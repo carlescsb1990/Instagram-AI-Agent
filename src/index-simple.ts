@@ -5,11 +5,11 @@ dotenv.config();
 
 const app = express();
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.json({ message: "Simple server is working!", status: "ok" });
 });
 
-app.get("/health", (req, res) => {
+app.get("/health", (_req, res) => {
   res.json({ status: "healthy", timestamp: new Date().toISOString() });
 });
 
