@@ -6,7 +6,7 @@ import logger from "../config/logger";
 const router = Router();
 
 // API Information
-router.get("/", (req: Request, res: Response) => {
+router.get("/", (_req: Request, res: Response) => {
   res.json({
     name: "Riona AI Agent API",
     version: "v1",
