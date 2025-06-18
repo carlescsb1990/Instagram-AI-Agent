@@ -49,13 +49,18 @@ export async function runAgent(
 }
 
 export function chooseCharacter(): any {
+  logger.info("Starting character selection...");
   const charactersDir = (() => {
     const buildPath = path.join(__dirname, "characters");
+    logger.info(`Checking build path: ${buildPath}`);
     if (fs.existsSync(buildPath)) {
+      logger.info("Using build path for characters");
       return buildPath;
     } else {
       // Fallback to source directory
-      return path.join(process.cwd(), "src", "Agent", "characters");
+      const sourcePath = path.join(process.cwd(), "src", "Agent", "characters");
+      logger.info(`Using source path for characters: ${sourcePath}`);
+      return sourcePath;
     }
   })();
   const files = fs.readdirSync(charactersDir);
