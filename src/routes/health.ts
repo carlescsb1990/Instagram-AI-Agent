@@ -66,7 +66,7 @@ router.get("/detailed", async (_req: Request, res: Response) => {
 });
 
 // Readiness probe (Kubernetes-style)
-router.get("/ready", async (req: Request, res: Response) => {
+router.get("/ready", async (_req: Request, res: Response) => {
   try {
     // Check if all critical services are ready
     const dbReady = (await checkDatabaseHealth()) === "connected";
