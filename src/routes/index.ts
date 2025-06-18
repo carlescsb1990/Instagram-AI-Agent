@@ -3,14 +3,30 @@ import apiRoutes from "./api";
 import healthRoutes from "./health";
 import agentRoutes from "./agent";
 import socialRoutes from "./social";
+import metricsRoutes from "./metrics";
+import {
+  metricsMiddleware,
+  rateLimitingMiddleware,
+  requestIdMiddleware,
+} from "../middleware/monitoring";
 
 const router = Router();
+
+// Apply monitoring middleware
+router.use(requestIdMiddleware);
+router.use(metricsMiddleware);
+
+// Apply rate limiting (100 requests per minute in development)
+if (process.env.NODE_ENV !== "development") {
+  router.use(rateLimitingMiddleware(100, 60000));
+}
 
 // API versioning and organization
 router.use("/api/v1", apiRoutes);
 router.use("/health", healthRoutes);
 router.use("/agent", agentRoutes);
 router.use("/social", socialRoutes);
+router.use("/metrics", metricsRoutes);
 
 // Root endpoint with API documentation
 router.get("/", (req, res) => {
