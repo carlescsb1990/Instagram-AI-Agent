@@ -34,7 +34,7 @@ router.get("/", async (_req: Request, res: Response) => {
 });
 
 // Detailed health check
-router.get("/detailed", async (req: Request, res: Response) => {
+router.get("/detailed", async (_req: Request, res: Response) => {
   try {
     const detailedHealth = {
       status: "healthy",
