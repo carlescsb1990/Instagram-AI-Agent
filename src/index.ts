@@ -17,6 +17,11 @@ async function startServer() {
 
   const server = app.listen(process.env.PORT || 3000, () => {
     logger.info(`Server is running on port ${process.env.PORT || 3000}`);
+
+    // Start the agents after the server is running
+    runAgents().catch((error) => {
+      setup_HandleError(error, "Error running agents:");
+    });
   });
 
   process.on("SIGTERM", () => {
