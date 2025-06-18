@@ -92,7 +92,7 @@ router.get("/ready", async (_req: Request, res: Response) => {
 });
 
 // Liveness probe (Kubernetes-style)
-router.get("/live", (req: Request, res: Response) => {
+router.get("/live", (_req: Request, res: Response) => {
   res.status(200).json({
     status: "alive",
     timestamp: new Date().toISOString(),
