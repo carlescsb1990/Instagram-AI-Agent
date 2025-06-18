@@ -114,7 +114,14 @@ export function initAgent(): any {
     return character;
   } catch (error) {
     console.error("Error selecting character:", error);
-    process.exit(1);
+    if (process.env.NODE_ENV === "development") {
+      logger.warn(
+        "Skipping agent initialization in development mode due to error",
+      );
+      return null;
+    } else {
+      process.exit(1);
+    }
   }
 }
 
