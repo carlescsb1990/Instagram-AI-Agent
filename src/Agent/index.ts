@@ -64,7 +64,9 @@ export function chooseCharacter(): any {
     }
   })();
   const files = fs.readdirSync(charactersDir);
+  logger.info(`Found files in characters directory: ${files.join(", ")}`);
   const jsonFiles = files.filter((file) => file.endsWith(".json"));
+  logger.info(`Found JSON files: ${jsonFiles.join(", ")}`);
   if (jsonFiles.length === 0) {
     throw new Error("No character JSON files found");
   }
