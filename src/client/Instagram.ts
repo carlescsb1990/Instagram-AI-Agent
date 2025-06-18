@@ -22,6 +22,19 @@ puppeteer.use(
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function runInstagram() {
+  // Check if Instagram credentials are properly configured
+  if (
+    !IGusername ||
+    IGusername === "default_IGusername" ||
+    !IGpassword ||
+    IGpassword === "default_IGpassword"
+  ) {
+    logger.info(
+      "Instagram credentials not configured. Skipping Instagram automation in development mode.",
+    );
+    return;
+  }
+
   const server = new Server({ port: 8000 });
   await server.listen();
   const proxyUrl = `http://localhost:8000`;
