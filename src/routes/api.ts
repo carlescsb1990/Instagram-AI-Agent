@@ -130,7 +130,7 @@ router.get("/ai/characters", (_req: Request, res: Response) => {
 });
 
 // API Statistics
-router.get("/stats", (req: Request, res: Response) => {
+router.get("/stats", (_req: Request, res: Response) => {
   res.json({
     success: true,
     data: {
