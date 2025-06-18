@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
+    "dev": "nodemon --exec ts-node src/index.ts",
     "start": "tsc && npm run postbuild && node build/index.js",
     "postbuild": "copyfiles -u 3 src/Agent/characters/*.json build/Agent/characters",
     "train-model": "tsc && node build/Agent/training/Model.js",
