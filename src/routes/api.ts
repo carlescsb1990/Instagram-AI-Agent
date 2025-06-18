@@ -64,7 +64,7 @@ router.post("/ai/generate", async (req: Request, res: Response) => {
 
     const result = await runAgent(schema, prompt);
 
-    res.json({
+    return res.json({
       success: true,
       data: result,
       metadata: {
