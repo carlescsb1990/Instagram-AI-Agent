@@ -16,8 +16,8 @@ const router = Router();
 router.use(requestIdMiddleware);
 router.use(metricsMiddleware);
 
-// Apply rate limiting (100 requests per minute in development)
-if (process.env.NODE_ENV !== "development") {
+// Apply rate limiting (100 requests per minute in production)
+if (process.env.NODE_ENV === "production") {
   router.use(rateLimitingMiddleware(100, 60000));
 }
 
