@@ -1,14 +1,16 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import helmet from "helmet"; // For securing HTTP headers
+import cors from "cors";
 
 import { runInstagram } from "./client/Instagram";
 import logger, { setupErrorHandlers } from "./config/logger";
 import { setup_HandleError } from "./utils";
 import { connectDB } from "./config/db";
-// import { main as twitterMain } from './client/Twitter'; //
-// import { main as githubMain } from './client/GitHub'; //
+
+// Import route modules
+import routes from "./routes";
 
 // Set up process-level error handlers
 setupErrorHandlers();
@@ -21,11 +23,78 @@ const app: Application = express();
 // Connect to the database
 connectDB();
 
-// Middleware setup
-app.use(helmet({ xssFilter: true, noSniff: true })); // Security headers
-app.use(express.json()); // JSON body parsing
-app.use(express.urlencoded({ extended: true, limit: "1kb" })); // URL-encoded data
-app.use(cookieParser()); // Cookie parsing
+// Security middleware
+app.use(
+  helmet({
+    xssFilter: true,
+    noSniff: true,
+    crossOriginEmbedderPolicy: false, // Allow embedding for development
+  }),
+);
+
+// CORS configuration
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "development"
+        ? ["http://localhost:3000", "http://127.0.0.1:3000"]
+        : [],
+    credentials: true,
+  }),
+);
+
+// Body parsing middleware
+app.use(express.json({ limit: "10mb" })); // Increased limit for AI content
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(cookieParser());
+
+// Request logging middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const start = Date.now();
+
+  // Log request
+  logger.info(`${req.method} ${req.url}`, {
+    ip: req.ip,
+    userAgent: req.get("User-Agent"),
+    timestamp: new Date().toISOString(),
+  });
+
+  // Log response
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    logger.info(`Response: ${res.statusCode} in ${duration}ms`);
+  });
+
+  next();
+});
+
+// API Routes
+app.use("/", routes);
+
+// 404 handler
+app.use("*", (req: Request, res: Response) => {
+  res.status(404).json({
+    error: "Not Found",
+    message: `Route ${req.originalUrl} not found`,
+    suggestion: "Check /api/v1 for available endpoints",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Global error handler
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  logger.error("Unhandled error:", error);
+
+  res.status(500).json({
+    error: "Internal Server Error",
+    message:
+      process.env.NODE_ENV === "development"
+        ? error.message
+        : "Something went wrong",
+    timestamp: new Date().toISOString(),
+    requestId: req.headers["x-request-id"] || "unknown",
+  });
+});
 
 const runAgents = async () => {
   while (true) {
