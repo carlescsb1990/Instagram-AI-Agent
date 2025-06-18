@@ -6,7 +6,7 @@ import { geminiApiKeys } from "../secret";
 const router = Router();
 
 // Basic health check
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (_req: Request, res: Response) => {
   try {
     const healthStatus = {
       status: "healthy",
