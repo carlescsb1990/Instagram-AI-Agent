@@ -9,10 +9,19 @@ dotenv.config();
 
 async function startServer() {
   try {
-    await initAgent();
+    const agentResult = await initAgent();
+    if (!agentResult && process.env.NODE_ENV === "development") {
+      logger.warn("Agent initialization skipped in development mode");
+    }
   } catch (err) {
     logger.error("Error during agent initialization:", err);
-    process.exit(1);
+    if (process.env.NODE_ENV === "development") {
+      logger.warn(
+        "Continuing in development mode despite agent initialization error",
+      );
+    } else {
+      process.exit(1);
+    }
   }
 
   const server = app.listen(process.env.PORT || 3000, () => {
