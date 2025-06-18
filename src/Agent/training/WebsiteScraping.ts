@@ -52,7 +52,18 @@ async function scrapeAndCleanContent(url: string): Promise<string | null> {
 // Function to get all links from a given URL
 async function getAllLinks(url: string): Promise<string[]> {
   try {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-accelerated-2d-canvas",
+        "--no-first-run",
+        "--no-zygote",
+        "--disable-gpu",
+      ],
+    });
     const page = await browser.newPage();
 
     await page.goto(url, { waitUntil: "networkidle2" });
