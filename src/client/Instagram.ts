@@ -26,7 +26,7 @@ async function runInstagram() {
   await server.listen();
   const proxyUrl = `http://localhost:8000`;
   const browser = await puppeteer.launch({
-    headless: process.env.NODE_ENV === "development" ? "new" : false,
+    headless: process.env.NODE_ENV === "development" ? true : false,
     args: [
       `--proxy-server=${proxyUrl}`,
       "--no-sandbox",
