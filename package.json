@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec \"tsc && node build/index.js\"",
+    "dev": "nodemon --watch src --ext ts --exec \"npm run start\"",
     "build": "tsc",
     "start": "tsc && npm run postbuild && node build/index.js",
     "postbuild": "copyfiles -u 3 src/Agent/characters/*.json build/Agent/characters",
