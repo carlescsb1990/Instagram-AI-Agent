@@ -152,7 +152,7 @@ router.get("/stats", (_req: Request, res: Response) => {
 });
 
 // API Documentation placeholder
-router.get("/docs", (req: Request, res: Response) => {
+router.get("/docs", (_req: Request, res: Response) => {
   res.json({
     message: "API Documentation",
     swagger: "Not implemented yet",
