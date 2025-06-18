@@ -29,7 +29,7 @@ router.use("/social", socialRoutes);
 router.use("/metrics", metricsRoutes);
 
 // Root endpoint with API documentation
-router.get("/", (req, res) => {
+router.get("/", (_req, res) => {
   res.json({
     name: "Riona AI Agent",
     version: "1.0.0",
