@@ -84,7 +84,7 @@ router.post("/ai/generate", async (req: Request, res: Response) => {
 });
 
 // Get available AI characters
-router.get("/ai/characters", (req: Request, res: Response) => {
+router.get("/ai/characters", (_req: Request, res: Response) => {
   try {
     const characters = [
       {
