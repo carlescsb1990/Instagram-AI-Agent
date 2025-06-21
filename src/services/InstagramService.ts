@@ -481,7 +481,6 @@ export class InstagramService {
     } catch (error) {
       logger.error('Error cleaning up Instagram service:', error);
     }
-    }
   }
 
   async runLikeAutomation(hashtag: string, maxLikes: number = 20): Promise<{likes: number, comments: number, follows: number}> {
