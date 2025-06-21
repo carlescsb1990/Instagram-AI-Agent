@@ -1004,9 +1004,6 @@ class RionaAIDashboard {
             }
         }
     }
-                case '1':
-                    e.preventDefault();
-                    this.showPage('dashboard');
                     break;
                 case '2':
                     e.preventDefault();
