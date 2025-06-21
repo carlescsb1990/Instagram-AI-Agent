@@ -623,11 +623,64 @@ class RionaAIDashboard {
         throw new Error(`Empty response from ${endpoint}`);
       }
 
+      // Clean the response text - remove any trailing content after JSON
+      let cleanText = text.trim();
+
+      // Find the end of the JSON object/array
+      let jsonEnd = -1;
+      let braceCount = 0;
+      let bracketCount = 0;
+      let inString = false;
+      let escaped = false;
+
+      for (let i = 0; i < cleanText.length; i++) {
+        const char = cleanText[i];
+
+        if (escaped) {
+          escaped = false;
+          continue;
+        }
+
+        if (char === "\\" && inString) {
+          escaped = true;
+          continue;
+        }
+
+        if (char === '"' && !escaped) {
+          inString = !inString;
+          continue;
+        }
+
+        if (!inString) {
+          if (char === "{") braceCount++;
+          else if (char === "}") braceCount--;
+          else if (char === "[") bracketCount++;
+          else if (char === "]") bracketCount--;
+
+          if (
+            braceCount === 0 &&
+            bracketCount === 0 &&
+            (char === "}" || char === "]")
+          ) {
+            jsonEnd = i + 1;
+            break;
+          }
+        }
+      }
+
+      if (jsonEnd > 0 && jsonEnd < cleanText.length) {
+        console.warn(
+          `Trimming response from ${cleanText.length} to ${jsonEnd} characters`,
+        );
+        cleanText = cleanText.substring(0, jsonEnd);
+      }
+
       try {
-        return JSON.parse(text);
+        return JSON.parse(cleanText);
       } catch (parseError) {
         console.error(`JSON parse error for ${endpoint}:`, parseError);
         console.error("Response text length:", text.length);
+        console.error("Cleaned text length:", cleanText.length);
         console.error(
           "Response text (first 200 chars):",
           text.substring(0, 200),
