@@ -127,6 +127,15 @@ app.get("/api", (_req: Request, res: Response) => {
   });
 });
 
+// Test endpoint for debugging
+app.get("/api/test", (_req: Request, res: Response) => {
+  res.json({
+    test: true,
+    timestamp: new Date().toISOString(),
+    message: "API is working correctly",
+  });
+});
+
 // Health check endpoint
 app.get("/api/health", (_req: Request, res: Response) => {
   res.json({
