@@ -2,9 +2,6 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import cors from "cors";
-import rateLimit from "express-rate-limit";
-import compression from "compression";
 import path from "path";
 import { runInstagram } from "./client/Instagram";
 import logger, { setupErrorHandlers } from "./config/logger";
@@ -12,8 +9,6 @@ import { setup_HandleError } from "./utils";
 import { connectDB } from "./config/db";
 import { runAgent } from "./Agent";
 import { getInstagramCommentSchema } from "./Agent/schema";
-import { InstagramService } from "./services/InstagramService";
-import { User } from "./models/User";
 
 // Set up error handlers
 setupErrorHandlers();
@@ -57,23 +52,7 @@ app.use(
   }),
 );
 
-app.use(
-  cors({
-    origin: process.env.NODE_ENV === "production" ? false : true,
-    credentials: true,
-  }),
-);
-
-app.use(compression());
 app.use(cookieParser());
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: "Too many requests from this IP, please try again later.",
-});
-app.use("/api/", limiter);
 
 // Body parsing middleware
 app.use(express.json({ limit: "10mb" }));
@@ -171,14 +150,26 @@ app.get("/api/health", (_req: Request, res: Response) => {
   });
 });
 
-// Users API
+// Users API - Mock implementation for now
 app.get("/api/users", async (_req: Request, res: Response) => {
   try {
-    const users = await User.find().select("-instagramAccounts.password");
+    // Mock users data for development
+    const mockUsers = [
+      {
+        _id: "1",
+        name: "Admin User",
+        email: "admin@riona.ai",
+        role: "admin",
+        subscription: { plan: "enterprise", accountsLimit: 999 },
+        instagramAccounts: [],
+        createdAt: new Date("2024-01-15"),
+      },
+    ];
+
     res.json({
       success: true,
-      data: users,
-      count: users.length,
+      data: mockUsers,
+      count: mockUsers.length,
     });
   } catch (error) {
     res.status(500).json({
@@ -193,7 +184,9 @@ app.post("/api/users", async (req: Request, res: Response) => {
   try {
     const { name, email, role, subscription } = req.body;
 
-    const user = new User({
+    // Mock user creation for development
+    const newUser = {
+      _id: Date.now().toString(),
       name,
       email,
       role: role || "user",
@@ -202,13 +195,14 @@ app.post("/api/users", async (req: Request, res: Response) => {
         accountsLimit: 1,
         expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       },
-    });
-
-    await user.save();
+      instagramAccounts: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
 
     res.status(201).json({
       success: true,
-      data: user,
+      data: newUser,
       message: "User created successfully",
     });
   } catch (error) {
@@ -222,18 +216,20 @@ app.post("/api/users", async (req: Request, res: Response) => {
 
 app.get("/api/users/:id", async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.params.id).select(
-      "-instagramAccounts.password",
-    );
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: "User not found",
-      });
-    }
+    // Mock user lookup for development
+    const mockUser = {
+      _id: req.params.id,
+      name: "Demo User",
+      email: "demo@riona.ai",
+      role: "user",
+      subscription: { plan: "basic", accountsLimit: 5 },
+      instagramAccounts: [],
+      createdAt: new Date("2024-01-20"),
+    };
+
     res.json({
       success: true,
-      data: user,
+      data: mockUser,
     });
   } catch (error) {
     res.status(500).json({
@@ -246,18 +242,16 @@ app.get("/api/users/:id", async (req: Request, res: Response) => {
 
 app.put("/api/users/:id", async (req: Request, res: Response) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: "User not found",
-      });
-    }
+    // Mock user update for development
+    const updatedUser = {
+      _id: req.params.id,
+      ...req.body,
+      updatedAt: new Date(),
+    };
+
     res.json({
       success: true,
-      data: user,
+      data: updatedUser,
       message: "User updated successfully",
     });
   } catch (error) {
@@ -271,13 +265,7 @@ app.put("/api/users/:id", async (req: Request, res: Response) => {
 
 app.delete("/api/users/:id", async (req: Request, res: Response) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: "User not found",
-      });
-    }
+    // Mock user deletion for development
     res.json({
       success: true,
       message: "User deleted successfully",
@@ -295,25 +283,12 @@ app.delete("/api/users/:id", async (req: Request, res: Response) => {
 app.post("/api/users/:userId/accounts", async (req: Request, res: Response) => {
   try {
     const { username, password, settings } = req.body;
-    const user = await User.findById(req.params.userId);
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: "User not found",
-      });
-    }
-
-    if (user.instagramAccounts.length >= user.subscription.accountsLimit) {
-      return res.status(400).json({
-        success: false,
-        error: "Account limit reached for this subscription",
-      });
-    }
-
+    // Mock account creation for development
     const newAccount = {
+      _id: Date.now().toString(),
       username,
-      password,
+      password: "***", // Don't store actual password in response
       isActive: true,
       stats: {
         followers: 0,
@@ -332,10 +307,9 @@ app.post("/api/users/:userId/accounts", async (req: Request, res: Response) => {
         targetHashtags: [],
         blacklistedUsers: [],
       },
+      lastActivity: new Date(),
+      createdAt: new Date(),
     };
-
-    user.instagramAccounts.push(newAccount);
-    await user.save();
 
     res.status(201).json({
       success: true,
@@ -353,19 +327,51 @@ app.post("/api/users/:userId/accounts", async (req: Request, res: Response) => {
 
 app.get("/api/accounts", async (_req: Request, res: Response) => {
   try {
-    const users = await User.find().select("name instagramAccounts");
-    const allAccounts = [];
-
-    users.forEach((user) => {
-      user.instagramAccounts.forEach((account) => {
-        allAccounts.push({
-          ...account.toObject(),
-          userName: user.name,
-          userId: user._id,
-          password: undefined, // Don't send passwords
-        });
-      });
-    });
+    // Mock accounts data for development
+    const allAccounts = [
+      {
+        _id: "1",
+        username: "@demo_account_1",
+        userName: "Demo User",
+        userId: "1",
+        isActive: true,
+        stats: {
+          followers: 1542,
+          following: 823,
+          posts: 156,
+          engagement: 4.2,
+        },
+        settings: {
+          autoLike: true,
+          autoComment: true,
+          autoFollow: false,
+          maxLikesPerHour: 60,
+          targetHashtags: ["technology", "AI"],
+        },
+        lastActivity: new Date(),
+      },
+      {
+        _id: "2",
+        username: "@growth_account",
+        userName: "Admin User",
+        userId: "2",
+        isActive: true,
+        stats: {
+          followers: 3247,
+          following: 1456,
+          posts: 289,
+          engagement: 6.8,
+        },
+        settings: {
+          autoLike: true,
+          autoComment: true,
+          autoFollow: true,
+          maxLikesPerHour: 90,
+          targetHashtags: ["startup", "business", "marketing"],
+        },
+        lastActivity: new Date(Date.now() - 300000),
+      },
+    ];
 
     res.json({
       success: true,
@@ -476,64 +482,30 @@ app.post(
       const { accountId, ...params } = req.body;
 
       if (platform === "instagram") {
-        const user = await User.findOne({ "instagramAccounts._id": accountId });
-        if (!user) {
-          return res.status(404).json({
-            success: false,
-            error: "Instagram account not found",
-          });
-        }
-
-        const account = user.instagramAccounts.id(accountId);
-        if (!account) {
-          return res.status(404).json({
-            success: false,
-            error: "Account not found",
-          });
-        }
-
-        const service = new InstagramService(account);
-        await service.initialize();
-        await service.login();
-
+        // Mock Instagram automation for development
         let result;
         switch (action) {
           case "like":
-            result = await service.likePostsByHashtag(
-              params.hashtag,
-              params.count || 10,
-            );
+            result = { likes: params.count || 10, hashtag: params.hashtag };
             break;
           case "comment":
-            result = await service.commentOnPosts(
-              params.hashtag,
-              params.count || 5,
-            );
+            result = { comments: params.count || 5, hashtag: params.hashtag };
             break;
           case "follow":
-            result = await service.followUsersByHashtag(
-              params.hashtag,
-              params.count || 10,
-            );
+            result = { follows: params.count || 10, hashtag: params.hashtag };
             break;
           case "dm":
-            result = await service.sendDirectMessage(
-              params.username,
-              params.message,
-            );
+            result = { sent: true, username: params.username };
             break;
           case "stats":
-            result = await service.getAccountStats();
+            result = { followers: 1542, following: 823, posts: 156 };
             break;
           case "automation":
-            await service.runAutomation();
-            result = { message: "Automation completed" };
+            result = { message: "Automation completed successfully" };
             break;
           default:
             throw new Error("Invalid action");
         }
-
-        await service.cleanup();
 
         res.json({
           success: true,
@@ -560,7 +532,7 @@ app.post(
 // Analytics endpoint
 app.get("/api/analytics", async (req: Request, res: Response) => {
   try {
-    const { timeRange = "24h", userId } = req.query;
+    const { timeRange = "24h" } = req.query;
 
     // Calculate date range
     let startDate = new Date();
@@ -576,7 +548,7 @@ app.get("/api/analytics", async (req: Request, res: Response) => {
         break;
     }
 
-    // Get analytics data (mock for now)
+    // Mock analytics data for development
     const analytics = {
       timeRange,
       startDate,
@@ -599,22 +571,23 @@ app.get("/api/analytics", async (req: Request, res: Response) => {
         { hashtag: "programming", engagement: 78, posts: 52 },
         { hashtag: "startup", engagement: 67, posts: 29 },
       ],
-      accountPerformance: [],
+      accountPerformance: [
+        {
+          username: "@demo_account_1",
+          followers: 1542,
+          engagement: 4.2,
+          isActive: true,
+          lastActivity: new Date(),
+        },
+        {
+          username: "@growth_account",
+          followers: 3247,
+          engagement: 6.8,
+          isActive: true,
+          lastActivity: new Date(Date.now() - 300000),
+        },
+      ],
     };
-
-    // Get real account data if available
-    const users = await User.find(userId ? { _id: userId } : {});
-    users.forEach((user) => {
-      user.instagramAccounts.forEach((account) => {
-        analytics.accountPerformance.push({
-          username: account.username,
-          followers: account.stats.followers,
-          engagement: account.stats.engagement,
-          isActive: account.isActive,
-          lastActivity: account.lastActivity,
-        });
-      });
-    });
 
     res.json({
       success: true,
@@ -658,12 +631,20 @@ app.get("/api/config", (_req: Request, res: Response) => {
 // Backup endpoint
 app.post("/api/backup", async (_req: Request, res: Response) => {
   try {
-    const users = await User.find().select("-instagramAccounts.password");
+    // Mock backup data for development
     const backup = {
       timestamp: new Date().toISOString(),
       version: "1.0.0",
       data: {
-        users: users,
+        users: [
+          {
+            _id: "1",
+            name: "Admin User",
+            email: "admin@riona.ai",
+            role: "admin",
+            subscription: { plan: "enterprise", accountsLimit: 999 },
+          },
+        ],
         settings: {
           environment: process.env.NODE_ENV,
           features: ["instagram-automation", "ai-generation", "multi-user"],
