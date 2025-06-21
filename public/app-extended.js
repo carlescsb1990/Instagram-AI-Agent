@@ -666,7 +666,7 @@ class ExtendedDashboard extends RionaAIDashboard {
                 engagement: account.stats.engagement,
                 isActive: account.isActive,
                 lastActivity: account.lastActivity
-            },
+            })),
             charts: []
         };
     }
