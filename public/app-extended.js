@@ -570,75 +570,237 @@ class ExtendedDashboard extends RionaAIDashboard {
     }
   }
 
-  // Analytics
-  async loadAnalytics(timeRange = "24h") {
+  // Analytics - REAL DATA ONLY
+  async loadAnalytics(timeRange = "24h", accountId = "all") {
     try {
-      const response = await this.apiCall(
-        `/api/analytics?timeRange=${timeRange}`,
-      );
-      if (response && response.success) {
-        this.analyticsData = response.data;
-        this.updateAnalyticsDisplay();
-        this.updateCharts();
-        this.addLogEntry("info", `Analytics cargados para ${timeRange}`);
-      }
+      // Load real data from localStorage
+      this.analyticsData = this.getRealAnalyticsData(timeRange, accountId);
+      this.updateAnalyticsDisplay();
+      this.updateAccountSelector();
+      this.updateCharts();
+      this.addLogEntry("info", `Analytics actualizados para ${timeRange}`);
     } catch (error) {
       this.addLogEntry("error", `Error cargando analytics: ${error.message}`);
-      // Use mock data
-      this.analyticsData = this.getMockAnalytics(timeRange);
-      this.updateAnalyticsDisplay();
-      this.updateCharts();
+      this.showNoDataMessage();
     }
   }
 
-  getMockAnalytics(timeRange) {
-    const multiplier = timeRange === "24h" ? 1 : timeRange === "7d" ? 7 : 30;
+  getRealAnalyticsData(timeRange, accountId) {
+    const accounts = this.getStoredAccounts();
+    const executionHistory = this.getFromStorage("executionHistory", []);
+    const globalAnalytics = this.getFromStorage("analyticsData", {
+      totalLikes: 0,
+      totalComments: 0,
+      totalFollows: 0,
+      totalExecutions: 0,
+      lastExecution: null,
+    });
+
+    // Filter accounts if specific account selected
+    let filteredAccounts = accounts;
+    if (accountId !== "all" && accountId) {
+      filteredAccounts = accounts.filter(
+        (acc) => acc.id.toString() === accountId.toString(),
+      );
+    }
+
+    // Calculate time range filter
+    const now = new Date();
+    let timeFilter = () => true;
+
+    if (timeRange === "24h") {
+      const yesterday = new Date(now - 24 * 60 * 60 * 1000);
+      timeFilter = (date) => new Date(date) >= yesterday;
+    } else if (timeRange === "7d") {
+      const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+      timeFilter = (date) => new Date(date) >= weekAgo;
+    } else if (timeRange === "30d") {
+      const monthAgo = new Date(now - 30 * 24 * 60 * 60 * 1000);
+      timeFilter = (date) => new Date(date) >= monthAgo;
+    }
+
+    // Filter executions by time range
+    const filteredExecutions = executionHistory.filter(
+      (exec) =>
+        timeFilter(exec.timestamp) &&
+        (accountId === "all" ||
+          exec.accountId.toString() === accountId.toString()),
+    );
+
+    // Calculate metrics from real data
+    const metrics = {
+      totalLikes: filteredExecutions.reduce(
+        (sum, exec) => sum + (exec.actions?.likes || 0),
+        0,
+      ),
+      totalComments: filteredExecutions.reduce(
+        (sum, exec) => sum + (exec.actions?.comments || 0),
+        0,
+      ),
+      totalFollows: filteredExecutions.reduce(
+        (sum, exec) => sum + (exec.actions?.follows || 0),
+        0,
+      ),
+      totalExecutions: filteredExecutions.length,
+      lastExecution:
+        filteredExecutions.length > 0
+          ? filteredExecutions.sort(
+              (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+            )[0].timestamp
+          : null,
+    };
+
+    // Calculate engagement rate
+    const totalActions =
+      metrics.totalLikes + metrics.totalComments + metrics.totalFollows;
+    const totalFollowers = filteredAccounts.reduce(
+      (sum, acc) => sum + (acc.stats?.followers || 0),
+      0,
+    );
+    metrics.engagementRate =
+      totalFollowers > 0
+        ? ((totalActions / totalFollowers) * 100).toFixed(2)
+        : 0;
+
+    // Get hashtags from all accounts
+    const allHashtags = {};
+    filteredAccounts.forEach((account) => {
+      if (account.settings?.targetHashtags) {
+        account.settings.targetHashtags.forEach((hashtag) => {
+          const cleanTag = hashtag.replace("#", "").trim();
+          if (!allHashtags[cleanTag]) {
+            allHashtags[cleanTag] = { count: 0, accounts: [] };
+          }
+          allHashtags[cleanTag].count += 1;
+          allHashtags[cleanTag].accounts.push(account.username);
+        });
+      }
+    });
+
     return {
       timeRange,
-      metrics: {
-        totalLikes: Math.floor(Math.random() * 500 * multiplier) + 100,
-        totalComments: Math.floor(Math.random() * 150 * multiplier) + 50,
-        totalFollows: Math.floor(Math.random() * 100 * multiplier) + 20,
-        engagementRate: (Math.random() * 5 + 3).toFixed(2),
-      },
-      hashtagPerformance: [
-        { hashtag: "ai", engagement: 85, posts: 45 },
-        { hashtag: "technology", engagement: 78, posts: 38 },
-        { hashtag: "innovation", engagement: 92, posts: 52 },
-        { hashtag: "startup", engagement: 67, posts: 29 },
-        { hashtag: "business", engagement: 73, posts: 34 },
-      ],
-      accountPerformance: this.accounts.map((account) => ({
-        username: account.username,
-        followers:
-          account.stats?.followers || Math.floor(Math.random() * 5000) + 1000,
-        engagement:
-          account.stats?.engagement || (Math.random() * 5 + 3).toFixed(1),
-        isActive: account.status === "active",
-        lastActivity: account.lastActivity || new Date(),
-      })),
-      charts: [],
+      accountFilter: accountId,
+      metrics,
+      accounts: filteredAccounts,
+      executions: filteredExecutions,
+      hashtags: allHashtags,
+      hasData: filteredAccounts.length > 0,
     };
   }
 
   updateAnalyticsDisplay() {
-    // Update analytics metrics in UI
-    this.updateElement(
-      "totalLikes",
-      this.analyticsData.metrics?.totalLikes?.toLocaleString() || "0",
-    );
+    const data = this.analyticsData;
+
+    // Show/hide no data message
+    const noDataMsg = document.getElementById("noDataMessage");
+    const analyticsMetrics = document.getElementById("analyticsMetrics");
+    const analyticsCharts = document.getElementById("analyticsCharts");
+
+    if (!data.hasData) {
+      if (noDataMsg) noDataMsg.style.display = "block";
+      if (analyticsMetrics) analyticsMetrics.style.display = "none";
+      if (analyticsCharts) analyticsCharts.style.display = "none";
+      return;
+    } else {
+      if (noDataMsg) noDataMsg.style.display = "none";
+      if (analyticsMetrics) analyticsMetrics.style.display = "grid";
+      if (analyticsCharts) analyticsCharts.style.display = "grid";
+    }
+
+    // Update metrics with real data
+    this.updateElement("totalLikes", data.metrics.totalLikes.toLocaleString());
     this.updateElement(
       "totalComments",
-      this.analyticsData.metrics?.totalComments?.toLocaleString() || "0",
+      data.metrics.totalComments.toLocaleString(),
     );
     this.updateElement(
       "totalFollows",
-      this.analyticsData.metrics?.totalFollows?.toLocaleString() || "0",
+      data.metrics.totalFollows.toLocaleString(),
     );
+    this.updateElement("engagementRate", data.metrics.engagementRate + "%");
     this.updateElement(
-      "engagementRate",
-      this.analyticsData.metrics?.engagementRate + "%" || "0%",
+      "totalExecutions",
+      data.metrics.totalExecutions.toLocaleString(),
     );
+
+    // Update last execution
+    if (data.metrics.lastExecution) {
+      const lastExec = new Date(data.metrics.lastExecution);
+      const timeAgo = this.getTimeAgo(lastExec);
+      this.updateElement("lastExecution", timeAgo);
+      this.updateElement("executionStatus", "Completada");
+    } else {
+      this.updateElement("lastExecution", "Nunca");
+      this.updateElement("executionStatus", "Sin datos");
+    }
+
+    // Calculate and show changes (basic implementation)
+    this.updateChangeIndicators(data);
+  }
+
+  updateChangeIndicators(data) {
+    // Simple change calculation - could be enhanced with historical comparison
+    const changeElements = [
+      "likesChange",
+      "commentsChange",
+      "followsChange",
+      "engagementChange",
+      "executionsChange",
+    ];
+
+    changeElements.forEach((elementId) => {
+      const element = document.getElementById(elementId);
+      if (element) {
+        if (data.metrics.totalExecutions > 0) {
+          element.textContent = "Activo";
+          element.className = "metric-change positive";
+        } else {
+          element.textContent = "Sin datos";
+          element.className = "metric-change neutral";
+        }
+      }
+    });
+  }
+
+  updateAccountSelector() {
+    const selector = document.getElementById("analyticsAccountSelect");
+    if (!selector) return;
+
+    const accounts = this.getStoredAccounts();
+
+    // Clear existing options except "all"
+    selector.innerHTML = '<option value="all">Todas las cuentas</option>';
+
+    // Add real accounts
+    accounts.forEach((account) => {
+      const option = document.createElement("option");
+      option.value = account.id;
+      option.textContent = `@${account.username}`;
+      selector.appendChild(option);
+    });
+  }
+
+  getTimeAgo(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffMins < 1) return "Hace un momento";
+    if (diffMins < 60) return `Hace ${diffMins} minutos`;
+    if (diffHours < 24) return `Hace ${diffHours} horas`;
+    return `Hace ${diffDays} días`;
+  }
+
+  showNoDataMessage() {
+    const noDataMsg = document.getElementById("noDataMessage");
+    const analyticsMetrics = document.getElementById("analyticsMetrics");
+    const analyticsCharts = document.getElementById("analyticsCharts");
+
+    if (noDataMsg) noDataMsg.style.display = "block";
+    if (analyticsMetrics) analyticsMetrics.style.display = "none";
+    if (analyticsCharts) analyticsCharts.style.display = "none";
   }
 
   // Settings Management
