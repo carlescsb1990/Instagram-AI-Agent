@@ -61,19 +61,33 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Request logging middleware
+// Request logging middleware - simplified to avoid response interference
 app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
 
-  logger.info(`${req.method} ${req.url}`, {
+  // Only log to console/files, never to response stream
+  const logData = {
+    method: req.method,
+    url: req.url,
     ip: req.ip,
     userAgent: req.get("User-Agent"),
     timestamp: new Date().toISOString(),
-  });
+  };
+
+  // Use console.log for development to avoid Winston interference
+  if (process.env.NODE_ENV === "development") {
+    console.log(`${req.method} ${req.url} - ${logData.ip}`);
+  } else {
+    logger.info(`${req.method} ${req.url}`, logData);
+  }
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    logger.info(`Response: ${res.statusCode} in ${duration}ms`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(`Response: ${res.statusCode} in ${duration}ms`);
+    } else {
+      logger.info(`Response: ${res.statusCode} in ${duration}ms`);
+    }
   });
 
   next();
