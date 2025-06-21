@@ -502,11 +502,24 @@ class ExtendedDashboard extends RionaAIDashboard {
             (currentAnalytics.totalComments || 0) + results.actions.comments;
           currentAnalytics.totalFollows =
             (currentAnalytics.totalFollows || 0) + results.actions.follows;
+          currentAnalytics.totalExecutions =
+            (currentAnalytics.totalExecutions || 0) + 1;
           currentAnalytics.lastExecution = new Date().toISOString();
           this.saveToStorage("analyticsData", currentAnalytics);
 
-          // Update account last activity
+          // Save execution to history
+          this.saveExecutionHistory(account.id, results.actions);
+
+          // Update account last activity and stats
           account.lastActivity = new Date().toISOString();
+          if (!account.stats) account.stats = {};
+          account.stats.totalLikes =
+            (account.stats.totalLikes || 0) + results.actions.likes;
+          account.stats.totalComments =
+            (account.stats.totalComments || 0) + results.actions.comments;
+          account.stats.totalFollows =
+            (account.stats.totalFollows || 0) + results.actions.follows;
+          account.stats.executions = (account.stats.executions || 0) + 1;
           this.saveAccount(account);
         } else {
           throw new Error("API response not successful");
@@ -560,8 +573,25 @@ class ExtendedDashboard extends RionaAIDashboard {
           (currentAnalytics.totalComments || 0) + simulatedActions.comments;
         currentAnalytics.totalFollows =
           (currentAnalytics.totalFollows || 0) + simulatedActions.follows;
+        currentAnalytics.totalExecutions =
+          (currentAnalytics.totalExecutions || 0) + 1;
         currentAnalytics.lastExecution = new Date().toISOString();
         this.saveToStorage("analyticsData", currentAnalytics);
+
+        // Save execution to history
+        this.saveExecutionHistory(account.id, simulatedActions);
+
+        // Update account stats
+        account.lastActivity = new Date().toISOString();
+        if (!account.stats) account.stats = {};
+        account.stats.totalLikes =
+          (account.stats.totalLikes || 0) + simulatedActions.likes;
+        account.stats.totalComments =
+          (account.stats.totalComments || 0) + simulatedActions.comments;
+        account.stats.totalFollows =
+          (account.stats.totalFollows || 0) + simulatedActions.follows;
+        account.stats.executions = (account.stats.executions || 0) + 1;
+        this.saveAccount(account);
       }
     } catch (error) {
       this.addLogEntry("error", `❌ Error en automatización: ${error.message}`);
