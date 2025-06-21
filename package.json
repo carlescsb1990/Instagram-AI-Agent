@@ -1,35 +1,83 @@
 {
   "name": "riona-ai-agent",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "description": "Riona AI Agent - Sistema completo de automatización para redes sociales con inteligencia artificial integrada. Combina automatización inteligente de Instagram con generación de contenido AI usando Google Gemini 2.0 Flash.",
+  "main": "build/index.js",
   "scripts": {
-    "dev": "npm run start",
+    "dev": "concurrently \"tsc --watch\" \"nodemon build/index.js\"",
     "build": "tsc",
     "start": "tsc && npm run postbuild && node build/index.js",
+    "start:prod": "NODE_ENV=production npm start",
     "postbuild": "copyfiles -u 3 src/Agent/characters/*.json build/Agent/characters",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf build",
+    "docker:build": "docker build -t riona-ai-agent .",
+    "docker:run": "docker run -p 3001:3001 riona-ai-agent",
     "train-model": "tsc && node build/Agent/training/Model.js",
     "train:link": "tsc && node build/Agent/training/WebsiteScraping.js",
-    "train:audio": "tsc && node build/Agent/training/TrainWithAudio.js"
+    "train:audio": "tsc && node build/Agent/training/TrainWithAudio.js",
+    "backup": "node -e \"const fs=require('fs'); const backup={timestamp:new Date().toISOString(),version:'1.0.0',data:{env:process.env}}; fs.writeFileSync('backup-'+Date.now()+'.json', JSON.stringify(backup,null,2));\"",
+    "health": "curl -s http://localhost:3001/api/health | jq .",
+    "logs": "tail -f logs/combined.log",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop riona-ai-agent",
+    "pm2:restart": "pm2 restart riona-ai-agent",
+    "pm2:delete": "pm2 delete riona-ai-agent"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "Riona-AI-Agent is an AI-powered automation tool designed to interact with various social media platforms.",
+  "keywords": [
+    "ai",
+    "automation",
+    "instagram",
+    "social-media",
+    "machine-learning",
+    "bot",
+    "gemini",
+    "typescript",
+    "nodejs",
+    "express",
+    "puppeteer",
+    "artificial-intelligence",
+    "social-automation",
+    "content-generation",
+    "analytics",
+    "growth-hacking",
+    "marketing-automation",
+    "influencer-tools",
+    "social-media-management",
+    "riona-ai"
+  ],
+  "author": {
+    "name": "Riona AI Team",
+    "email": "team@riona.ai",
+    "url": "https://riona.ai"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/riona-ai/agent#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riona-ai/agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/riona-ai/agent/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
-    "@types/compression": "^1.8.1",
-    "@types/cors": "^2.8.19",
     "axios": "^1.7.9",
-    "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
     "copyfiles": "^2.4.1",
-    "cors": "^2.8.5",
     "cron": "^3.5.0",
     "csv-parser": "^3.1.0",
     "dompurify": "^3.2.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "express-rate-limit": "^7.5.1",
     "helmet": "^8.0.0",
     "instagram-private-api": "^1.46.1",
     "jsdom": "^26.0.0",
@@ -56,6 +104,7 @@
     "youtube-transcript": "^1.2.1"
   },
   "devDependencies": {
+    "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/jsdom": "^21.1.7",
@@ -67,7 +116,23 @@
     "@types/request": "^2.48.12",
     "@types/textract": "^2.4.5",
     "@types/user-agents": "^1.0.4",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "concurrently": "^8.2.0",
+    "eslint": "^9.0.0",
+    "jest": "^29.5.0",
     "nodemon": "^3.1.9",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2"
-  }
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ]
 }
