@@ -175,7 +175,7 @@
 
             <div class="status-card">
               <div class="card-header">
-                <h3>Métricas de Rendimiento</h3>
+                <h3>M��tricas de Rendimiento</h3>
               </div>
               <div class="card-content">
                 <div class="metric">
@@ -458,16 +458,114 @@
           </div>
         </div>
 
-        <!-- Other pages will be populated similarly -->
+        <!-- Automation Section -->
         <div id="automation" class="page-content">
           <div class="automation-section">
             <div class="section-header">
               <h3>Centro de Automatización</h3>
+              <button class="primary-btn" id="addUserBtn">
+                <i class="fas fa-user-plus"></i>
+                Agregar Usuario
+              </button>
             </div>
-            <div class="coming-soon">
-              <i class="fas fa-cogs"></i>
-              <h4>Próximamente</h4>
-              <p>Configuración avanzada de automatización</p>
+
+            <!-- Users Management -->
+            <div class="users-grid" id="usersGrid">
+              <!-- Users will be loaded here -->
+            </div>
+
+            <!-- Instagram Accounts Management -->
+            <div class="accounts-section">
+              <div class="section-header">
+                <h3>Cuentas de Instagram</h3>
+                <button class="primary-btn" id="addAccountBtn">
+                  <i class="fab fa-instagram"></i>
+                  Agregar Cuenta
+                </button>
+              </div>
+              <div class="accounts-grid" id="accountsGrid">
+                <!-- Instagram accounts will be loaded here -->
+              </div>
+            </div>
+
+            <!-- Automation Rules -->
+            <div class="rules-section">
+              <div class="section-header">
+                <h3>Reglas de Automatización</h3>
+              </div>
+              <div class="rules-grid">
+                <div class="rule-card">
+                  <h4>Automatización de Likes</h4>
+                  <div class="rule-settings">
+                    <label>
+                      <input type="checkbox" id="autoLikeGlobal" />
+                      Activar likes automáticos
+                    </label>
+                    <label>
+                      Max likes por hora:
+                      <input
+                        type="number"
+                        id="maxLikesGlobal"
+                        value="60"
+                        min="1"
+                        max="200"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div class="rule-card">
+                  <h4>Automatización de Comentarios</h4>
+                  <div class="rule-settings">
+                    <label>
+                      <input type="checkbox" id="autoCommentGlobal" />
+                      Activar comentarios automáticos
+                    </label>
+                    <label>
+                      Max comentarios por hora:
+                      <input
+                        type="number"
+                        id="maxCommentsGlobal"
+                        value="30"
+                        min="1"
+                        max="100"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div class="rule-card">
+                  <h4>Automatización de Follows</h4>
+                  <div class="rule-settings">
+                    <label>
+                      <input type="checkbox" id="autoFollowGlobal" />
+                      Activar follows automáticos
+                    </label>
+                    <label>
+                      Max follows por hora:
+                      <input
+                        type="number"
+                        id="maxFollowsGlobal"
+                        value="20"
+                        min="1"
+                        max="50"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div class="rule-card">
+                  <h4>Hashtags Objetivo</h4>
+                  <div class="hashtags-input">
+                    <textarea
+                      id="targetHashtags"
+                      placeholder="technology, AI, programming, startup"
+                      rows="3"
+                    ></textarea>
+                    <small>Separar hashtags con comas</small>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
