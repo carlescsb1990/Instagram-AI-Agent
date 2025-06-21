@@ -6,6 +6,12 @@ class RionaAIDashboard {
     this.activityLog = [];
     this.isLoading = false;
     this.apiBaseUrl = "/api";
+
+    // Initialize start time if not exists
+    if (!this.getFromStorage("startTime")) {
+      this.saveToStorage("startTime", Date.now());
+    }
+
     this.setupEventListeners();
     this.loadInitialData();
     this.startAutoRefresh();
@@ -249,7 +255,7 @@ class RionaAIDashboard {
 
   async loadDashboardMetrics() {
     try {
-      // Load basic metrics for dashboard overview
+      // Try to load from API first
       const response = await this.apiCall("/social");
       if (response && response.success) {
         // Update total accounts
@@ -260,7 +266,28 @@ class RionaAIDashboard {
         );
       }
     } catch (error) {
-      console.warn("Could not load dashboard metrics:", error);
+      console.warn(
+        "Could not load dashboard metrics from API, using localStorage:",
+        error,
+      );
+
+      // Fallback to localStorage data
+      const accounts = this.getStoredAccounts();
+      const users = this.getStoredUsers();
+
+      const totalAccounts = accounts.length;
+      const activeAccounts = accounts.filter(
+        (acc) => acc.status === "active",
+      ).length;
+
+      this.updateElement("totalAccounts", totalAccounts);
+      this.updateElement("activeAccounts", activeAccounts);
+
+      // Update uptime with stored data or default
+      const settings = this.getStoredSettings();
+      const startTime = this.getFromStorage("startTime", Date.now());
+      const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+      this.updateUptime(uptimeSeconds);
     }
   }
 
@@ -780,14 +807,119 @@ class RionaAIDashboard {
       : { success: false, error: "Mock endpoint not found" };
   }
 
+  // Storage Management
+  saveToStorage(key, data) {
+    try {
+      localStorage.setItem(`riona_${key}`, JSON.stringify(data));
+    } catch (error) {
+      console.error("Error saving to localStorage:", error);
+    }
+  }
+
+  getFromStorage(key, defaultValue = null) {
+    try {
+      const data = localStorage.getItem(`riona_${key}`);
+      return data ? JSON.parse(data) : defaultValue;
+    } catch (error) {
+      console.error("Error reading from localStorage:", error);
+      return defaultValue;
+    }
+  }
+
+  // Users Management
+  getStoredUsers() {
+    return this.getFromStorage("users", [
+      {
+        id: 1,
+        name: "Administrador",
+        email: "admin@riona.ai",
+        role: "admin",
+        subscription: "enterprise",
+        status: "active",
+        created: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+      },
+    ]);
+  }
+
+  saveUser(user) {
+    const users = this.getStoredUsers();
+    const existingIndex = users.findIndex((u) => u.id === user.id);
+
+    if (existingIndex >= 0) {
+      users[existingIndex] = { ...users[existingIndex], ...user };
+    } else {
+      user.id = Date.now();
+      user.created = new Date().toISOString();
+      users.push(user);
+    }
+
+    this.saveToStorage("users", users);
+    return user;
+  }
+
+  // Accounts Management
+  getStoredAccounts() {
+    return this.getFromStorage("accounts", []);
+  }
+
+  saveAccount(account) {
+    const accounts = this.getStoredAccounts();
+    const existingIndex = accounts.findIndex((a) => a.id === account.id);
+
+    if (existingIndex >= 0) {
+      accounts[existingIndex] = { ...accounts[existingIndex], ...account };
+    } else {
+      account.id = Date.now();
+      account.created = new Date().toISOString();
+      account.status = "active";
+      accounts.push(account);
+    }
+
+    this.saveToStorage("accounts", accounts);
+    this.updateActiveAccountsCount();
+    return account;
+  }
+
+  updateActiveAccountsCount() {
+    const accounts = this.getStoredAccounts();
+    const activeCount = accounts.filter(
+      (acc) => acc.status === "active",
+    ).length;
+    this.updateElement("activeAccounts", activeCount);
+  }
+
+  // Analytics Storage
+  saveAnalyticsData(data) {
+    const analytics = this.getFromStorage("analytics", {});
+    const today = new Date().toISOString().split("T")[0];
+
+    analytics[today] = {
+      ...analytics[today],
+      ...data,
+      timestamp: new Date().toISOString(),
+    };
+
+    this.saveToStorage("analytics", analytics);
+  }
+
+  getAnalyticsData(days = 30) {
+    const analytics = this.getFromStorage("analytics", {});
+    const dates = Object.keys(analytics).sort().slice(-days);
+    return dates.map((date) => analytics[date]);
+  }
+
   // Settings Management
   getStoredSettings() {
-    try {
-      const settings = localStorage.getItem("rionaSettings");
-      return settings ? JSON.parse(settings) : this.getDefaultSettings();
-    } catch (error) {
-      return this.getDefaultSettings();
-    }
+    return this.getFromStorage("settings", this.getDefaultSettings());
+  }
+
+  saveSettings(settings) {
+    const currentSettings = this.getStoredSettings();
+    const updatedSettings = { ...currentSettings, ...settings };
+    this.saveToStorage("settings", updatedSettings);
+    this.applySettings(updatedSettings);
+    return updatedSettings;
   }
 
   getDefaultSettings() {
@@ -798,6 +930,12 @@ class RionaAIDashboard {
       refreshInterval: 30000,
       notifications: true,
       language: "es",
+      automationSettings: {
+        likesPerHour: 30,
+        commentsPerHour: 10,
+        followsPerHour: 15,
+        hashtags: ["#ai", "#technology", "#innovation"],
+      },
     };
   }
 
@@ -827,6 +965,11 @@ class RionaAIDashboard {
   }
 
   updateUptime(seconds) {
+    if (!seconds || isNaN(seconds) || seconds < 0) {
+      this.updateElement("systemUptime", "0h 0m");
+      return;
+    }
+
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     this.updateElement("systemUptime", `${hours}h ${minutes}m`);
@@ -851,8 +994,38 @@ class RionaAIDashboard {
 
   toggleSidebar() {
     const sidebar = document.querySelector(".sidebar");
+    const overlay = document.querySelector(".sidebar-overlay");
+
     if (sidebar) {
-      sidebar.classList.toggle("active");
+      const isActive = sidebar.classList.toggle("active");
+
+      // Create overlay if it doesn't exist
+      if (!overlay && window.innerWidth <= 1024) {
+        const newOverlay = document.createElement("div");
+        newOverlay.className = "sidebar-overlay";
+        newOverlay.addEventListener("click", () => this.closeSidebar());
+        document.body.appendChild(newOverlay);
+      }
+
+      // Toggle overlay for mobile
+      if (window.innerWidth <= 1024) {
+        const currentOverlay = document.querySelector(".sidebar-overlay");
+        if (currentOverlay) {
+          currentOverlay.classList.toggle("active", isActive);
+        }
+      }
+    }
+  }
+
+  closeSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const overlay = document.querySelector(".sidebar-overlay");
+
+    if (sidebar) {
+      sidebar.classList.remove("active");
+    }
+    if (overlay) {
+      overlay.classList.remove("active");
     }
   }
 
@@ -939,7 +1112,7 @@ class RionaAIDashboard {
 
                     <h3>Primeros Pasos</h3>
                     <ol>
-                        <li>Ve a <strong>Automatizaci��n</strong> para agregar tu primera cuenta de Instagram</li>
+                        <li>Ve a <strong>Automatización</strong> para agregar tu primera cuenta de Instagram</li>
                         <li>Configura los hashtags objetivo en <strong>Configuración</strong></li>
                         <li>Ajusta la personalidad del AI en <strong>Agente AI</strong></li>
                         <li>Ejecuta las automatizaciones desde <strong>Redes Sociales</strong></li>
@@ -959,32 +1132,87 @@ class RionaAIDashboard {
     this.addLogEntry("info", "Ejecutando test de debugging API...");
 
     const endpoints = [
-      "/api/test",
+      "/api/health",
       "/api/users",
       "/api/accounts",
-      "/api/health",
+      "/api/social",
     ];
+
+    let successCount = 0;
+    let totalCount = endpoints.length;
 
     for (const endpoint of endpoints) {
       try {
         console.log(`Testing ${endpoint}...`);
         const response = await fetch(endpoint);
-        const text = await response.text();
 
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const text = await response.text();
         console.log(
           `✅ ${endpoint}: Status ${response.status}, Length ${text.length}`,
         );
-        console.log(`Content: ${text.substring(0, 100)}...`);
 
-        const parsed = JSON.parse(text);
-        this.addLogEntry("success", `${endpoint} - OK (${text.length} chars)`);
+        // Try to parse JSON
+        try {
+          const parsed = JSON.parse(text);
+          console.log(`Content preview:`, Object.keys(parsed));
+          this.addLogEntry(
+            "success",
+            `${endpoint} - OK (${text.length} chars)`,
+          );
+          successCount++;
+        } catch (parseError) {
+          console.log(
+            `Content (first 100 chars): ${text.substring(0, 100)}...`,
+          );
+          this.addLogEntry(
+            "warning",
+            `${endpoint} - Response not JSON: ${parseError.message}`,
+          );
+        }
       } catch (error) {
         console.error(`❌ ${endpoint}: ${error.message}`);
         this.addLogEntry("error", `${endpoint} - Error: ${error.message}`);
       }
     }
 
-    console.log("🔧 Debug test completed");
+    const summary = `Test completado: ${successCount}/${totalCount} endpoints OK`;
+    console.log(`🔧 ${summary}`);
+    this.addLogEntry("info", summary);
+
+    // Also test localStorage
+    this.testLocalStorage();
+  }
+
+  testLocalStorage() {
+    try {
+      // Test localStorage functionality
+      const testData = { test: "data", timestamp: Date.now() };
+      this.saveToStorage("test", testData);
+      const retrieved = this.getFromStorage("test");
+
+      if (JSON.stringify(testData) === JSON.stringify(retrieved)) {
+        this.addLogEntry("success", "LocalStorage funcionando correctamente");
+      } else {
+        this.addLogEntry("error", "LocalStorage error en datos");
+      }
+
+      // Clean up test data
+      localStorage.removeItem("riona_test");
+
+      // Show current data counts
+      const users = this.getStoredUsers();
+      const accounts = this.getStoredAccounts();
+      this.addLogEntry(
+        "info",
+        `Datos: ${users.length} usuarios, ${accounts.length} cuentas`,
+      );
+    } catch (error) {
+      this.addLogEntry("error", `Error en LocalStorage: ${error.message}`);
+    }
   }
 }
 
