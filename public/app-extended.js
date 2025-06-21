@@ -986,26 +986,70 @@ class ExtendedDashboard extends RionaAIDashboard {
 
   updateHashtagAnalytics() {
     const hashtagAnalytics = document.getElementById("hashtagAnalytics");
-    if (!hashtagAnalytics || !this.analyticsData.hashtagPerformance) return;
+    if (!hashtagAnalytics) return;
 
-    hashtagAnalytics.innerHTML = this.analyticsData.hashtagPerformance
+    const data = this.analyticsData;
+
+    if (
+      !data.hasData ||
+      !data.hashtags ||
+      Object.keys(data.hashtags).length === 0
+    ) {
+      hashtagAnalytics.innerHTML = `
+                <div class="no-hashtag-data">
+                    <i class="fas fa-hashtag"></i>
+                    <p>No hay datos de hashtags disponibles</p>
+                    <small>Los hashtags aparecerán después de ejecutar automatizaciones</small>
+                </div>
+            `;
+      return;
+    }
+
+    const hashtagEntries = Object.entries(data.hashtags)
+      .sort((a, b) => b[1].count - a[1].count) // Sort by usage count
+      .slice(0, 10); // Show top 10
+
+    hashtagAnalytics.innerHTML = hashtagEntries
       .map(
-        (hashtag) => `
+        ([hashtag, info]) => `
             <div class="hashtag-item">
                 <div class="hashtag-info">
-                    <span class="hashtag-name">#${hashtag.hashtag}</span>
-                    <span class="hashtag-posts">${hashtag.posts} posts</span>
+                    <span class="hashtag-name">#${hashtag}</span>
+                    <span class="hashtag-usage">${info.count} cuentas</span>
                 </div>
-                <div class="hashtag-engagement">
-                    <div class="engagement-bar">
-                        <div class="engagement-fill" style="width: ${hashtag.engagement}%"></div>
-                    </div>
-                    <span class="engagement-value">${hashtag.engagement}%</span>
+                <div class="hashtag-accounts">
+                    <small>Usado por: ${info.accounts.join(", ")}</small>
                 </div>
             </div>
         `,
       )
       .join("");
+  }
+
+  exportAnalyticsData() {
+    try {
+      const data = {
+        exportDate: new Date().toISOString(),
+        accounts: this.getStoredAccounts(),
+        analytics: this.getFromStorage("analyticsData", {}),
+        executionHistory: this.getFromStorage("executionHistory", []),
+        timeRange: this.analyticsData?.timeRange || "all",
+      };
+
+      const dataStr = JSON.stringify(data, null, 2);
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(dataBlob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `riona-analytics-${new Date().toISOString().split("T")[0]}.json`;
+      link.click();
+
+      URL.revokeObjectURL(url);
+      this.addLogEntry("success", "Datos de analytics exportados exitosamente");
+    } catch (error) {
+      this.addLogEntry("error", `Error exportando datos: ${error.message}`);
+    }
   }
 
   updateAccountPerformanceTable() {
