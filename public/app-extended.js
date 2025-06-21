@@ -2,18 +2,19 @@
 class ExtendedDashboard extends RionaAIDashboard {
   constructor() {
     super();
-    this.users = [];
-    this.accounts = [];
-    this.analyticsData = {
+    this.users = this.getStoredUsers();
+    this.accounts = this.getStoredAccounts();
+    this.analyticsData = this.getFromStorage("analyticsData", {
       totalLikes: 0,
       totalComments: 0,
       totalFollows: 0,
       engagementRate: 0,
-    };
+    });
     this.charts = {};
-    this.automationStatus = {};
+    this.automationStatus = this.getFromStorage("automationStatus", {});
     this.setupExtendedEventListeners();
     this.initializeCharts();
+    this.loadStoredData();
   }
 
   setupExtendedEventListeners() {
