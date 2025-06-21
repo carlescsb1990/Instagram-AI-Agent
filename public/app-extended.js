@@ -22,6 +22,9 @@ class ExtendedDashboard extends RionaAIDashboard {
     this.renderUsers();
     this.renderAccounts();
     this.updateCounts();
+
+    // Load real analytics immediately
+    this.loadAnalytics("24h", "all");
   }
 
   updateCounts() {
