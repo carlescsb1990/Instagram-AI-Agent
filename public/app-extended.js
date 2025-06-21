@@ -432,6 +432,168 @@ class ExtendedDashboard extends RionaAIDashboard {
     ];
   }
 
+  // User CRUD Operations
+  showAddUserModal() {
+    const modal = document.getElementById("addUserModal");
+    if (modal) {
+      // Reset form
+      const form = document.getElementById("addUserForm");
+      if (form) form.reset();
+
+      modal.classList.add("active");
+    }
+  }
+
+  handleAddUser(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const userData = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      role: formData.get("role"),
+      subscription: formData.get("subscription"),
+    };
+
+    // Save user using parent class method
+    const savedUser = this.saveUser(userData);
+    this.users = this.getStoredUsers();
+
+    // Update UI
+    this.renderUsers();
+    this.updateCounts();
+
+    // Close modal
+    const modal = document.getElementById("addUserModal");
+    if (modal) modal.classList.remove("active");
+
+    this.addLogEntry(
+      "success",
+      `Usuario ${savedUser.name} creado exitosamente`,
+    );
+  }
+
+  editUser(userId) {
+    const user = this.users.find((u) => u.id === parseInt(userId));
+    if (user) {
+      // Pre-fill form with user data
+      const form = document.getElementById("addUserForm");
+      if (form) {
+        form.name.value = user.name;
+        form.email.value = user.email;
+        form.role.value = user.role;
+        form.subscription.value = user.subscription;
+      }
+
+      this.showAddUserModal();
+    }
+  }
+
+  deleteUser(userId) {
+    if (confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
+      const users = this.getStoredUsers();
+      const filteredUsers = users.filter((u) => u.id !== parseInt(userId));
+      this.saveToStorage("users", filteredUsers);
+
+      this.users = filteredUsers;
+      this.renderUsers();
+      this.updateCounts();
+
+      this.addLogEntry("warning", "Usuario eliminado");
+    }
+  }
+
+  // Account CRUD Operations
+  showAddAccountModal() {
+    const modal = document.getElementById("addAccountModal");
+    if (modal) {
+      // Reset form
+      const form = document.getElementById("addAccountForm");
+      if (form) form.reset();
+
+      modal.classList.add("active");
+    }
+  }
+
+  handleAddAccount(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const accountData = {
+      username: formData.get("username"),
+      password: formData.get("password"),
+      platform: formData.get("platform") || "instagram",
+      userId: formData.get("userId"),
+      settings: {
+        autoLike: formData.get("autoLike") === "on",
+        autoComment: formData.get("autoComment") === "on",
+        autoFollow: formData.get("autoFollow") === "on",
+        maxLikesPerHour: parseInt(formData.get("maxLikesPerHour")) || 30,
+        targetHashtags:
+          formData
+            .get("targetHashtags")
+            ?.split(",")
+            .map((h) => h.trim()) || [],
+      },
+    };
+
+    // Save account using parent class method
+    const savedAccount = this.saveAccount(accountData);
+    this.accounts = this.getStoredAccounts();
+
+    // Update UI
+    this.renderAccounts();
+    this.updateCounts();
+
+    // Close modal
+    const modal = document.getElementById("addAccountModal");
+    if (modal) modal.classList.remove("active");
+
+    this.addLogEntry(
+      "success",
+      `Cuenta @${savedAccount.username} agregada exitosamente`,
+    );
+  }
+
+  editAccount(accountId) {
+    const account = this.accounts.find((a) => a.id === parseInt(accountId));
+    if (account) {
+      // Pre-fill form with account data
+      const form = document.getElementById("addAccountForm");
+      if (form) {
+        form.username.value = account.username;
+        form.platform.value = account.platform;
+        form.userId.value = account.userId;
+        if (account.settings) {
+          form.autoLike.checked = account.settings.autoLike;
+          form.autoComment.checked = account.settings.autoComment;
+          form.autoFollow.checked = account.settings.autoFollow;
+          form.maxLikesPerHour.value = account.settings.maxLikesPerHour;
+          form.targetHashtags.value =
+            account.settings.targetHashtags?.join(", ");
+        }
+      }
+
+      this.showAddAccountModal();
+    }
+  }
+
+  deleteAccount(accountId) {
+    if (confirm("¿Estás seguro de que quieres eliminar esta cuenta?")) {
+      const accounts = this.getStoredAccounts();
+      const filteredAccounts = accounts.filter(
+        (a) => a.id !== parseInt(accountId),
+      );
+      this.saveToStorage("accounts", filteredAccounts);
+
+      this.accounts = filteredAccounts;
+      this.renderAccounts();
+      this.updateCounts();
+
+      this.addLogEntry("warning", "Cuenta eliminada");
+    }
+  }
+
   renderAccounts() {
     const accountsGrid = document.getElementById("accountsGrid");
     if (!accountsGrid) return;
