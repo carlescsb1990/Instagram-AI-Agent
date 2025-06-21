@@ -1,506 +1,434 @@
-# 🤖 Riona AI Agent - Sistema Completo de Automatización IA
+# 🤖 Riona AI Agent - Sistema Completo de Automatización Social
 
-[![Estado](https://img.shields.io/badge/Estado-100%25%20Funcional-brightgreen)]()
-[![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)]()
-[![Node.js](https://img.shields.io/badge/Node.js-22.x-green)]()
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.x-blue)]()
+## 🌟 Descripción
 
-## 🎯 **¿Qué es Riona AI Agent?**
+**Riona AI Agent** es la plataforma más avanzada de automatización para redes sociales con inteligencia artificial integrada. Combina automatización inteligente de Instagram con generación de contenido AI usando Google Gemini 2.0 Flash.
 
-Riona AI Agent es un **sistema de automatización inteligente** que utiliza IA generativa para gestionar múltiples plataformas de redes sociales de forma autónoma. El sistema incluye:
+### ✨ Características Principales
 
-- **🧠 Inteligencia Artificial**: Google Gemini 2.0 Flash
-- **📱 Multi-Plataforma**: Instagram, Twitter, GitHub
-- **🎭 Caracteres Personalizables**: Múltiples personalidades AI
-- **📊 Dashboard Completo**: Interfaz web moderna y funcional
-- **🔄 Automatización**: Procesos inteligentes en tiempo real
+- 🤖 **AI Generativa Avanzada**: 50 claves API de Google Gemini para contenido contextual
+- 📱 **Automatización Instagram**: Likes, comentarios, follows, DMs y stories automáticos
+- 👥 **Sistema Multi-Usuario**: Gestión completa de usuarios y roles
+- 📊 **Analytics Profesionales**: Métricas detalladas y reportes en tiempo real
+- 🛡️ **Anti-Detección**: Técnicas profesionales para evitar restricciones
+- 🎨 **Dashboard Moderno**: Interfaz completa con 7 secciones principales
 
----
+## 🚀 Instalación Rápida
 
-## 🚀 **Aplicación 100% Funcional**
+### Prerrequisitos
 
-### **✅ Backend API (Puerto 3000)**
+- Node.js 16+
+- npm o yarn
+- Git
 
-- **Express.js + TypeScript**: Servidor robusto y escalable
-- **Endpoints REST**: API completa para todas las funcionalidades
-- **Sistema de Agentes**: IA con caracteres personalizables
-- **Automatización**: Instagram, Twitter, GitHub
-- **Logging**: Sistema completo con Winston
-- **Seguridad**: Helmet, CORS, validaciones
-
-### **✅ Frontend Dashboard**
-
-- **Interfaz Moderna**: HTML5, CSS3, JavaScript ES6+
-- **Dashboard en Tiempo Real**: Monitoreo completo del sistema
-- **Panel de Control**: Gestión de agentes y automatización
-- **Documentación Integrada**: Guías completas y troubleshooting
-- **Responsive**: Optimizado para todos los dispositivos
-
----
-
-## 🏗️ **Arquitectura del Sistema**
-
-```
-┌─ Frontend Dashboard (http://localhost:3000/)
-│  ├─ Dashboard Principal
-│  ├─ Gestión de Agentes AI
-│  ├─ Control de Redes Sociales
-│  ├─ Analíticas y Métricas
-│  └─ Documentación Completa
-│
-├─ Backend API (Express + TypeScript)
-│  ├─ Sistema de Agentes AI
-│  │  ├─ Google Gemini 2.0 Flash
-│  │  ├─ ArcanEdge System Agent
-│  │  ├─ Elon Character
-│  │  └─ Sample Character
-│  │
-│  ├─ Automatización de Redes Sociales
-│  │  ├─ Instagram (Puppeteer + API)
-│  │  ├─ Twitter (API v2)
-│  │  └─ GitHub (API)
-│  │
-│  ├─ Procesamiento de Contenido
-│  ├─ Base de Datos (MongoDB - Opcional)
-│  └─ Sistema de Logging (Winston)
-│
-└─ Configuración y Variables de Entorno
-```
-
----
-
-## 📱 **Cómo Usar la Aplicación**
-
-### **🌐 Acceso Web**
-
-1. **Dashboard Principal**: `http://localhost:3000/`
-2. **Estado de Salud**: `http://localhost:3000/health`
-3. **API Status**: `http://localhost:3000/status`
-4. **Agente AI**: `http://localhost:3000/agent`
-5. **Redes Sociales**: `http://localhost:3000/social`
-
-### **📊 Funcionalidades del Dashboard**
-
-#### **🏠 Dashboard Principal**
-
-- **Estado del Sistema**: Monitoreo en tiempo real
-- **Métricas de Rendimiento**: CPU, RAM, uptime
-- **Estado de Agentes**: IA y automatización
-- **Plataformas Sociales**: Instagram, Twitter, GitHub
-- **Registro de Actividad**: Logs en tiempo real
-
-#### **🧠 Agente AI**
-
-- **Caracteres Disponibles**: Selección y configuración
-- **Generador de Contenido**: IA con prompts personalizados
-- **Pruebas del Agente**: Testing en tiempo real
-- **Configuración**: Parámetros y ajustes
-
-#### **📱 Redes Sociales**
-
-- **Instagram**: Automatización de comentarios e interacciones
-- **Twitter**: Gestión de tweets y engagement
-- **GitHub**: Monitoreo de repositorios (en desarrollo)
-- **Controles**: Iniciar/detener automatización por plataforma
-
-#### **📚 Documentación**
-
-- **Guía Completa**: Arquitectura y funcionalidades
-- **API Reference**: Endpoints y ejemplos
-- **Troubleshooting**: Solución de problemas
-- **Configuración**: Variables de entorno
-
----
-
-## 🔧 **Configuración Completa**
-
-### **📋 Requisitos**
-
-- **Node.js**: 22.x o superior
-- **npm**: 10.x o superior
-- **TypeScript**: 5.7.x (incluido)
-
-### **⚙️ Variables de Entorno**
-
-Crear archivo `.env` en la raíz del proyecto:
+### Pasos de Instalación
 
 ```bash
-# Configuración del Sistema
+# 1. Clonar el repositorio
+git clone https://github.com/tu-usuario/riona-ai-agent.git
+cd riona-ai-agent
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Configurar variables de entorno
+cp .env.example .env
+
+# 4. Compilar y ejecutar
+npm start
+```
+
+### 🌐 Acceso al Dashboard
+
+Una vez iniciado, accede al dashboard en:
+
+```
+http://localhost:3001
+```
+
+## ⚙️ Configuración
+
+### Variables de Entorno
+
+El archivo `.env` incluye:
+
+```env
+# Entorno
 NODE_ENV=development
 
-# Base de Datos (Opcional en desarrollo)
-MONGODB_URI=mongodb://localhost:27017/riona-ai-agent
+# Base de datos (opcional para desarrollo)
+MONGODB_URI=
 
-# Instagram (Opcional)
-IGusername=tu_usuario_instagram
-IGpassword=tu_contraseña_instagram
+# Credenciales Instagram (agregar en el dashboard)
+IGusername=
+IGpassword=
 
-# Twitter API (Opcional)
-TWITTER_API_KEY=tu_api_key
-TWITTER_API_SECRET=tu_api_secret
-TWITTER_ACCESS_TOKEN=tu_access_token
-TWITTER_ACCESS_SECRET=tu_access_secret
-TWITTER_BEARER_TOKEN=tu_bearer_token
-
-# Google Gemini API Keys (Ya incluidas - 50 keys)
+# API Keys de Google Gemini (50 keys incluidas)
 GEMINI_API_KEY_1=AIzaSyBwOdDKvtandLwzPhtGS_nqFYzkWY0_RQE
-# ... (más keys disponibles en .env.example)
+GEMINI_API_KEY_2=AIzaSyA35Q0b3PkCw_EssBhlBqFAE7rH7aZChp8
+# ... hasta 50 keys
 ```
 
-### **🚀 Instalación y Ejecución**
+### 🎯 Configuración Inicial
+
+1. **Acceder al Dashboard**: `http://localhost:3001`
+2. **Crear Usuario**: Ve a "Automatización" → "Agregar Usuario"
+3. **Agregar Cuenta IG**: "Agregar Cuenta" con credenciales
+4. **Configurar AI**: En "Agente AI" selecciona personalidad
+5. **Ejecutar**: Desde "Redes Sociales" inicia automatización
+
+## 📱 Funcionalidades del Dashboard
+
+### 🏠 Dashboard Principal
+
+- Métricas en tiempo real
+- Estado del sistema
+- Acciones rápidas
+- Actividad reciente
+
+### 🤖 Agente AI
+
+- Selección de personalidades AI
+- Generación de contenido
+- Configuración de estilo
+- Preview en tiempo real
+
+### 📱 Redes Sociales
+
+- Control de automatización Instagram
+- Monitoreo de plataformas
+- Estados de conexión
+- Ejecución manual
+
+### ⚡ Automatización
+
+- Gestión de usuarios
+- Configuración de cuentas IG
+- Reglas de automatización
+- Límites y horarios
+
+### 📊 Analíticas
+
+- Métricas detalladas
+- Gráficos en tiempo real
+- Rendimiento por cuenta
+- Análisis de hashtags
+
+### ⚙️ Configuración
+
+- Configuración AI
+- Seguridad del sistema
+- Backup y restauración
+- Variables globales
+
+### 📚 Documentación
+
+- Guías completas
+- Mejores prácticas
+- Solución de problemas
+- API Reference
+
+## 🤖 Sistema de Inteligencia Artificial
+
+### Personalidades Disponibles
+
+#### 🚀 ArcanEdge System Agent
+
+- **Especialidad**: Tecnología e innovación
+- **Tono**: Profesional, técnico, visionario
+- **Ideal para**: Cuentas tech, startups, AI
+
+#### ⚡ Elon Style
+
+- **Especialidad**: Emprendimiento disruptivo
+- **Tono**: Directo, visionario, provocativo
+- **Ideal para**: Emprendedores, innovadores
+
+#### 🌟 General Purpose
+
+- **Especialidad**: Versatilidad
+- **Tono**: Amigable, adaptable, equilibrado
+- **Ideal para**: Cuentas personales, múltiples nichos
+
+### Generación de Contenido
+
+El sistema genera automáticamente:
+
+- ✅ Comentarios contextuales inteligentes
+- ✅ Captions para posts
+- ✅ Respuestas a comentarios
+- ✅ Mensajes directos personalizados
+
+## 📱 Automatización de Instagram
+
+### Funciones Principales
+
+#### ❤️ Likes Automáticos
+
+- Targeting por hashtags
+- Límites configurables (30-150/hora)
+- Delays naturales anti-detección
+
+#### 💬 Comentarios AI
+
+- Generación contextual inteligente
+- 50 API keys rotativas
+- Comentarios únicos y naturales
+
+#### 👥 Follows Inteligentes
+
+- Estrategias de targeting múltiples
+- Ratios de follow/unfollow optimizados
+- Límites seguros por tipo de cuenta
+
+#### 📩 Mensajes Directos
+
+- DMs personalizados automáticos
+- Templates configurables
+- Seguimiento de conversaciones
+
+### Configuraciones Recomendadas
+
+#### 🆕 Cuenta Nueva (0-1K seguidores)
+
+```
+Likes: 30-40/hora
+Comentarios: 10-15/hora
+Follows: 15-20/hora
+Horario: 9AM-9PM
+```
+
+#### 📈 Cuenta en Crecimiento (1K-10K)
+
+```
+Likes: 60-90/hora
+Comentarios: 25-35/hora
+Follows: 30-45/hora
+Horario: 8AM-11PM
+```
+
+#### 🏆 Cuenta Establecida (10K+)
+
+```
+Likes: 100-150/hora
+Comentarios: 40-60/hora
+Follows: 50-80/hora
+Horario: 24/7 con pausas
+```
+
+## 🛡️ Seguridad y Anti-Detección
+
+### Técnicas Implementadas
+
+- ⏱️ **Delays Aleatorios**: 3-8 segundos entre acciones
+- 🕒 **Horarios Humanos**: Actividad 9AM-11PM
+- 🔄 **User Agent Rotation**: Cambio automático
+- 🍪 **Gestión de Cookies**: Persistencia de sesiones
+- 📍 **Proxy Support**: Soporte para proxies rotativos
+- 🎭 **Comportamiento Humano**: Patrones no repetitivos
+
+### Mejores Prácticas
+
+1. **Empezar Conservador**: 30-50 acciones/hora inicialmente
+2. **Monitorear Constantly**: Revisar métricas diariamente
+3. **Usar Hashtags Específicos**: Evitar hashtags genéricos
+4. **Respetar Límites**: No exceder 200 acciones/día
+5. **Pausas Regulares**: Descansos cada hora
+
+## 📊 Analytics y Métricas
+
+### KPIs Principales
+
+- 📈 **Crecimiento de Seguidores**: Meta 5-10% mensual
+- ❤️ **Engagement Rate**: Meta >3%
+- 🔄 **Follow-Back Rate**: Meta >20%
+- 📱 **Reach Promedio**: Trending upward
+
+### Reportes Disponibles
+
+- **Actividad por Hora**: Gráficos de acciones realizadas
+- **Performance por Hashtag**: Efectividad de targeting
+- **Comparación de Cuentas**: Rendimiento relativo
+- **Tendencias Temporales**: Análisis de períodos
+
+## 🔧 API y Desarrollo
+
+### Endpoints Principales
 
 ```bash
-# 1. Instalar dependencias
-npm install
+# Usuarios
+GET    /api/users
+POST   /api/users
+GET    /api/users/:id
+PUT    /api/users/:id
+DELETE /api/users/:id
 
-# 2. Compilar TypeScript
+# Cuentas Instagram
+GET    /api/accounts
+POST   /api/users/:userId/accounts
+
+# Generación AI
+POST   /api/generate
+
+# Automatización
+POST   /api/social/:platform/:action
+
+# Analytics
+GET    /api/analytics
+
+# Sistema
+GET    /api/health
+GET    /api/config
+POST   /api/backup
+```
+
+### Ejemplo de Uso
+
+```javascript
+// Generar comentario AI
+const response = await fetch("/api/generate", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    type: "comment",
+    context: "Post sobre tecnología startup",
+    character: "arcane-edge",
+  }),
+});
+
+const result = await response.json();
+console.log(result.data.content);
+// "¡Increíble enfoque sobre la innovación! 🚀"
+```
+
+## 🔍 Solución de Problemas
+
+### Problemas Comunes
+
+#### ❌ Login Failures
+
+```bash
+# Verificar credenciales
+# Completar challenges manualmente
+# Usar cookies guardadas
+```
+
+#### ⏸️ Action Blocks
+
+```bash
+# Pausar automatización inmediatamente
+# Esperar duración completa + 2 horas
+# Reducir configuraciones 30-50%
+```
+
+#### 🌐 Network Issues
+
+```bash
+# Verificar conexión proxy
+# Aumentar timeouts
+# Reiniciar browser cada 2-3 horas
+```
+
+### Logs y Debugging
+
+```bash
+# Ver logs del sistema
+GET /api/health
+
+# Logs detallados en consola
+npm start
+
+# Modo debug
+NODE_ENV=development npm start
+```
+
+## 🚀 Deployment
+
+### Desarrollo Local
+
+```bash
+npm start
+# Dashboard: http://localhost:3001
+```
+
+### Producción
+
+```bash
+# Construir proyecto
 npm run build
 
-# 3. Iniciar servidor
-npm run start
+# Variables de entorno
+NODE_ENV=production
+PORT=3000
+MONGODB_URI=mongodb://...
 
-# ✅ La aplicación estará disponible en http://localhost:3000/
+# Ejecutar
+node build/index.js
 ```
 
----
+### Docker (Opcional)
 
-## 🎯 **Funcionalidades Principales**
-
-### **🤖 Sistema de IA**
-
-- **Google Gemini 2.0 Flash**: Modelo de IA de última generación
-- **50 API Keys**: Configuradas para alta disponibilidad
-- **Caracteres Personalizables**: Múltiples personalidades
-- **Generación de Contenido**: Posts, comentarios, tweets
-
-### **📱 Automatización de Redes Sociales**
-
-#### **📸 Instagram**
-
-- ✅ **Automatización de Comentarios**: IA contextual
-- ✅ **Interacción con Posts**: Likes y engagement
-- ✅ **Gestión de Sesiones**: Cookies y autenticación
-- ✅ **Modo Headless**: Funcionamiento en servidor
-
-#### **🐦 Twitter**
-
-- ✅ **API v2 Integrada**: Autenticación completa
-- ✅ **Publicación Automática**: Tweets programados
-- ✅ **Límites de Rate**: Gestión inteligente
-- ✅ **Engagement Automation**: Respuestas automáticas
-
-#### **🐙 GitHub**
-
-- 🔄 **En Desarrollo**: Monitoreo de repositorios
-- 🔄 **Issues Automation**: Respuestas automáticas
-- 🔄 **Code Analysis**: Análisis de código
-
-### **📊 Monitoreo y Métricas**
-
-- **Tiempo Real**: Actualizaciones cada 30 segundos
-- **Métricas del Sistema**: CPU, RAM, uptime
-- **Estado de Servicios**: Base de datos, IA, APIs
-- **Logs Estructurados**: Winston con rotación diaria
-- **Health Checks**: Endpoints de salud
-
----
-
-## 📡 **API Endpoints Completos**
-
-### **🏠 Endpoints Principales**
-
-| Método | Endpoint  | Descripción                         |
-| ------ | --------- | ----------------------------------- |
-| `GET`  | `/`       | Información del sistema y endpoints |
-| `GET`  | `/health` | Estado de salud con métricas        |
-| `GET`  | `/status` | Estado del servidor                 |
-| `GET`  | `/agent`  | Estado del agente AI                |
-| `GET`  | `/social` | Estado de redes sociales            |
-
-### **🤖 Endpoints de IA**
-
-| Método | Endpoint          | Descripción          |
-| ------ | ----------------- | -------------------- |
-| `POST` | `/api/generate`   | Generar contenido AI |
-| `GET`  | `/api/characters` | Lista de caracteres  |
-
-#### **Ejemplo de Generación AI:**
-
-```bash
-curl -X POST http://localhost:3000/api/generate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "Crea un comentario motivacional",
-    "type": "comment"
-  }'
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+EXPOSE 3001
+CMD ["npm", "start"]
 ```
 
-### **📱 Control de Plataformas**
+## 🤝 Contribución
 
-| Método | Endpoint                      | Descripción            |
-| ------ | ----------------------------- | ---------------------- |
-| `POST` | `/api/social/:platform/start` | Iniciar automatización |
-| `POST` | `/api/social/:platform/stop`  | Detener automatización |
+1. Fork el proyecto
+2. Crear branch (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit cambios (`git commit -m 'Agregar nueva funcionalidad'`)
+4. Push branch (`git push origin feature/nueva-funcionalidad`)
+5. Abrir Pull Request
 
----
+## 📄 Licencia
 
-## 🎭 **Caracteres AI Disponibles**
+Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 
-### **1. ArcanEdge System Agent** ✅ _Activo_
+## 📞 Soporte
 
-- **Especialidad**: Prompt engineering y transformación digital
-- **Estilo**: Profesional, innovador, técnico
-- **Plataformas**: Instagram, Facebook, LinkedIn
-- **Uso**: Contenido empresarial y tecnológico
+- **Email**: support@riona.ai
+- **Documentación**: http://localhost:3001 → Documentación
+- **Issues**: GitHub Issues
+- **Discord**: Riona AI Community
 
-### **2. Elon Character**
+## 🎯 Roadmap
 
-- **Especialidad**: Emprendimiento e innovación
-- **Estilo**: Visionario, disruptivo, motivacional
-- **Plataformas**: Twitter, Instagram
-- **Uso**: Contenido de innovación y futuro
+### Próximas Funcionalidades
 
-### **3. Sample Character**
+- 🐦 **Twitter/X Integration**: Automatización completa
+- 📺 **TikTok Support**: Likes y comentarios automáticos
+- 🔔 **Notificaciones Push**: Alertas en tiempo real
+- 🌍 **Multi-idioma**: Soporte completo i18n
+- 📱 **Mobile App**: Aplicación nativa
+- 🤖 **GPT-4 Integration**: Upgrade del sistema AI
 
-- **Especialidad**: Propósito general
-- **Estilo**: Amigable, conversacional
-- **Plataformas**: Todas
-- **Uso**: Contenido general y pruebas
+### Mejoras Planificadas
 
----
-
-## 🔄 **Flujo de Funcionamiento**
-
-### **🚀 Al Iniciar**
-
-1. **Compilación TypeScript**: Código fuente a JavaScript
-2. **Inicialización del Agente**: Selección de carácter (ArcanEdge)
-3. **Servidor Express**: Puerto 3000 disponible
-4. **Conexión a Servicios**: IA, Base de datos (opcional)
-5. **Automatización**: Ciclos cada 30 segundos
-
-### **🔄 Ciclo de Automatización**
-
-1. **Instagram Agent**: Ejecuta interacciones (si configurado)
-2. **Twitter Agent**: Procesa tweets (si configurado)
-3. **GitHub Agent**: Monitorea repos (en desarrollo)
-4. **Espera**: 30 segundos hasta siguiente iteración
-
-### **🧠 Generación de Contenido**
-
-1. **Prompt del Usuario**: Entrada de texto
-2. **Selección de Carácter**: Personalidad activa
-3. **Procesamiento IA**: Google Gemini
-4. **Contenido Optimizado**: Listo para publicar
+- ⚡ **Performance**: Optimización de velocidad
+- 🔐 **Security**: 2FA y encriptación avanzada
+- 📊 **Analytics**: Más métricas y reportes
+- 🎨 **UI/UX**: Nuevos temas y personalización
 
 ---
 
-## 🛡️ **Seguridad y Configuración**
+## ⭐ ¿Te gusta Riona AI Agent?
 
-### **🔒 Seguridad Implementada**
+Si este proyecto te ha sido útil, considera:
 
-- **Helmet**: Headers de seguridad
-- **CORS**: Control de acceso
-- **Rate Limiting**: Prevención de spam
-- **Validation**: Sanitización de inputs
-- **Environment Variables**: Credenciales seguras
-
-### **🌍 Modos de Operación**
-
-#### **🔧 Desarrollo** (Actual)
-
-- MongoDB opcional
-- Logs detallados
-- Recarga automática
-- Modo no-interactivo
-
-#### **🚀 Producción**
-
-- MongoDB requerido
-- Logs optimizados
-- Rate limiting activo
-- Modo headless completo
+- ⭐ Dar una estrella al repositorio
+- 🐛 Reportar bugs o sugerir mejoras
+- 💰 Apoyar el desarrollo
+- 📢 Compartir con otros developers
 
 ---
 
-## 📊 **Métricas y Monitoreo**
+**© 2024 Riona AI Agent - La evolución de la automatización social inteligente**
 
-### **📈 Métricas del Sistema**
-
-- **Uptime**: Tiempo de funcionamiento
-- **Memoria**: Uso de RAM en tiempo real
-- **CPU**: Carga del procesador
-- **Requests/min**: Tráfico API
-
-### **🔍 Logs Estructurados**
-
-- **Niveles**: INFO, WARN, ERROR
-- **Timestamp**: Marca de tiempo precisa
-- **Contexto**: Información detallada
-- **Rotación**: Archivos diarios
-
-### **⚡ Estado de Servicios**
-
-- **Backend**: Estado del servidor
-- **IA**: Conectividad con Gemini
-- **Base de Datos**: MongoDB (opcional)
-- **Plataformas**: Instagram, Twitter, GitHub
-
----
-
-## 🔧 **Solución de Problemas**
-
-### **❌ Problemas Comunes**
-
-#### **Error: "Cannot GET /"**
-
-```bash
-# Verificar que el servidor esté ejecutándose
-curl http://localhost:3000/health
-
-# Reiniciar si es necesario
-npm run start
-```
-
-#### **Error de Compilación TypeScript**
-
-```bash
-# Verificar errores específicos
-npm run build
-
-# Reinstalar dependencias si es necesario
-rm -rf node_modules package-lock.json
-npm install
-```
-
-#### **Instagram: "Credenciales no configuradas"**
-
-```bash
-# Agregar credenciales al archivo .env
-IGusername=tu_usuario
-IGpassword=tu_contraseña
-
-# Reiniciar servidor
-npm run start
-```
-
-### **🔍 Diagnóstico**
-
-#### **Comandos Útiles**
-
-```bash
-# Estado de salud
-curl http://localhost:3000/health
-
-# Verificar agente AI
-curl http://localhost:3000/agent
-
-# Estado de redes sociales
-curl http://localhost:3000/social
-
-# Logs en tiempo real (si disponible)
-tail -f logs/application.log
-```
-
-#### **Verificación del Sistema**
-
-```bash
-# Comprobar puerto 3000
-netstat -tlnp | grep :3000
-
-# Verificar procesos Node.js
-ps aux | grep node
-
-# Espacio en disco
-df -h
-```
-
----
-
-## 🎯 **Roadmap y Mejoras Futuras**
-
-### **🔄 En Desarrollo**
-
-- [ ] **GitHub Integration**: Automatización completa
-- [ ] **Analytics Dashboard**: Métricas avanzadas
-- [ ] **Multi-Account Support**: Múltiples cuentas por plataforma
-- [ ] **Scheduled Posts**: Publicaciones programadas
-- [ ] **Content Calendar**: Calendario de contenido
-
-### **🚀 Próximas Funcionalidades**
-
-- [ ] **LinkedIn Integration**: Nueva plataforma
-- [ ] **TikTok Support**: Contenido de video
-- [ ] **AI Training**: Entrenamiento personalizado
-- [ ] **Webhook Support**: Integraciones externas
-- [ ] **Mobile App**: Aplicación móvil
-
-### **⚡ Optimizaciones**
-
-- [ ] **Performance**: Optimización de velocidad
-- [ ] **Scalability**: Soporte para múltiples instancias
-- [ ] **Monitoring**: Métricas avanzadas
-- [ ] **Security**: Autenticación y autorización
-- [ ] **Documentation**: API docs automática
-
----
-
-## 📞 **Soporte y Contacto**
-
-### **🛟 Obtener Ayuda**
-
-- **Dashboard**: Logs en tiempo real
-- **Health Endpoint**: `GET /health`
-- **Status Endpoint**: `GET /status`
-- **Documentation**: Panel integrado
-
-### **🐛 Reportar Problemas**
-
-- **GitHub Issues**: Reportar bugs
-- **Feature Requests**: Nuevas funcionalidades
-- **Pull Requests**: Contribuciones
-
-### **📚 Recursos**
-
-- **Documentación**: Dashboard integrado
-- **API Reference**: Endpoints completos
-- **Examples**: Casos de uso
-- **Troubleshooting**: Solución de problemas
-
----
-
-## 📄 **Licencia**
-
-Este proyecto está bajo la licencia ISC.
-
----
-
-## ✨ **Resumen - Estado Actual**
-
-### **✅ 100% FUNCIONAL**
-
-- ✅ **Backend API**: Express + TypeScript funcionando
-- ✅ **Frontend Dashboard**: Interfaz web completa
-- ✅ **Sistema de IA**: Google Gemini integrado
-- ✅ **Automatización**: Instagram configurado
-- ✅ **Monitoreo**: Métricas en tiempo real
-- ✅ **Documentación**: Guías completas
-- ✅ **API Endpoints**: Todos funcionando
-- ✅ **Logs**: Sistema completo
-- ✅ **Seguridad**: Implementada
-
-### **🚀 Listo para Uso**
-
-El sistema está completamente operativo y listo para:
-
-- Monitorear el estado del sistema
-- Generar contenido con IA
-- Automatizar redes sociales
-- Analizar métricas en tiempo real
-- Gestionar configuraciones
-
-**Accede al dashboard en: `http://localhost:3000/`**
-
----
-
-_🤖 Desarrollado con ❤️ usando IA y tecnologías modernas_
+_Hecho con ❤️ y mucha ☕ por el equipo de Riona AI_
