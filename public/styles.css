@@ -160,6 +160,7 @@ html {
   transition: transform var(--transition-normal);
   display: flex;
   flex-direction: column;
+  transform: translateX(0); /* Show by default on desktop */
 }
 
 .sidebar-header {
