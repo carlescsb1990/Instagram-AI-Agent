@@ -91,6 +91,105 @@ class ExtendedDashboard extends RionaAIDashboard {
     setInterval(() => this.updateRealTimeData(), 30000); // Update every 30 seconds
   }
 
+  loadStoredData() {
+    // Load and render stored users and accounts
+    this.renderUsers();
+    this.renderAccounts();
+    this.updateCounts();
+  }
+
+  updateCounts() {
+    // Update counts in dashboard
+    const totalUsers = this.users.length;
+    const totalAccounts = this.accounts.length;
+    const activeAccounts = this.accounts.filter(
+      (acc) => acc.status === "active",
+    ).length;
+
+    this.updateElement("totalUsers", totalUsers);
+    this.updateElement("totalAccounts", totalAccounts);
+    this.updateElement("activeAccounts", activeAccounts);
+  }
+
+  renderUsers() {
+    const usersGrid = document.getElementById("usersGrid");
+    if (!usersGrid || this.users.length === 0) return;
+
+    usersGrid.innerHTML = this.users
+      .map(
+        (user) => `
+            <div class="user-card">
+                <div class="user-header">
+                    <div class="user-info">
+                        <h4>${user.name}</h4>
+                        <p>${user.email}</p>
+                        <div class="role-badge ${user.role}">${user.role}</div>
+                        <div class="subscription-badge ${user.subscription}">${user.subscription}</div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn secondary-btn" onclick="dashboard.editUser(${user.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn danger-btn" onclick="dashboard.deleteUser(${user.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">${this.accounts.filter((acc) => acc.userId === user.id).length}</span>
+                        <span class="stat-label">Cuentas</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">${new Date(user.lastLogin || user.created).toLocaleDateString()}</span>
+                        <span class="stat-label">Último acceso</span>
+                    </div>
+                </div>
+            </div>
+        `,
+      )
+      .join("");
+  }
+
+  renderAccounts() {
+    const accountsGrid = document.getElementById("accountsGrid");
+    if (!accountsGrid || this.accounts.length === 0) return;
+
+    accountsGrid.innerHTML = this.accounts
+      .map(
+        (account) => `
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-info">
+                        <h4>@${account.username}</h4>
+                        <p>${account.platform}</p>
+                        <div class="account-status ${account.status}">${account.status}</div>
+                    </div>
+                    <div class="account-actions">
+                        <button class="btn secondary-btn" onclick="dashboard.editAccount(${account.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn danger-btn" onclick="dashboard.deleteAccount(${account.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">${account.stats?.followers || 0}</span>
+                        <span class="stat-label">Seguidores</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">${account.stats?.following || 0}</span>
+                        <span class="stat-label">Siguiendo</span>
+                    </div>
+                </div>
+            </div>
+        `,
+      )
+      .join("");
+  }
+
   setupModalControls() {
     // User modal
     const userModal = document.getElementById("addUserModal");
