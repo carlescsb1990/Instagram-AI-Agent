@@ -1,10 +1,10 @@
-import { Page, Browser } from 'puppeteer';
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-import { IInstagramAccount } from '../models/User';
-import logger from '../config/logger';
-import { runAgent } from '../Agent';
-import { getInstagramCommentSchema } from '../Agent/schema';
+import { Page, Browser } from "puppeteer";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import { IInstagramAccount } from "../models/User";
+import logger from "../config/logger";
+import { runAgent } from "../Agent";
+import { getInstagramCommentSchema } from "../Agent/schema";
 
 puppeteer.use(StealthPlugin());
 
@@ -21,20 +21,20 @@ export class InstagramService {
   async initialize(): Promise<void> {
     try {
       this.browser = await puppeteer.launch({
-        headless: process.env.NODE_ENV === 'production',
+        headless: process.env.NODE_ENV === "production",
         args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--disable-gpu',
-          '--disable-notifications',
-          '--disable-background-timer-throttling',
-          '--disable-backgrounding-occluded-windows',
-          '--disable-renderer-backgrounding',
-          '--disable-features=TranslateUI'
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run",
+          "--no-zygote",
+          "--disable-gpu",
+          "--disable-notifications",
+          "--disable-background-timer-throttling",
+          "--disable-backgrounding-occluded-windows",
+          "--disable-renderer-backgrounding",
+          "--disable-features=TranslateUI",
         ],
       });
 
@@ -42,23 +42,27 @@ export class InstagramService {
       await this.page.setViewport({ width: 1366, height: 768 });
 
       // Set user agent
-      await this.page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+      await this.page.setUserAgent(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      );
 
       logger.info(`Instagram service initialized for ${this.account.username}`);
     } catch (error) {
-      logger.error('Error initializing Instagram service:', error);
+      logger.error("Error initializing Instagram service:", error);
       throw error;
     }
   }
 
   async login(): Promise<boolean> {
-    if (!this.page) throw new Error('Page not initialized');
+    if (!this.page) throw new Error("Page not initialized");
 
     try {
       // Load cookies if available
       if (this.account.cookies && this.account.cookies.length > 0) {
         await this.page.setCookie(...this.account.cookies);
-        await this.page.goto('https://www.instagram.com/', { waitUntil: 'networkidle2' });
+        await this.page.goto("https://www.instagram.com/", {
+          waitUntil: "networkidle2",
+        });
 
         // Check if already logged in
         const isLoggedIn = await this.page.$("a[href='/direct/inbox/']");
@@ -70,18 +74,26 @@ export class InstagramService {
       }
 
       // Fresh login
-      await this.page.goto('https://www.instagram.com/accounts/login/', { waitUntil: 'networkidle2' });
+      await this.page.goto("https://www.instagram.com/accounts/login/", {
+        waitUntil: "networkidle2",
+      });
 
       // Wait for login form
-      await this.page.waitForSelector('input[name="username"]', { timeout: 10000 });
+      await this.page.waitForSelector('input[name="username"]', {
+        timeout: 10000,
+      });
 
       // Fill credentials
-      await this.page.type('input[name="username"]', this.account.username, { delay: 100 });
-      await this.page.type('input[name="password"]', this.account.password, { delay: 100 });
+      await this.page.type('input[name="username"]', this.account.username, {
+        delay: 100,
+      });
+      await this.page.type('input[name="password"]', this.account.password, {
+        delay: 100,
+      });
 
       // Click login
       await this.page.click('button[type="submit"]');
-      await this.page.waitForNavigation({ waitUntil: 'networkidle2' });
+      await this.page.waitForNavigation({ waitUntil: "networkidle2" });
 
       // Handle potential security checks
       await this.handleSecurityChecks();
@@ -93,7 +105,6 @@ export class InstagramService {
       this.isLoggedIn = true;
       logger.info(`Successfully logged in: ${this.account.username}`);
       return true;
-
     } catch (error) {
       logger.error(`Login failed for ${this.account.username}:`, error);
       return false;
@@ -112,7 +123,9 @@ export class InstagramService {
       }
 
       // Handle "Turn on Notifications" popup
-      const notificationButton = await this.page.$('button:contains("Not Now")');
+      const notificationButton = await this.page.$(
+        'button:contains("Not Now")',
+      );
       if (notificationButton) {
         await notificationButton.click();
         await this.page.waitForTimeout(2000);
@@ -124,22 +137,24 @@ export class InstagramService {
         await suspiciousLogin.click();
         await this.page.waitForTimeout(3000);
       }
-
     } catch (error) {
-      logger.warn('Error handling security checks:', error);
+      logger.warn("Error handling security checks:", error);
     }
   }
 
-  async likePostsByHashtag(hashtag: string, maxLikes: number = 10): Promise<number> {
-    if (!this.isLoggedIn) throw new Error('Not logged in');
-    if (!this.page) throw new Error('Page not initialized');
+  async likePostsByHashtag(
+    hashtag: string,
+    maxLikes: number = 10,
+  ): Promise<number> {
+    if (!this.isLoggedIn) throw new Error("Not logged in");
+    if (!this.page) throw new Error("Page not initialized");
 
     try {
       const url = `https://www.instagram.com/explore/tags/${hashtag}/`;
-      await this.page.goto(url, { waitUntil: 'networkidle2' });
+      await this.page.goto(url, { waitUntil: "networkidle2" });
 
       let likesCount = 0;
-      const posts = await this.page.$$('article div div div div a');
+      const posts = await this.page.$$("article div div div div a");
 
       for (let i = 0; i < Math.min(posts.length, maxLikes); i++) {
         try {
@@ -158,12 +173,13 @@ export class InstagramService {
           }
 
           // Close post modal
-          const closeButton = await this.page.$('button svg[aria-label="Close"]');
+          const closeButton = await this.page.$(
+            'button svg[aria-label="Close"]',
+          );
           if (closeButton) {
             await closeButton.click();
             await this.page.waitForTimeout(1000);
           }
-
         } catch (error) {
           logger.warn(`Error processing post ${i + 1}:`, error);
         }
@@ -171,23 +187,25 @@ export class InstagramService {
 
       logger.info(`Completed liking ${likesCount} posts for #${hashtag}`);
       return likesCount;
-
     } catch (error) {
       logger.error(`Error liking posts for hashtag #${hashtag}:`, error);
       return 0;
     }
   }
 
-  async commentOnPosts(hashtag: string, maxComments: number = 5): Promise<number> {
-    if (!this.isLoggedIn) throw new Error('Not logged in');
-    if (!this.page) throw new Error('Page not initialized');
+  async commentOnPosts(
+    hashtag: string,
+    maxComments: number = 5,
+  ): Promise<number> {
+    if (!this.isLoggedIn) throw new Error("Not logged in");
+    if (!this.page) throw new Error("Page not initialized");
 
     try {
       const url = `https://www.instagram.com/explore/tags/${hashtag}/`;
-      await this.page.goto(url, { waitUntil: 'networkidle2' });
+      await this.page.goto(url, { waitUntil: "networkidle2" });
 
       let commentsCount = 0;
-      const posts = await this.page.$$('article div div div div a');
+      const posts = await this.page.$$("article div div div div a");
 
       for (let i = 0; i < Math.min(posts.length, maxComments); i++) {
         try {
@@ -199,7 +217,9 @@ export class InstagramService {
           const aiComment = await this.generateComment(postContext);
 
           // Find comment box
-          const commentBox = await this.page.$('textarea[placeholder*="comment"]');
+          const commentBox = await this.page.$(
+            'textarea[placeholder*="comment"]',
+          );
           if (commentBox && aiComment) {
             await commentBox.type(aiComment, { delay: 100 });
             await this.page.waitForTimeout(1000);
@@ -209,7 +229,9 @@ export class InstagramService {
             if (submitButton) {
               await submitButton.click();
               commentsCount++;
-              logger.info(`Posted comment ${i + 1} for hashtag #${hashtag}: ${aiComment}`);
+              logger.info(
+                `Posted comment ${i + 1} for hashtag #${hashtag}: ${aiComment}`,
+              );
 
               // Random delay
               await this.page.waitForTimeout(Math.random() * 10000 + 5000);
@@ -217,20 +239,22 @@ export class InstagramService {
           }
 
           // Close post modal
-          const closeButton = await this.page.$('button svg[aria-label="Close"]');
+          const closeButton = await this.page.$(
+            'button svg[aria-label="Close"]',
+          );
           if (closeButton) {
             await closeButton.click();
             await this.page.waitForTimeout(1000);
           }
-
         } catch (error) {
           logger.warn(`Error commenting on post ${i + 1}:`, error);
         }
       }
 
-      logger.info(`Completed commenting on ${commentsCount} posts for #${hashtag}`);
+      logger.info(
+        `Completed commenting on ${commentsCount} posts for #${hashtag}`,
+      );
       return commentsCount;
-
     } catch (error) {
       logger.error(`Error commenting on posts for hashtag #${hashtag}:`, error);
       return 0;
@@ -238,22 +262,25 @@ export class InstagramService {
   }
 
   private async getPostContext(): Promise<string> {
-    if (!this.page) return '';
+    if (!this.page) return "";
 
     try {
       // Get post caption
-      const caption = await this.page.$eval('meta[property="og:description"]',
-        el => el.getAttribute('content') || ''
-      ).catch(() => '');
+      const caption = await this.page
+        .$eval(
+          'meta[property="og:description"]',
+          (el) => el.getAttribute("content") || "",
+        )
+        .catch(() => "");
 
       // Get visible text from post
-      const postText = await this.page.$eval('article',
-        el => el.textContent?.slice(0, 200) || ''
-      ).catch(() => '');
+      const postText = await this.page
+        .$eval("article", (el) => el.textContent?.slice(0, 200) || "")
+        .catch(() => "");
 
-      return caption || postText || 'Instagram post';
+      return caption || postText || "Instagram post";
     } catch (error) {
-      return 'Instagram post';
+      return "Instagram post";
     }
   }
 
@@ -265,35 +292,38 @@ export class InstagramService {
       const result = await runAgent(schema, prompt);
       return result?.comment || this.getRandomComment();
     } catch (error) {
-      logger.warn('Error generating AI comment, using fallback:', error);
+      logger.warn("Error generating AI comment, using fallback:", error);
       return this.getRandomComment();
     }
   }
 
   private getRandomComment(): string {
     const comments = [
-      '¡Increíble! 🔥',
-      'Me encanta este contenido 💙',
-      '¡Excelente trabajo! 👏',
-      'Inspirador 🚀',
-      '¡Qué genial! ✨',
-      'Amazing content! 🙌',
-      'Love this! ❤️',
-      'So good! 🔥'
+      "¡Increíble! 🔥",
+      "Me encanta este contenido 💙",
+      "¡Excelente trabajo! 👏",
+      "Inspirador 🚀",
+      "¡Qué genial! ✨",
+      "Amazing content! 🙌",
+      "Love this! ❤️",
+      "So good! 🔥",
     ];
     return comments[Math.floor(Math.random() * comments.length)];
   }
 
-  async followUsersByHashtag(hashtag: string, maxFollows: number = 10): Promise<number> {
-    if (!this.isLoggedIn) throw new Error('Not logged in');
-    if (!this.page) throw new Error('Page not initialized');
+  async followUsersByHashtag(
+    hashtag: string,
+    maxFollows: number = 10,
+  ): Promise<number> {
+    if (!this.isLoggedIn) throw new Error("Not logged in");
+    if (!this.page) throw new Error("Page not initialized");
 
     try {
       const url = `https://www.instagram.com/explore/tags/${hashtag}/`;
-      await this.page.goto(url, { waitUntil: 'networkidle2' });
+      await this.page.goto(url, { waitUntil: "networkidle2" });
 
       let followsCount = 0;
-      const posts = await this.page.$$('article div div div div a');
+      const posts = await this.page.$$("article div div div div a");
 
       for (let i = 0; i < Math.min(posts.length, maxFollows); i++) {
         try {
@@ -301,7 +331,7 @@ export class InstagramService {
           await this.page.waitForTimeout(2000);
 
           // Click on username to go to profile
-          const usernameLink = await this.page.$('header a');
+          const usernameLink = await this.page.$("header a");
           if (usernameLink) {
             await usernameLink.click();
             await this.page.waitForTimeout(3000);
@@ -321,7 +351,6 @@ export class InstagramService {
           // Go back to hashtag page
           await this.page.goBack();
           await this.page.waitForTimeout(2000);
-
         } catch (error) {
           logger.warn(`Error following user ${i + 1}:`, error);
         }
@@ -329,7 +358,6 @@ export class InstagramService {
 
       logger.info(`Completed following ${followsCount} users for #${hashtag}`);
       return followsCount;
-
     } catch (error) {
       logger.error(`Error following users for hashtag #${hashtag}:`, error);
       return 0;
@@ -337,15 +365,19 @@ export class InstagramService {
   }
 
   async sendDirectMessage(username: string, message: string): Promise<boolean> {
-    if (!this.isLoggedIn) throw new Error('Not logged in');
-    if (!this.page) throw new Error('Page not initialized');
+    if (!this.isLoggedIn) throw new Error("Not logged in");
+    if (!this.page) throw new Error("Page not initialized");
 
     try {
       // Go to direct messages
-      await this.page.goto('https://www.instagram.com/direct/inbox/', { waitUntil: 'networkidle2' });
+      await this.page.goto("https://www.instagram.com/direct/inbox/", {
+        waitUntil: "networkidle2",
+      });
 
       // Click new message button
-      const newMessageButton = await this.page.$('button svg[aria-label="New message"]');
+      const newMessageButton = await this.page.$(
+        'button svg[aria-label="New message"]',
+      );
       if (newMessageButton) {
         await newMessageButton.click();
         await this.page.waitForTimeout(2000);
@@ -363,14 +395,17 @@ export class InstagramService {
             await this.page.waitForTimeout(1000);
 
             // Click next/send button
-            const nextButton = await this.page.$('button:contains("Next")') ||
-                             await this.page.$('button:contains("Send")');
+            const nextButton =
+              (await this.page.$('button:contains("Next")')) ||
+              (await this.page.$('button:contains("Send")'));
             if (nextButton) {
               await nextButton.click();
               await this.page.waitForTimeout(2000);
 
               // Type message
-              const messageInput = await this.page.$('textarea[placeholder*="Message"]');
+              const messageInput = await this.page.$(
+                'textarea[placeholder*="Message"]',
+              );
               if (messageInput) {
                 await messageInput.type(message, { delay: 100 });
                 await this.page.waitForTimeout(1000);
@@ -389,7 +424,6 @@ export class InstagramService {
       }
 
       return false;
-
     } catch (error) {
       logger.error(`Error sending DM to ${username}:`, error);
       return false;
@@ -397,17 +431,22 @@ export class InstagramService {
   }
 
   async getAccountStats(): Promise<any> {
-    if (!this.isLoggedIn) throw new Error('Not logged in');
-    if (!this.page) throw new Error('Page not initialized');
+    if (!this.isLoggedIn) throw new Error("Not logged in");
+    if (!this.page) throw new Error("Page not initialized");
 
     try {
       // Go to own profile
-      await this.page.goto(`https://www.instagram.com/${this.account.username}/`, { waitUntil: 'networkidle2' });
+      await this.page.goto(
+        `https://www.instagram.com/${this.account.username}/`,
+        { waitUntil: "networkidle2" },
+      );
 
       // Extract stats
       const stats = await this.page.evaluate(() => {
-        const statsElements = document.querySelectorAll('meta[property="og:description"]');
-        const description = statsElements[0]?.getAttribute('content') || '';
+        const statsElements = document.querySelectorAll(
+          'meta[property="og:description"]',
+        );
+        const description = statsElements[0]?.getAttribute("content") || "";
 
         // Parse follower count, following count, posts count from meta description
         const followersMatch = description.match(/(\d+(?:,\d+)*)\s+Followers/);
@@ -415,15 +454,18 @@ export class InstagramService {
         const postsMatch = description.match(/(\d+(?:,\d+)*)\s+Posts/);
 
         return {
-          followers: followersMatch ? parseInt(followersMatch[1].replace(/,/g, '')) : 0,
-          following: followingMatch ? parseInt(followingMatch[1].replace(/,/g, '')) : 0,
-          posts: postsMatch ? parseInt(postsMatch[1].replace(/,/g, '')) : 0
+          followers: followersMatch
+            ? parseInt(followersMatch[1].replace(/,/g, ""))
+            : 0,
+          following: followingMatch
+            ? parseInt(followingMatch[1].replace(/,/g, ""))
+            : 0,
+          posts: postsMatch ? parseInt(postsMatch[1].replace(/,/g, "")) : 0,
         };
       });
 
       logger.info(`Retrieved stats for ${this.account.username}:`, stats);
       return stats;
-
     } catch (error) {
       logger.error(`Error getting stats for ${this.account.username}:`, error);
       return { followers: 0, following: 0, posts: 0 };
@@ -438,21 +480,34 @@ export class InstagramService {
 
       if (settings.autoLike && settings.targetHashtags.length > 0) {
         for (const hashtag of settings.targetHashtags) {
-          await this.likePostsByHashtag(hashtag, settings.maxLikesPerHour / settings.targetHashtags.length);
+          await this.likePostsByHashtag(
+            hashtag,
+            settings.maxLikesPerHour / settings.targetHashtags.length,
+          );
           await this.page?.waitForTimeout(5000); // Pause between hashtags
         }
       }
 
       if (settings.autoComment && settings.targetHashtags.length > 0) {
         for (const hashtag of settings.targetHashtags) {
-          await this.commentOnPosts(hashtag, Math.floor(settings.maxCommentsPerHour / settings.targetHashtags.length));
+          await this.commentOnPosts(
+            hashtag,
+            Math.floor(
+              settings.maxCommentsPerHour / settings.targetHashtags.length,
+            ),
+          );
           await this.page?.waitForTimeout(10000);
         }
       }
 
       if (settings.autoFollow && settings.targetHashtags.length > 0) {
         for (const hashtag of settings.targetHashtags) {
-          await this.followUsersByHashtag(hashtag, Math.floor(settings.maxFollowsPerHour / settings.targetHashtags.length));
+          await this.followUsersByHashtag(
+            hashtag,
+            Math.floor(
+              settings.maxFollowsPerHour / settings.targetHashtags.length,
+            ),
+          );
           await this.page?.waitForTimeout(15000);
         }
       }
@@ -461,9 +516,11 @@ export class InstagramService {
       const stats = await this.getAccountStats();
       this.account.stats = { ...this.account.stats, ...stats };
       this.account.lastActivity = new Date();
-
     } catch (error) {
-      logger.error(`Error running automation for ${this.account.username}:`, error);
+      logger.error(
+        `Error running automation for ${this.account.username}:`,
+        error,
+      );
     }
   }
 
@@ -479,13 +536,16 @@ export class InstagramService {
       }
       logger.info(`Cleaned up Instagram service for ${this.account.username}`);
     } catch (error) {
-      logger.error('Error cleaning up Instagram service:', error);
+      logger.error("Error cleaning up Instagram service:", error);
     }
   }
 
-  async runLikeAutomation(hashtag: string, maxLikes: number = 20): Promise<{likes: number, comments: number, follows: number}> {
+  async runLikeAutomation(
+    hashtag: string,
+    maxLikes: number = 20,
+  ): Promise<{ likes: number; comments: number; follows: number }> {
     if (!this.page || !this.isLoggedIn) {
-      throw new Error('Not logged in or page not initialized');
+      throw new Error("Not logged in or page not initialized");
     }
 
     try {
@@ -493,27 +553,31 @@ export class InstagramService {
 
       // Navigate to hashtag page
       const hashtagUrl = `https://www.instagram.com/explore/tags/${hashtag}/`;
-      await this.page.goto(hashtagUrl, { waitUntil: 'networkidle2' });
+      await this.page.goto(hashtagUrl, { waitUntil: "networkidle2" });
 
       logger.info(`Navigated to hashtag: ${hashtag}`);
 
       // Wait for posts to load
-      await this.page.waitForSelector('article', { timeout: 10000 });
+      await this.page.waitForSelector("article", { timeout: 10000 });
 
       // Get posts from the hashtag page
       const posts = await this.page.$$('article a[href*="/p/"]');
       const selectedPosts = posts.slice(0, Math.min(maxLikes, posts.length));
 
-      logger.info(`Found ${posts.length} posts, will process ${selectedPosts.length}`);
+      logger.info(
+        `Found ${posts.length} posts, will process ${selectedPosts.length}`,
+      );
 
       for (let i = 0; i < selectedPosts.length; i++) {
         try {
           // Click on post
           await selectedPosts[i].click();
-          await this.page.waitForSelector('article', { timeout: 5000 });
+          await this.page.waitForSelector("article", { timeout: 5000 });
 
           // Like the post
-          const likeButton = await this.page.$('button[aria-label="Like"], svg[aria-label="Like"]');
+          const likeButton = await this.page.$(
+            'button[aria-label="Like"], svg[aria-label="Like"]',
+          );
           if (likeButton) {
             await likeButton.click();
             results.likes++;
@@ -521,18 +585,21 @@ export class InstagramService {
           }
 
           // Sometimes add a comment using AI
-          if (Math.random() < 0.3 && this.account.settings?.autoComment) { // 30% chance
+          if (Math.random() < 0.3 && this.account.settings?.autoComment) {
+            // 30% chance
             try {
               const comment = await this.generateAIComment(hashtag);
-              const commentInput = await this.page.$('textarea[aria-label="Add a comment..."]');
+              const commentInput = await this.page.$(
+                'textarea[aria-label="Add a comment..."]',
+              );
               if (commentInput && comment) {
                 await commentInput.type(comment);
-                await this.page.keyboard.press('Enter');
+                await this.page.keyboard.press("Enter");
                 results.comments++;
                 logger.info(`Added AI comment: ${comment.substring(0, 50)}...`);
               }
             } catch (commentError) {
-              logger.warn('Could not add comment:', commentError);
+              logger.warn("Could not add comment:", commentError);
             }
           }
 
@@ -541,13 +608,12 @@ export class InstagramService {
           if (closeButton) {
             await closeButton.click();
           } else {
-            await this.page.keyboard.press('Escape');
+            await this.page.keyboard.press("Escape");
           }
 
           // Wait between actions to avoid detection
           const delay = 2000 + Math.random() * 5000; // 2-7 seconds
-          await new Promise(resolve => setTimeout(resolve, delay));
-
+          await new Promise((resolve) => setTimeout(resolve, delay));
         } catch (postError) {
           logger.warn(`Error processing post ${i + 1}:`, postError);
           // Continue with next post
@@ -556,7 +622,6 @@ export class InstagramService {
 
       logger.info(`Automation completed for hashtag ${hashtag}:`, results);
       return results;
-
     } catch (error) {
       logger.error(`Error in automation for hashtag ${hashtag}:`, error);
       throw error;
@@ -569,12 +634,12 @@ export class InstagramService {
       const commentSchema = getInstagramCommentSchema();
       const aiResponse = await runAgent(
         `Generate an engaging, natural comment for a post about ${context}. Make it authentic and conversational.`,
-        commentSchema
+        commentSchema,
       );
 
       return aiResponse?.comment || `Great content about ${context}! 🚀`;
     } catch (error) {
-      logger.warn('AI comment generation failed:', error);
+      logger.warn("AI comment generation failed:", error);
       return `Amazing! Love this content 💯`;
     }
   }
@@ -589,10 +654,40 @@ export class InstagramService {
         await this.browser.close();
         this.browser = null;
       }
-      logger.info('Instagram service cleaned up');
+      logger.info("Instagram service cleaned up");
     } catch (error) {
-      logger.error('Error during cleanup:', error);
+      logger.error("Error during cleanup:", error);
     }
   }
 
-  async handleSecurityChecks(): Promise<void> {
+  private async handleSecurityChecks(): Promise<void> {
+    if (!this.page) return;
+
+    try {
+      // Handle "Save Your Login Info" popup
+      const saveLoginButton = await this.page.$('button:contains("Not Now")');
+      if (saveLoginButton) {
+        await saveLoginButton.click();
+        await this.page.waitForTimeout(2000);
+      }
+
+      // Handle "Turn on Notifications" popup
+      const notificationButton = await this.page.$(
+        'button:contains("Not Now")',
+      );
+      if (notificationButton) {
+        await notificationButton.click();
+        await this.page.waitForTimeout(2000);
+      }
+
+      // Handle suspicious login attempt
+      const suspiciousLogin = await this.page.$('button:contains("It Was Me")');
+      if (suspiciousLogin) {
+        await suspiciousLogin.click();
+        await this.page.waitForTimeout(3000);
+      }
+    } catch (error) {
+      logger.warn("Error handling security checks:", error);
+    }
+  }
+}
