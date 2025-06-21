@@ -888,6 +888,40 @@ class RionaAIDashboard {
             `;
     }
   }
+
+  // Debug functionality
+  async runDebugTest() {
+    console.log("🔧 Running API Debug Test...");
+    this.addLogEntry("info", "Ejecutando test de debugging API...");
+
+    const endpoints = [
+      "/api/test",
+      "/api/users",
+      "/api/accounts",
+      "/api/health",
+    ];
+
+    for (const endpoint of endpoints) {
+      try {
+        console.log(`Testing ${endpoint}...`);
+        const response = await fetch(endpoint);
+        const text = await response.text();
+
+        console.log(
+          `✅ ${endpoint}: Status ${response.status}, Length ${text.length}`,
+        );
+        console.log(`Content: ${text.substring(0, 100)}...`);
+
+        const parsed = JSON.parse(text);
+        this.addLogEntry("success", `${endpoint} - OK (${text.length} chars)`);
+      } catch (error) {
+        console.error(`❌ ${endpoint}: ${error.message}`);
+        this.addLogEntry("error", `${endpoint} - Error: ${error.message}`);
+      }
+    }
+
+    console.log("🔧 Debug test completed");
+  }
 }
 
 // Initialize dashboard when DOM is ready
