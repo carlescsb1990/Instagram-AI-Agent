@@ -1124,8 +1124,22 @@
     </div>
 
     <!-- Scripts -->
-    <script src="app.js"></script>
-    <script src="app-extended.js"></script>
-    <script src="docs.js"></script>
+    <script>
+      // Initialize dashboard when DOM is ready
+      document.addEventListener("DOMContentLoaded", () => {
+        // Use ExtendedDashboard if available, otherwise fallback to basic dashboard
+        if (typeof ExtendedDashboard !== "undefined") {
+          window.dashboard = new ExtendedDashboard();
+          console.log(
+            "🚀 Riona AI Agent Extended Dashboard initialized successfully",
+          );
+        } else {
+          window.dashboard = new RionaAIDashboard();
+          console.log(
+            "🚀 Riona AI Agent Basic Dashboard initialized successfully",
+          );
+        }
+      });
+    </script>
   </body>
 </html>
