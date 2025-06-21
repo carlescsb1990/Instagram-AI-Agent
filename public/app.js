@@ -89,6 +89,9 @@ class RionaAIDashboard {
     window.addEventListener("resize", () => {
       this.handleResize();
     });
+
+    // Force sidebar visibility on page load
+    this.ensureSidebarVisibility();
   }
 
   // Page Navigation
