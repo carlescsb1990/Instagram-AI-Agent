@@ -737,18 +737,4 @@ app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
-const runAgents = async () => {
-  while (true) {
-    try {
-      logger.info("Starting Instagram agent iteration...");
-      await runInstagram();
-      logger.info("Instagram agent iteration finished.");
-    } catch (error) {
-      logger.error("Error in agent iteration:", error);
-    }
-    await new Promise((resolve) => setTimeout(resolve, 30000));
-  }
-};
-
-export { runAgents };
 export default app;
