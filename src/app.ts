@@ -23,10 +23,6 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Serve static files from public directory
 app.use(express.static("public"));
 
-// Import and use user routes
-import userRoutes from "./routes/users";
-app.use("/api/users", userRoutes);
-
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
