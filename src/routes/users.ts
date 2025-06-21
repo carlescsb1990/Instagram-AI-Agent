@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import logger from "../config/logger";
 
 const router = express.Router();
@@ -26,7 +26,7 @@ const mockUsers = [
 ];
 
 // Get all users
-router.get("/", (req: Request, res: Response) => {
+router.get("/", (req, res) => {
   try {
     res.json({
       success: true,
@@ -44,7 +44,7 @@ router.get("/", (req: Request, res: Response) => {
 });
 
 // Create new user
-router.post("/", (req: Request, res: Response) => {
+router.post("/", (req, res) => {
   try {
     const { name, email, role, subscription } = req.body;
 
@@ -83,7 +83,7 @@ router.post("/", (req: Request, res: Response) => {
 });
 
 // Get user by ID
-router.get("/:id", (req: Request, res: Response) => {
+router.get("/:id", (req, res) => {
   try {
     const user = mockUsers.find((u) => u._id === req.params.id);
     if (!user) {
@@ -107,7 +107,7 @@ router.get("/:id", (req: Request, res: Response) => {
 });
 
 // Update user
-router.put("/:id", (req: Request, res: Response) => {
+router.put("/:id", (req, res) => {
   try {
     const userIndex = mockUsers.findIndex((u) => u._id === req.params.id);
     if (userIndex === -1) {
@@ -143,7 +143,7 @@ router.put("/:id", (req: Request, res: Response) => {
 });
 
 // Delete user
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", (req, res) => {
   try {
     const userIndex = mockUsers.findIndex((u) => u._id === req.params.id);
     if (userIndex === -1) {
