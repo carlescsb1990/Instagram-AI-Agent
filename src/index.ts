@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import logger from "./config/logger";
 import { shutdown } from "./services";
-import app, { runAgents } from "./app-simple";
+import app, { runAgents } from "./app";
 import { initAgent } from "./Agent/index";
 import { setup_HandleError } from "./utils";
 
