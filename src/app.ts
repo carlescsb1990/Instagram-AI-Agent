@@ -397,43 +397,128 @@ app.post("/api/accounts", async (req: Request, res: Response) => {
   }
 });
 
-// Instagram Automation Execution
+// Instagram Automation Execution - REAL AUTOMATION
 app.post(
   "/api/social/instagram/automation",
   async (req: Request, res: Response) => {
     try {
-      const { accountId, actions } = req.body;
+      const { accountId, username, password, settings } = req.body;
 
-      // Simulate automation execution
-      const simulatedResults = {
-        accountId: accountId || "default",
+      if (!username || !password) {
+        return res.status(400).json({
+          success: false,
+          error: "Missing credentials",
+          message: "Username and password are required",
+        });
+      }
+
+      logger.info(
+        `Starting real Instagram automation for account: ${username}`,
+      );
+
+      // Create Instagram account object
+      const instagramAccount = {
+        username,
+        password,
+        settings: settings || {
+          maxLikesPerHour: 30,
+          maxCommentsPerHour: 10,
+          maxFollowsPerHour: 15,
+          targetHashtags: ["technology", "ai"],
+        },
+      };
+
+      // Import and use the real Instagram service
+      const { InstagramService } = await import("./services/InstagramService");
+      const service = new InstagramService(instagramAccount);
+
+      const executionResults = {
+        accountId: accountId || username,
         executionId: Date.now().toString(),
         startTime: new Date().toISOString(),
         actions: {
-          likes: Math.floor(Math.random() * 20) + 10,
-          comments: Math.floor(Math.random() * 8) + 3,
-          follows: Math.floor(Math.random() * 5) + 1,
+          likes: 0,
+          comments: 0,
+          follows: 0,
         },
-        status: "completed",
-        duration: Math.floor(Math.random() * 300) + 60, // 60-360 seconds
+        status: "running",
+        duration: 0,
         errors: 0,
         warnings: [],
+        logs: [],
       };
 
-      // Simulate processing time
-      setTimeout(() => {
-        console.log("Instagram automation simulated for account:", accountId);
-      }, 100);
+      // Initialize service
+      await service.initialize();
+      executionResults.logs.push("✅ Browser initialized");
+
+      // Login to Instagram
+      const loginSuccess = await service.login();
+      if (!loginSuccess) {
+        throw new Error("Failed to login to Instagram");
+      }
+      executionResults.logs.push("✅ Successfully logged into Instagram");
+
+      // Execute automation based on settings
+      const hashtags = settings?.targetHashtags || ["technology", "ai"];
+      const maxLikes = Math.min(settings?.maxLikesPerHour || 30, 30); // Cap at 30 for safety
+
+      for (const hashtag of hashtags.slice(0, 2)) {
+        // Limit to 2 hashtags per execution
+        try {
+          executionResults.logs.push(`🔍 Searching hashtag: #${hashtag}`);
+
+          // Run automation for this hashtag
+          const result = await service.runLikeAutomation(
+            hashtag,
+            Math.floor(maxLikes / hashtags.length),
+          );
+
+          executionResults.actions.likes += result.likes;
+          executionResults.actions.comments += result.comments;
+          executionResults.actions.follows += result.follows;
+
+          executionResults.logs.push(
+            `✅ Completed #${hashtag}: ${result.likes} likes, ${result.comments} comments`,
+          );
+
+          // Wait between hashtags to avoid detection
+          await new Promise((resolve) =>
+            setTimeout(resolve, 5000 + Math.random() * 10000),
+          );
+        } catch (hashtagError) {
+          logger.error(`Error processing hashtag ${hashtag}:`, hashtagError);
+          executionResults.warnings.push(
+            `Warning with hashtag ${hashtag}: ${hashtagError.message}`,
+          );
+        }
+      }
+
+      // Clean up
+      await service.cleanup();
+      executionResults.logs.push("🧹 Browser cleaned up");
+
+      // Finalize results
+      executionResults.status = "completed";
+      executionResults.duration = Math.floor(
+        (Date.now() - parseInt(executionResults.executionId)) / 1000,
+      );
+
+      logger.info(
+        `Instagram automation completed for ${username}:`,
+        executionResults.actions,
+      );
 
       res.json({
         success: true,
-        data: simulatedResults,
-        message: "Automation executed successfully",
+        data: executionResults,
+        message: `Real automation completed: ${executionResults.actions.likes} likes, ${executionResults.actions.comments} comments, ${executionResults.actions.follows} follows`,
       });
     } catch (error) {
+      logger.error("Instagram automation error:", error);
       res.status(500).json({
         success: false,
-        error: "Error executing Instagram automation",
+        error: "Instagram automation failed",
         message: error instanceof Error ? error.message : "Unknown error",
       });
     }
@@ -598,7 +683,7 @@ app.get("/api/characters", (_req: Request, res: Response) => {
         description:
           "Carácter AI de propósito general. Adaptable a diferentes contextos y audiencias.",
         active: false,
-        personality: "Amigable, versátil, equilibrado",
+        personality: "Amigable, vers��til, equilibrado",
         language: "Español",
       },
     ];
