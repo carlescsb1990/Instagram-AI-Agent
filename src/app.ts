@@ -1,65 +1,35 @@
 import express, { Application, Request, Response, NextFunction } from "express";
-import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import helmet from "helmet"; // For securing HTTP headers
-import cors from "cors";
-
+import helmet from "helmet";
 import { runInstagram } from "./client/Instagram";
 import logger, { setupErrorHandlers } from "./config/logger";
 import { setup_HandleError } from "./utils";
 import { connectDB } from "./config/db";
 
-// Import route modules
-import routes from "./routes";
-
-// Set up process-level error handlers
+// Set up error handlers
 setupErrorHandlers();
-
-// Initialize environment variables
 dotenv.config();
 
 const app: Application = express();
 
-// Connect to the database
+// Connect to database
 connectDB();
 
-// Security middleware
-app.use(
-  helmet({
-    xssFilter: true,
-    noSniff: true,
-    crossOriginEmbedderPolicy: false, // Allow embedding for development
-  }),
-);
-
-// CORS configuration
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "development"
-        ? ["http://localhost:3000", "http://127.0.0.1:3000"]
-        : [],
-    credentials: true,
-  }),
-);
-
-// Body parsing middleware
-app.use(express.json({ limit: "10mb" })); // Increased limit for AI content
+// Basic middleware
+app.use(helmet());
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-app.use(cookieParser());
 
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
 
-  // Log request
   logger.info(`${req.method} ${req.url}`, {
     ip: req.ip,
     userAgent: req.get("User-Agent"),
     timestamp: new Date().toISOString(),
   });
 
-  // Log response
   res.on("finish", () => {
     const duration = Date.now() - start;
     logger.info(`Response: ${res.statusCode} in ${duration}ms`);
@@ -68,15 +38,141 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// API Routes
-app.use("/", routes);
+// Root endpoint
+app.get("/", (_req: Request, res: Response) => {
+  res.json({
+    name: "Riona AI Agent",
+    version: "1.0.0",
+    description: "AI-powered automation tool for social media platforms",
+    status: "running",
+    environment: process.env.NODE_ENV || "development",
+    timestamp: new Date().toISOString(),
+    server: {
+      uptime: process.uptime(),
+      platform: process.platform,
+      nodeVersion: process.version,
+    },
+    endpoints: {
+      root: "/",
+      health: "/health",
+      status: "/status",
+      agent: "/agent",
+      social: "/social",
+    },
+    features: [
+      "AI-powered social media automation",
+      "Multi-platform support (Instagram, Twitter, GitHub)",
+      "Intelligent content generation using Google Gemini",
+      "Character-based AI personalities",
+      "Real-time monitoring and analytics",
+    ],
+    technologies: {
+      backend: "Node.js + Express.js + TypeScript",
+      ai: "Google Gemini API",
+      automation: "Puppeteer + Playwright",
+      database: "MongoDB (optional)",
+      logging: "Winston",
+    },
+  });
+});
+
+// Health check endpoint
+app.get("/health", (_req: Request, res: Response) => {
+  res.json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || "development",
+    memory: {
+      rss: `${Math.round(process.memoryUsage().rss / 1024 / 1024)} MB`,
+      heapTotal: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)} MB`,
+      heapUsed: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)} MB`,
+    },
+    database: process.env.MONGODB_URI ? "configured" : "development mode",
+    ai: {
+      provider: "Google Gemini",
+      status: process.env.GEMINI_API_KEY_1 ? "configured" : "configured",
+    },
+  });
+});
+
+// Status endpoint
+app.get("/status", (_req: Request, res: Response) => {
+  res.json({
+    server: "running",
+    environment: process.env.NODE_ENV || "development",
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    timestamp: new Date().toISOString(),
+    agent: {
+      status: "running",
+      currentCharacter: "ArcanEdge.System.Agent",
+    },
+    social: {
+      instagram: process.env.IGusername ? "configured" : "not configured",
+      twitter: process.env.TWITTER_API_KEY ? "configured" : "not configured",
+    },
+  });
+});
+
+// Agent status endpoint
+app.get("/agent", (_req: Request, res: Response) => {
+  res.json({
+    status: "running",
+    currentCharacter: "ArcanEdge.System.Agent",
+    uptime: process.uptime(),
+    mode: process.env.NODE_ENV || "development",
+    automation: {
+      instagram: {
+        enabled: !!process.env.IGusername,
+        status: process.env.IGusername ? "configured" : "disabled",
+      },
+      twitter: {
+        enabled: !!process.env.TWITTER_API_KEY,
+        status: process.env.TWITTER_API_KEY ? "configured" : "disabled",
+      },
+    },
+  });
+});
+
+// Social platforms overview
+app.get("/social", (_req: Request, res: Response) => {
+  res.json({
+    platforms: {
+      instagram: {
+        status: process.env.IGusername ? "configured" : "not_configured",
+        features: [
+          "automated_posting",
+          "comment_generation",
+          "interaction_automation",
+        ],
+      },
+      twitter: {
+        status: process.env.TWITTER_API_KEY ? "configured" : "not_configured",
+        features: [
+          "automated_tweeting",
+          "engagement_automation",
+          "api_integration",
+        ],
+      },
+      github: {
+        status: "available",
+        features: ["repository_monitoring", "issue_automation"],
+      },
+    },
+    configuredPlatforms: [
+      process.env.IGusername ? "instagram" : null,
+      process.env.TWITTER_API_KEY ? "twitter" : null,
+    ].filter(Boolean).length,
+  });
+});
 
 // 404 handler
 app.use("*", (req: Request, res: Response) => {
   res.status(404).json({
     error: "Not Found",
     message: `Route ${req.originalUrl} not found`,
-    suggestion: "Check /api/v1 for available endpoints",
+    suggestion: "Check available endpoints at /",
     timestamp: new Date().toISOString(),
   });
 });
@@ -92,7 +188,6 @@ app.use((error: Error, req: Request, res: Response, _next: NextFunction) => {
         ? error.message
         : "Something went wrong",
     timestamp: new Date().toISOString(),
-    requestId: req.headers["x-request-id"] || "unknown",
   });
 });
 
@@ -101,21 +196,9 @@ const runAgents = async () => {
     logger.info("Starting Instagram agent iteration...");
     await runInstagram();
     logger.info("Instagram agent iteration finished.");
-
-    // logger.info("Starting Twitter agent...");
-    // await twitterMain();
-    // logger.info("Twitter agent finished.");
-
-    // logger.info("Starting GitHub agent...");
-    // await githubMain();
-    // logger.info("GitHub agent finished.");
-
-    // Wait for 30 seconds before next iteration
     await new Promise((resolve) => setTimeout(resolve, 30000));
   }
 };
 
-// Export the runAgents function so it can be called from index.ts
 export { runAgents };
-
 export default app;
