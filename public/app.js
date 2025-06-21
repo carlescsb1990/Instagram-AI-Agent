@@ -12,9 +12,11 @@ class RionaAIDashboard {
       this.saveToStorage("startTime", Date.now());
     }
 
+    console.log("🔧 Dashboard inicializando...");
     this.setupEventListeners();
     this.loadInitialData();
     this.startAutoRefresh();
+    this.forceSidebarVisibility();
   }
 
   // Core Event Listeners
@@ -1062,6 +1064,37 @@ class RionaAIDashboard {
       sidebar.style.transform = "translateX(0)";
       sidebar.classList.remove("active"); // Remove mobile active state
     }
+  }
+
+  forceSidebarVisibility() {
+    setTimeout(() => {
+      const sidebar = document.querySelector(".sidebar");
+      const mainContent = document.querySelector(".main-content");
+
+      console.log("🔧 Verificando sidebar...", {
+        sidebar: !!sidebar,
+        sidebarTransform:
+          sidebar?.style.transform || sidebar?.getComputedStyle?.transform,
+        windowWidth: window.innerWidth,
+      });
+
+      if (sidebar) {
+        // Force sidebar to be visible regardless of media queries
+        sidebar.style.transform = "translateX(0)";
+        sidebar.style.left = "0";
+        sidebar.style.position = "fixed";
+        sidebar.style.display = "flex";
+
+        console.log("✅ Sidebar forzado a mostrarse");
+
+        // Ensure main content has proper margin
+        if (mainContent && window.innerWidth > 1024) {
+          mainContent.style.marginLeft = "280px";
+        }
+      } else {
+        console.error("❌ Sidebar no encontrado en DOM");
+      }
+    }, 100);
   }
 
   handleResize() {
