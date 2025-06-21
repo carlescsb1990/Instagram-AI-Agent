@@ -602,13 +602,36 @@ class RionaAIDashboard {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error(`Non-JSON response from ${endpoint}:`, text);
+        throw new Error(
+          `Expected JSON but got ${contentType || "unknown"} from ${endpoint}`,
+        );
+      }
+
       const text = await response.text();
+      if (!text.trim()) {
+        throw new Error(`Empty response from ${endpoint}`);
+      }
+
       try {
         return JSON.parse(text);
       } catch (parseError) {
         console.error(`JSON parse error for ${endpoint}:`, parseError);
-        console.error("Response text:", text);
-        throw new Error(`Invalid JSON response from ${endpoint}`);
+        console.error("Response text length:", text.length);
+        console.error(
+          "Response text (first 200 chars):",
+          text.substring(0, 200),
+        );
+        console.error(
+          "Response text (last 50 chars):",
+          text.substring(Math.max(0, text.length - 50)),
+        );
+        throw new Error(
+          `Invalid JSON response from ${endpoint}: ${parseError.message}`,
+        );
       }
     } catch (error) {
       console.error(`API call failed: ${endpoint}`, error);
