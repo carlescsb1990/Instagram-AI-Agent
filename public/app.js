@@ -45,6 +45,13 @@ class RionaAIDashboard {
       });
     }
 
+    const debugBtn = document.getElementById("debugBtn");
+    if (debugBtn) {
+      debugBtn.addEventListener("click", () => {
+        this.runDebugTest();
+      });
+    }
+
     // Character selection
     document.querySelectorAll(".character-card").forEach((card) => {
       card.addEventListener("click", () => {
