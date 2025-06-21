@@ -602,12 +602,28 @@ class RionaAIDashboard {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      return await response.json();
+      const text = await response.text();
+      try {
+        return JSON.parse(text);
+      } catch (parseError) {
+        console.error(`JSON parse error for ${endpoint}:`, parseError);
+        console.error("Response text:", text);
+        throw new Error(`Invalid JSON response from ${endpoint}`);
+      }
     } catch (error) {
       console.error(`API call failed: ${endpoint}`, error);
 
-      // Return mock data for development
-      return this.getMockResponse(endpoint, method, data);
+      // Only return mock data if server is not reachable
+      if (
+        error.message.includes("fetch") ||
+        error.message.includes("NetworkError")
+      ) {
+        console.log(`Using mock data for ${endpoint} due to network error`);
+        return this.getMockResponse(endpoint, method, data);
+      }
+
+      // Re-throw other errors
+      throw error;
     }
   }
 
@@ -817,7 +833,7 @@ class RionaAIDashboard {
                 <div class="docs-section">
                     <h2>Bienvenido a Riona AI Agent</h2>
                     <p>Sistema completo de automatización para redes sociales con inteligencia artificial.</p>
-                    
+
                     <h3>Características Principales</h3>
                     <ul>
                         <li><strong>Automatización de Instagram:</strong> Likes, comentarios, follows y mensajes directos automáticos</li>
