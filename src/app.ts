@@ -138,6 +138,92 @@ app.get("/agent", (_req: Request, res: Response) => {
   });
 });
 
+// AI Content Generation endpoint
+app.post("/api/generate", async (_req: Request, res: Response) => {
+  try {
+    // Simulate AI generation (replace with actual AI call)
+    const mockResponse = {
+      success: true,
+      data: {
+        content:
+          "Este es contenido generado por AI usando el modelo Gemini. El contenido se personaliza según el carácter seleccionado y el tipo de contenido solicitado.",
+        type: "comment",
+        timestamp: new Date().toISOString(),
+      },
+    };
+
+    res.json(mockResponse);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Error generating AI content",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+});
+
+// Characters endpoint
+app.get("/api/characters", (_req: Request, res: Response) => {
+  try {
+    const characters = [
+      {
+        id: "arcane-edge",
+        name: "ArcanEdge System Agent",
+        description: "Pionero en comunicación AI dirigida por prompts",
+        active: true,
+      },
+      {
+        id: "elon",
+        name: "Elon Character",
+        description: "Personalidad de emprendedor e innovador",
+        active: false,
+      },
+      {
+        id: "sample",
+        name: "Sample Character",
+        description: "Carácter AI de propósito general",
+        active: false,
+      },
+    ];
+
+    res.json({
+      success: true,
+      data: characters,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Error loading characters",
+    });
+  }
+});
+
+// Platform control endpoints
+app.post("/api/social/:platform/:action", (req: Request, res: Response) => {
+  const { platform, action } = req.params;
+
+  if (!["instagram", "twitter", "github"].includes(platform)) {
+    return res.status(400).json({
+      success: false,
+      error: "Invalid platform",
+    });
+  }
+
+  if (!["start", "stop"].includes(action)) {
+    return res.status(400).json({
+      success: false,
+      error: "Invalid action",
+    });
+  }
+
+  res.json({
+    success: true,
+    message: `${action} action for ${platform} executed`,
+    platform,
+    action,
+  });
+});
+
 // Social platforms overview
 app.get("/social", (_req: Request, res: Response) => {
   res.json({
