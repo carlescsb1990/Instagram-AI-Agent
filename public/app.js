@@ -678,6 +678,17 @@ class RionaAIDashboard {
       try {
         return JSON.parse(cleanText);
       } catch (parseError) {
+        // Try to find and extract just the JSON part
+        const jsonMatch = cleanText.match(/\{.*\}|\[.*\]/);
+        if (jsonMatch) {
+          try {
+            console.warn(`Using regex-extracted JSON for ${endpoint}`);
+            return JSON.parse(jsonMatch[0]);
+          } catch (regexParseError) {
+            // Still failed, continue to error
+          }
+        }
+
         console.error(`JSON parse error for ${endpoint}:`, parseError);
         console.error("Response text length:", text.length);
         console.error("Cleaned text length:", cleanText.length);
@@ -928,7 +939,7 @@ class RionaAIDashboard {
 
                     <h3>Primeros Pasos</h3>
                     <ol>
-                        <li>Ve a <strong>Automatización</strong> para agregar tu primera cuenta de Instagram</li>
+                        <li>Ve a <strong>Automatizaci��n</strong> para agregar tu primera cuenta de Instagram</li>
                         <li>Configura los hashtags objetivo en <strong>Configuración</strong></li>
                         <li>Ajusta la personalidad del AI en <strong>Agente AI</strong></li>
                         <li>Ejecuta las automatizaciones desde <strong>Redes Sociales</strong></li>
