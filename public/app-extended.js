@@ -76,9 +76,38 @@ class ExtendedDashboard extends RionaAIDashboard {
     // Analytics
     const analyticsTimeRange = document.getElementById("analyticsTimeRange");
     if (analyticsTimeRange) {
-      analyticsTimeRange.addEventListener("change", (e) =>
-        this.loadAnalytics(e.target.value),
-      );
+      analyticsTimeRange.addEventListener("change", (e) => {
+        const accountSelect = document.getElementById("analyticsAccountSelect");
+        const accountId = accountSelect ? accountSelect.value : "all";
+        this.loadAnalytics(e.target.value, accountId);
+      });
+    }
+
+    const analyticsAccountSelect = document.getElementById(
+      "analyticsAccountSelect",
+    );
+    if (analyticsAccountSelect) {
+      analyticsAccountSelect.addEventListener("change", (e) => {
+        const timeRange = document.getElementById("analyticsTimeRange");
+        const timeValue = timeRange ? timeRange.value : "24h";
+        this.loadAnalytics(timeValue, e.target.value);
+      });
+    }
+
+    const refreshAnalyticsBtn = document.getElementById("refreshAnalyticsBtn");
+    if (refreshAnalyticsBtn) {
+      refreshAnalyticsBtn.addEventListener("click", () => {
+        const timeRange = document.getElementById("analyticsTimeRange");
+        const accountSelect = document.getElementById("analyticsAccountSelect");
+        const timeValue = timeRange ? timeRange.value : "24h";
+        const accountId = accountSelect ? accountSelect.value : "all";
+        this.loadAnalytics(timeValue, accountId);
+      });
+    }
+
+    const exportDataBtn = document.getElementById("exportDataBtn");
+    if (exportDataBtn) {
+      exportDataBtn.addEventListener("click", () => this.exportAnalyticsData());
     }
 
     // Backup
