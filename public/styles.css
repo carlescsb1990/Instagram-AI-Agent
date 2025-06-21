@@ -2065,6 +2065,139 @@ textarea:focus {
   outline-offset: 2px;
 }
 
+/* Analytics Specific Styles */
+.analytics-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  margin: 2rem 0;
+}
+
+.no-data-content i {
+  font-size: 3rem;
+  color: var(--gray-400);
+  margin-bottom: 1rem;
+}
+
+.no-data-content h4 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.no-data-content p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.performance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.performance-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.account-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.account-cell i {
+  color: var(--danger-color);
+}
+
+.no-data-cell {
+  text-align: center;
+  padding: 2rem;
+}
+
+.no-accounts-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.no-accounts-message i {
+  font-size: 2rem;
+  color: var(--gray-400);
+}
+
+.no-hashtag-data {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.no-hashtag-data i {
+  font-size: 2rem;
+  color: var(--gray-400);
+  margin-bottom: 1rem;
+}
+
+.hashtag-item {
+  background: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 0.5rem;
+}
+
+.hashtag-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.hashtag-name {
+  font-weight: var(--font-semibold);
+  color: var(--primary-color);
+}
+
+.hashtag-usage {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.hashtag-accounts {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.metric-change {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.metric-change.positive {
+  background: var(--success-color);
+  color: white;
+}
+
+.metric-change.negative {
+  background: var(--danger-color);
+  color: white;
+}
+
+.metric-change.neutral {
+  background: var(--gray-300);
+  color: var(--text-secondary);
+}
+
 /* Print Styles */
 @media print {
   .sidebar,
