@@ -258,27 +258,12 @@ class RionaAIDashboard {
     }
   }
 
-  async loadDashboardMetrics() {
+  loadDashboardMetrics() {
     try {
-      // Try to load from API first
-      const response = await this.apiCall("/social");
-      if (response && response.success) {
-        // Update total accounts
-        this.updateElement("totalAccounts", response.data.totalAccounts || 0);
-        this.updateElement(
-          "activeAccounts",
-          response.data.activeAutomations || 0,
-        );
-      }
-    } catch (error) {
-      console.warn(
-        "Could not load dashboard metrics from API, using localStorage:",
-        error,
-      );
-
-      // Fallback to localStorage data
+      // Use localStorage data directly - no API dependency
       const accounts = this.getStoredAccounts();
       const users = this.getStoredUsers();
+      const analytics = this.getFromStorage("analyticsData", {});
 
       const totalAccounts = accounts.length;
       const activeAccounts = accounts.filter(
@@ -289,10 +274,21 @@ class RionaAIDashboard {
       this.updateElement("activeAccounts", activeAccounts);
 
       // Update uptime with stored data or default
-      const settings = this.getStoredSettings();
       const startTime = this.getFromStorage("startTime", Date.now());
       const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
       this.updateUptime(uptimeSeconds);
+
+      console.log("Dashboard metrics loaded from localStorage:", {
+        totalAccounts,
+        activeAccounts,
+        uptimeSeconds,
+      });
+    } catch (error) {
+      console.error("Error loading dashboard metrics:", error);
+      // Set safe defaults
+      this.updateElement("totalAccounts", 0);
+      this.updateElement("activeAccounts", 0);
+      this.updateUptime(0);
     }
   }
 
@@ -737,19 +733,11 @@ class RionaAIDashboard {
         );
       }
     } catch (error) {
-      console.error(`API call failed: ${endpoint}`, error);
+      console.warn(`API call failed: ${endpoint}`, error.message);
 
-      // Only return mock data if server is not reachable
-      if (
-        error.message.includes("fetch") ||
-        error.message.includes("NetworkError")
-      ) {
-        console.log(`Using mock data for ${endpoint} due to network error`);
-        return this.getMockResponse(endpoint, method, data);
-      }
-
-      // Re-throw other errors
-      throw error;
+      // Always return fallback data instead of throwing errors
+      console.log(`Using fallback data for ${endpoint}`);
+      return this.getMockResponse(endpoint, method, data);
     }
   }
 
@@ -1040,16 +1028,42 @@ class RionaAIDashboard {
   }
 
   // Auto-refresh functionality
-  startAutoRefresh(interval = 30000) {
+  startAutoRefresh(interval = 60000) {
+    // Reduced frequency to 1 minute
     if (this.autoRefreshInterval) {
       clearInterval(this.autoRefreshInterval);
     }
 
     this.autoRefreshInterval = setInterval(() => {
-      if (this.currentPage === "dashboard") {
-        this.loadDashboardMetrics();
+      try {
+        if (this.currentPage === "dashboard") {
+          this.loadDashboardMetrics();
+        }
+        // Update real-time data without API calls
+        this.updateRealTimeData();
+      } catch (error) {
+        console.warn("Auto-refresh error:", error);
+        // Don't break the interval
       }
     }, interval);
+  }
+
+  updateRealTimeData() {
+    try {
+      // Update uptime
+      const startTime = this.getFromStorage("startTime", Date.now());
+      const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+      this.updateUptime(uptimeSeconds);
+
+      // Update active accounts count
+      const accounts = this.getStoredAccounts();
+      const activeAccounts = accounts.filter(
+        (acc) => acc.status === "active",
+      ).length;
+      this.updateElement("activeAccounts", activeAccounts);
+    } catch (error) {
+      console.warn("Error updating real-time data:", error);
+    }
   }
 
   // Keyboard shortcuts
