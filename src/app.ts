@@ -216,7 +216,7 @@ app.post("/api/social/:platform/:action", (req: Request, res: Response) => {
     });
   }
 
-  res.json({
+  return res.json({
     success: true,
     message: `${action} action for ${platform} executed`,
     platform,
