@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riona AI Agent - Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <i class="fas fa-robot"></i>
+            <h2>Riona AI</h2>
+          </div>
+          <div class="status-indicator" id="connectionStatus">
+            <div class="status-dot"></div>
+            <span>Conectado</span>
+          </div>
+        </div>
+
+        <ul class="nav-menu">
+          <li class="nav-item active" data-page="dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </li>
+          <li class="nav-item" data-page="agent">
+            <i class="fas fa-brain"></i>
+            <span>Agente AI</span>
+          </li>
+          <li class="nav-item" data-page="social">
+            <i class="fas fa-share-alt"></i>
+            <span>Redes Sociales</span>
+          </li>
+          <li class="nav-item" data-page="automation">
+            <i class="fas fa-cogs"></i>
+            <span>Automatización</span>
+          </li>
+          <li class="nav-item" data-page="analytics">
+            <i class="fas fa-chart-line"></i>
+            <span>Analíticas</span>
+          </li>
+          <li class="nav-item" data-page="settings">
+            <i class="fas fa-cog"></i>
+            <span>Configuración</span>
+          </li>
+          <li class="nav-item" data-page="documentation">
+            <i class="fas fa-book"></i>
+            <span>Documentación</span>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="top-header">
+          <div class="header-left">
+            <h1 id="pageTitle">Dashboard Principal</h1>
+            <p id="pageSubtitle">Monitoreo en tiempo real del sistema AI</p>
+          </div>
+          <div class="header-right">
+            <div class="header-stats">
+              <div class="stat-item">
+                <span class="stat-label">Uptime</span>
+                <span class="stat-value" id="uptime">--</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Memoria</span>
+                <span class="stat-value" id="memory">--</span>
+              </div>
+            </div>
+            <button class="refresh-btn" id="refreshBtn">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard" class="page-content active">
+          <!-- System Status Cards -->
+          <div class="cards-grid">
+            <div class="status-card">
+              <div class="card-header">
+                <h3>Estado del Sistema</h3>
+                <div class="status-badge" id="systemStatus">
+                  <div class="status-dot active"></div>
+                  <span>Activo</span>
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="metric">
+                  <span class="metric-label">Servidor</span>
+                  <span class="metric-value" id="serverStatus">--</span>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Base de Datos</span>
+                  <span class="metric-value" id="dbStatus">--</span>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">IA</span>
+                  <span class="metric-value" id="aiStatus">--</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="status-card">
+              <div class="card-header">
+                <h3>Agente AI</h3>
+                <div class="status-badge" id="agentStatus">
+                  <div class="status-dot"></div>
+                  <span>Cargando...</span>
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="metric">
+                  <span class="metric-label">Carácter Activo</span>
+                  <span class="metric-value" id="activeCharacter">--</span>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Modo</span>
+                  <span class="metric-value" id="agentMode">--</span>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Última Actividad</span>
+                  <span class="metric-value" id="lastActivity">--</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="status-card">
+              <div class="card-header">
+                <h3>Redes Sociales</h3>
+                <div class="platform-indicators">
+                  <div class="platform-dot instagram" title="Instagram"></div>
+                  <div class="platform-dot twitter" title="Twitter"></div>
+                  <div class="platform-dot github" title="GitHub"></div>
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="platform-status">
+                  <div class="platform-item">
+                    <i class="fab fa-instagram"></i>
+                    <span>Instagram</span>
+                    <span class="platform-status-text" id="instagramStatus"
+                      >--</span
+                    >
+                  </div>
+                  <div class="platform-item">
+                    <i class="fab fa-twitter"></i>
+                    <span>Twitter</span>
+                    <span class="platform-status-text" id="twitterStatus"
+                      >--</span
+                    >
+                  </div>
+                  <div class="platform-item">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                    <span class="platform-status-text" id="githubStatus"
+                      >--</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="status-card">
+              <div class="card-header">
+                <h3>Métricas de Rendimiento</h3>
+              </div>
+              <div class="card-content">
+                <div class="metric">
+                  <span class="metric-label">CPU</span>
+                  <div class="progress-bar">
+                    <div
+                      class="progress-fill"
+                      id="cpuUsage"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">RAM</span>
+                  <div class="progress-bar">
+                    <div
+                      class="progress-fill"
+                      id="ramUsage"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Requests/min</span>
+                  <span class="metric-value" id="requestsPerMin">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Log -->
+          <div class="activity-section">
+            <div class="section-header">
+              <h3>Registro de Actividad</h3>
+              <button class="clear-log-btn" id="clearLogBtn">
+                <i class="fas fa-trash"></i>
+                Limpiar
+              </button>
+            </div>
+            <div class="activity-log" id="activityLog">
+              <div class="log-entry">
+                <span class="log-time">--:--:--</span>
+                <span class="log-level info">INFO</span>
+                <span class="log-message">Iniciando dashboard...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent Page -->
+        <div id="agent" class="page-content">
+          <div class="agent-section">
+            <div class="section-header">
+              <h3>Configuración del Agente AI</h3>
+              <button class="primary-btn" id="testAgentBtn">
+                <i class="fas fa-play"></i>
+                Probar Agente
+              </button>
+            </div>
+
+            <div class="cards-grid">
+              <div class="config-card">
+                <h4>Caracteres Disponibles</h4>
+                <div class="characters-list" id="charactersList">
+                  <!-- Characters will be loaded here -->
+                </div>
+              </div>
+
+              <div class="config-card">
+                <h4>Generar Contenido AI</h4>
+                <div class="ai-generator">
+                  <textarea
+                    id="promptInput"
+                    placeholder="Escribe tu prompt aquí..."
+                    rows="4"
+                  ></textarea>
+                  <div class="generator-controls">
+                    <select id="contentType">
+                      <option value="comment">Comentario de Instagram</option>
+                      <option value="tweet">Tweet</option>
+                      <option value="post">Post General</option>
+                    </select>
+                    <button class="primary-btn" id="generateBtn">
+                      <i class="fas fa-magic"></i>
+                      Generar
+                    </button>
+                  </div>
+                  <div class="ai-output" id="aiOutput">
+                    <div class="output-placeholder">
+                      El contenido generado aparecerá aquí...
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media Page -->
+        <div id="social" class="page-content">
+          <div class="social-section">
+            <div class="section-header">
+              <h3>Gestión de Redes Sociales</h3>
+            </div>
+
+            <div class="platforms-grid">
+              <div class="platform-card instagram-card">
+                <div class="platform-header">
+                  <i class="fab fa-instagram"></i>
+                  <h4>Instagram</h4>
+                  <div
+                    class="platform-status-indicator"
+                    id="instagramIndicator"
+                  ></div>
+                </div>
+                <div class="platform-content">
+                  <div class="platform-stats">
+                    <div class="stat">
+                      <span class="stat-number" id="instagramPosts">0</span>
+                      <span class="stat-label">Posts Procesados</span>
+                    </div>
+                    <div class="stat">
+                      <span class="stat-number" id="instagramComments">0</span>
+                      <span class="stat-label">Comentarios</span>
+                    </div>
+                  </div>
+                  <div class="platform-controls">
+                    <button class="control-btn" id="instagramStartBtn">
+                      <i class="fas fa-play"></i>
+                      Iniciar
+                    </button>
+                    <button class="control-btn secondary" id="instagramStopBtn">
+                      <i class="fas fa-stop"></i>
+                      Detener
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="platform-card twitter-card">
+                <div class="platform-header">
+                  <i class="fab fa-twitter"></i>
+                  <h4>Twitter</h4>
+                  <div
+                    class="platform-status-indicator"
+                    id="twitterIndicator"
+                  ></div>
+                </div>
+                <div class="platform-content">
+                  <div class="platform-stats">
+                    <div class="stat">
+                      <span class="stat-number" id="twitterTweets">0</span>
+                      <span class="stat-label">Tweets</span>
+                    </div>
+                    <div class="stat">
+                      <span class="stat-number" id="twitterEngagement">0</span>
+                      <span class="stat-label">Engagement</span>
+                    </div>
+                  </div>
+                  <div class="platform-controls">
+                    <button class="control-btn" id="twitterStartBtn">
+                      <i class="fas fa-play"></i>
+                      Iniciar
+                    </button>
+                    <button class="control-btn secondary" id="twitterStopBtn">
+                      <i class="fas fa-stop"></i>
+                      Detener
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="platform-card github-card">
+                <div class="platform-header">
+                  <i class="fab fa-github"></i>
+                  <h4>GitHub</h4>
+                  <div
+                    class="platform-status-indicator"
+                    id="githubIndicator"
+                  ></div>
+                </div>
+                <div class="platform-content">
+                  <div class="platform-stats">
+                    <div class="stat">
+                      <span class="stat-number" id="githubRepos">0</span>
+                      <span class="stat-label">Repositorios</span>
+                    </div>
+                    <div class="stat">
+                      <span class="stat-number" id="githubIssues">0</span>
+                      <span class="stat-label">Issues</span>
+                    </div>
+                  </div>
+                  <div class="platform-controls">
+                    <button class="control-btn" id="githubStartBtn">
+                      <i class="fas fa-play"></i>
+                      Iniciar
+                    </button>
+                    <button class="control-btn secondary" id="githubStopBtn">
+                      <i class="fas fa-stop"></i>
+                      Detener
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documentation Page -->
+        <div id="documentation" class="page-content">
+          <div class="docs-section">
+            <div class="section-header">
+              <h3>Documentación del Sistema</h3>
+            </div>
+
+            <div class="docs-content">
+              <div class="docs-nav">
+                <ul>
+                  <li class="docs-nav-item active" data-doc="overview">
+                    Resumen General
+                  </li>
+                  <li class="docs-nav-item" data-doc="agent">
+                    Sistema de Agentes
+                  </li>
+                  <li class="docs-nav-item" data-doc="social">
+                    Redes Sociales
+                  </li>
+                  <li class="docs-nav-item" data-doc="api">API Reference</li>
+                  <li class="docs-nav-item" data-doc="troubleshooting">
+                    Solución de Problemas
+                  </li>
+                </ul>
+              </div>
+
+              <div class="docs-main">
+                <div id="docs-overview" class="docs-page active">
+                  <h2>Riona AI Agent - Resumen General</h2>
+                  <p>
+                    Riona AI Agent es un sistema de automatización inteligente
+                    diseñado para gestionar múltiples plataformas de redes
+                    sociales utilizando inteligencia artificial.
+                  </p>
+
+                  <h3>Características Principales</h3>
+                  <ul>
+                    <li>
+                      <strong>IA Generativa:</strong> Utiliza Google Gemini para
+                      generar contenido inteligente
+                    </li>
+                    <li>
+                      <strong>Multi-Plataforma:</strong> Soporte para Instagram,
+                      Twitter y GitHub
+                    </li>
+                    <li>
+                      <strong>Automatización:</strong> Procesos automáticos de
+                      interacción y publicación
+                    </li>
+                    <li>
+                      <strong>Caracteres AI:</strong> Personalidades
+                      configurables para diferentes contextos
+                    </li>
+                    <li>
+                      <strong>Monitoreo:</strong> Dashboard en tiempo real con
+                      métricas detalladas
+                    </li>
+                  </ul>
+
+                  <h3>Arquitectura del Sistema</h3>
+                  <div class="code-block">
+                    <pre><code>Backend API (Node.js + Express)
+├── Sistema de Agentes AI (Google Gemini)
+├── Automatización de Redes Sociales
+├── Procesamiento de Contenido
+├── Base de Datos (MongoDB - Opcional)
+└── Dashboard Web (Frontend)</code></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other pages will be populated similarly -->
+        <div id="automation" class="page-content">
+          <div class="automation-section">
+            <div class="section-header">
+              <h3>Centro de Automatización</h3>
+            </div>
+            <div class="coming-soon">
+              <i class="fas fa-cogs"></i>
+              <h4>Próximamente</h4>
+              <p>Configuración avanzada de automatización</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="analytics" class="page-content">
+          <div class="analytics-section">
+            <div class="section-header">
+              <h3>Analíticas y Métricas</h3>
+            </div>
+            <div class="coming-soon">
+              <i class="fas fa-chart-line"></i>
+              <h4>Próximamente</h4>
+              <p>Análisis detallado de rendimiento</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="settings" class="page-content">
+          <div class="settings-section">
+            <div class="section-header">
+              <h3>Configuración del Sistema</h3>
+            </div>
+            <div class="coming-soon">
+              <i class="fas fa-cog"></i>
+              <h4>Próximamente</h4>
+              <p>Configuración de parámetros del sistema</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+      <p>Cargando...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+  </body>
+</html>
