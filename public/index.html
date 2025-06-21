@@ -615,15 +615,49 @@
             <div class="analytics-section">
               <div class="section-header">
                 <h3>Analíticas y Métricas</h3>
-                <select id="analyticsTimeRange">
-                  <option value="24h">Últimas 24 horas</option>
-                  <option value="7d">Últimos 7 días</option>
-                  <option value="30d">Últimos 30 días</option>
-                </select>
+                <div class="analytics-controls">
+                  <select id="analyticsAccountSelect">
+                    <option value="all">Todas las cuentas</option>
+                    <!-- Se llenarán con las cuentas reales -->
+                  </select>
+                  <select id="analyticsTimeRange">
+                    <option value="24h">Últimas 24 horas</option>
+                    <option value="7d">Últimos 7 días</option>
+                    <option value="30d">Últimos 30 días</option>
+                    <option value="all">Todo el tiempo</option>
+                  </select>
+                  <button class="secondary-btn" id="refreshAnalyticsBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar
+                  </button>
+                </div>
+              </div>
+
+              <!-- No Data Message -->
+              <div
+                id="noDataMessage"
+                class="no-data-message"
+                style="display: none"
+              >
+                <div class="no-data-content">
+                  <i class="fas fa-chart-line"></i>
+                  <h4>No hay datos disponibles</h4>
+                  <p>
+                    Agrega una cuenta de Instagram y ejecuta automatizaciones
+                    para ver las métricas.
+                  </p>
+                  <button
+                    class="primary-btn"
+                    onclick="dashboard.showPage('automation')"
+                  >
+                    <i class="fas fa-plus"></i>
+                    Agregar Cuenta
+                  </button>
+                </div>
               </div>
 
               <!-- Key Metrics -->
-              <div class="analytics-metrics">
+              <div class="analytics-metrics" id="analyticsMetrics">
                 <div class="metric-card">
                   <div class="metric-icon">
                     <i class="fas fa-heart"></i>
@@ -631,7 +665,7 @@
                   <div class="metric-info">
                     <h4 id="totalLikes">0</h4>
                     <p>Likes Totales</p>
-                    <span class="metric-change positive">+12%</span>
+                    <span class="metric-change" id="likesChange">--</span>
                   </div>
                 </div>
 
@@ -642,7 +676,7 @@
                   <div class="metric-info">
                     <h4 id="totalComments">0</h4>
                     <p>Comentarios</p>
-                    <span class="metric-change positive">+8%</span>
+                    <span class="metric-change" id="commentsChange">--</span>
                   </div>
                 </div>
 
@@ -653,7 +687,7 @@
                   <div class="metric-info">
                     <h4 id="totalFollows">0</h4>
                     <p>Nuevos Follows</p>
-                    <span class="metric-change positive">+5%</span>
+                    <span class="metric-change" id="followsChange">--</span>
                   </div>
                 </div>
 
@@ -664,18 +698,40 @@
                   <div class="metric-info">
                     <h4 id="engagementRate">0%</h4>
                     <p>Engagement Rate</p>
-                    <span class="metric-change positive">+15%</span>
+                    <span class="metric-change" id="engagementChange">--</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="lastExecution">Nunca</h4>
+                    <p>Última Ejecución</p>
+                    <span class="metric-change" id="executionStatus">--</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-calendar"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="totalExecutions">0</h4>
+                    <p>Ejecuciones Totales</p>
+                    <span class="metric-change" id="executionsChange">--</span>
                   </div>
                 </div>
               </div>
 
               <!-- Charts -->
-              <div class="charts-grid">
+              <div class="charts-grid" id="analyticsCharts">
                 <div class="chart-card">
-                  <h4>Actividad por Hora</h4>
-                  <div class="chart-placeholder" id="hourlyChart">
+                  <h4>Actividad por Día</h4>
+                  <div class="chart-placeholder" id="dailyChart">
                     <canvas
-                      id="hourlyActivityChart"
+                      id="dailyActivityChart"
                       width="400"
                       height="200"
                     ></canvas>
@@ -683,30 +739,59 @@
                 </div>
 
                 <div class="chart-card">
-                  <h4>Engagement por Hashtag</h4>
+                  <h4>Hashtags Utilizados</h4>
                   <div class="hashtag-analytics" id="hashtagAnalytics">
-                    <!-- Hashtag performance will be loaded here -->
+                    <div class="no-hashtag-data">
+                      <p>No hay datos de hashtags disponibles</p>
+                      <small
+                        >Los hashtags aparecerán después de ejecutar
+                        automatizaciones</small
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
 
               <!-- Account Performance -->
-              <div class="account-performance">
-                <h4>Rendimiento por Cuenta</h4>
+              <div class="account-performance" id="accountPerformanceSection">
+                <div class="performance-header">
+                  <h4>Rendimiento por Cuenta</h4>
+                  <div class="performance-controls">
+                    <button class="secondary-btn" id="exportDataBtn">
+                      <i class="fas fa-download"></i>
+                      Exportar Datos
+                    </button>
+                  </div>
+                </div>
                 <div class="performance-table">
                   <table id="accountPerformanceTable">
                     <thead>
                       <tr>
                         <th>Cuenta</th>
                         <th>Seguidores</th>
-                        <th>Likes</th>
+                        <th>Likes Dados</th>
                         <th>Comentarios</th>
-                        <th>Engagement</th>
+                        <th>Follows</th>
+                        <th>Ejecuciones</th>
+                        <th>Última Actividad</th>
                         <th>Estado</th>
                       </tr>
                     </thead>
                     <tbody id="performanceTableBody">
-                      <!-- Performance data will be loaded here -->
+                      <tr id="noAccountsRow">
+                        <td colspan="8" class="no-data-cell">
+                          <div class="no-accounts-message">
+                            <i class="fas fa-instagram"></i>
+                            <p>No hay cuentas configuradas</p>
+                            <button
+                              class="primary-btn"
+                              onclick="dashboard.showPage('automation')"
+                            >
+                              Agregar Primera Cuenta
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
