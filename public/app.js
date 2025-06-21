@@ -182,15 +182,12 @@ class RionaAIDashboard {
   }
 
   // Data Loading
-  async loadInitialData() {
+  loadInitialData() {
     try {
       this.setLoading(true);
 
-      // Load system health
-      await this.loadSystemHealth();
-
-      // Load dashboard metrics
-      await this.loadDashboardMetrics();
+      // Load dashboard metrics from localStorage
+      this.loadDashboardMetrics();
 
       // Load initial activity log
       this.initializeActivityLog();
@@ -240,19 +237,18 @@ class RionaAIDashboard {
     }
   }
 
-  async loadSystemHealth() {
+  loadSystemHealth() {
     try {
-      const response = await this.apiCall("/health");
-      if (response) {
-        // Update system status
-        const statusElement = document.querySelector(".system-status");
-        if (statusElement && response.status === "healthy") {
-          statusElement.classList.add("active");
-        }
-
-        // Update uptime
-        this.updateUptime(response.uptime);
+      // Update system status from localStorage
+      const statusElement = document.querySelector(".system-status");
+      if (statusElement) {
+        statusElement.classList.add("active");
       }
+
+      // Update uptime from stored start time
+      const startTime = this.getFromStorage("startTime", Date.now());
+      const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+      this.updateUptime(uptimeSeconds);
     } catch (error) {
       console.warn("Could not load system health:", error);
     }
