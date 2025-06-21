@@ -981,26 +981,67 @@ class ExtendedDashboard extends RionaAIDashboard {
 
   updateAccountPerformanceTable() {
     const tableBody = document.getElementById("performanceTableBody");
-    if (!tableBody || !this.analyticsData.accountPerformance) return;
+    if (!tableBody) return;
 
-    tableBody.innerHTML = this.analyticsData.accountPerformance
+    const accounts = this.getStoredAccounts();
+    const noAccountsRow = document.getElementById("noAccountsRow");
+
+    if (accounts.length === 0) {
+      if (noAccountsRow) noAccountsRow.style.display = "table-row";
+      return;
+    } else {
+      if (noAccountsRow) noAccountsRow.style.display = "none";
+    }
+
+    tableBody.innerHTML = accounts
       .map(
         (account) => `
             <tr>
-                <td>${account.username}</td>
-                <td>${account.followers?.toLocaleString() || 0}</td>
-                <td>-</td>
-                <td>-</td>
-                <td>${account.engagement || 0}%</td>
                 <td>
-                    <span class="status-badge ${account.isActive ? "active" : "inactive"}">
-                        ${account.isActive ? "Activa" : "Inactiva"}
+                    <div class="account-cell">
+                        <i class="fab fa-instagram"></i>
+                        <strong>@${account.username}</strong>
+                    </div>
+                </td>
+                <td>${(account.stats?.followers || 0).toLocaleString()}</td>
+                <td>${(account.stats?.totalLikes || 0).toLocaleString()}</td>
+                <td>${(account.stats?.totalComments || 0).toLocaleString()}</td>
+                <td>${(account.stats?.totalFollows || 0).toLocaleString()}</td>
+                <td>${account.stats?.executions || 0}</td>
+                <td>${account.lastActivity ? this.getTimeAgo(new Date(account.lastActivity)) : "Nunca"}</td>
+                <td>
+                    <span class="status-badge ${account.status === "active" ? "active" : "inactive"}">
+                        ${account.status === "active" ? "Activa" : "Inactiva"}
                     </span>
                 </td>
             </tr>
         `,
       )
       .join("");
+  }
+
+  saveExecutionHistory(accountId, actions) {
+    const history = this.getFromStorage("executionHistory", []);
+    const execution = {
+      id: Date.now(),
+      accountId: accountId,
+      timestamp: new Date().toISOString(),
+      actions: {
+        likes: actions.likes || 0,
+        comments: actions.comments || 0,
+        follows: actions.follows || 0,
+      },
+      duration: Math.floor(Math.random() * 300) + 60, // Simulate 60-360 seconds
+    };
+
+    history.unshift(execution); // Add to beginning
+
+    // Keep only last 1000 executions
+    if (history.length > 1000) {
+      history.splice(1000);
+    }
+
+    this.saveToStorage("executionHistory", history);
   }
 
   viewAccountStats(accountId) {
