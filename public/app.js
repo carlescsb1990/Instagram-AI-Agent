@@ -1119,31 +1119,615 @@ class RionaAIDashboard {
     const docsMain = document.getElementById("docsMain");
     if (docsMain) {
       docsMain.innerHTML = `
-                <div class="docs-section">
-                    <h2>Bienvenido a Riona AI Agent</h2>
-                    <p>Sistema completo de automatización para redes sociales con inteligencia artificial.</p>
+                <div class="docs-container">
+                    <div class="docs-header">
+                        <h1>🚀 Guía Completa de Riona AI Agent</h1>
+                        <p class="docs-subtitle">Sistema de automatización inteligente para Instagram con IA avanzada</p>
+                    </div>
 
-                    <h3>Características Principales</h3>
-                    <ul>
-                        <li><strong>Automatización de Instagram:</strong> Likes, comentarios, follows y mensajes directos automáticos</li>
-                        <li><strong>AI Generativa:</strong> Contenido contextual usando Google Gemini 2.0</li>
-                        <li><strong>Multi-Usuario:</strong> Gestión de múltiples usuarios y cuentas</li>
-                        <li><strong>Analytics:</strong> Métricas detalladas y reportes en tiempo real</li>
-                        <li><strong>Anti-Detección:</strong> Técnicas avanzadas para evitar restricciones</li>
-                    </ul>
+                    <div class="docs-navigation">
+                        <button class="docs-nav-btn active" onclick="this.parentElement.parentElement.showDocsSection('getting-started')">🏁 Primeros Pasos</button>
+                        <button class="docs-nav-btn" onclick="this.parentElement.parentElement.showDocsSection('add-account')">📱 Agregar Cuenta</button>
+                        <button class="docs-nav-btn" onclick="this.parentElement.parentElement.showDocsSection('ai-setup')">🤖 Configurar AI</button>
+                        <button class="docs-nav-btn" onclick="this.parentElement.parentElement.showDocsSection('automation')">⚡ Automatización</button>
+                        <button class="docs-nav-btn" onclick="this.parentElement.parentElement.showDocsSection('results')">📊 Resultados</button>
+                        <button class="docs-nav-btn" onclick="this.parentElement.parentElement.showDocsSection('security')">🛡️ Seguridad</button>
+                    </div>
 
-                    <h3>Primeros Pasos</h3>
-                    <ol>
-                        <li>Ve a <strong>Automatización</strong> para agregar tu primera cuenta de Instagram</li>
-                        <li>Configura los hashtags objetivo en <strong>Configuración</strong></li>
-                        <li>Ajusta la personalidad del AI en <strong>Agente AI</strong></li>
-                        <li>Ejecuta las automatizaciones desde <strong>Redes Sociales</strong></li>
-                        <li>Monitorea el rendimiento en <strong>Analíticas</strong></li>
-                    </ol>
+                    <div class="docs-content">
+                        <!-- Getting Started Section -->
+                        <div id="getting-started" class="docs-section active">
+                            <h2>🏁 Primeros Pasos</h2>
+                            <div class="docs-intro">
+                                <p>Riona AI Agent es tu asistente de automatización para Instagram que utiliza inteligencia artificial para hacer crecer tu cuenta de forma orgánica y segura.</p>
+                            </div>
 
-                    <h3>Seguridad</h3>
-                    <p>Todas las credenciales se almacenan de forma segura y encriptada. El sistema respeta los límites de Instagram para evitar restricciones.</p>
+                            <div class="feature-grid">
+                                <div class="feature-card">
+                                    <div class="feature-icon">❤️</div>
+                                    <h4>Auto Likes</h4>
+                                    <p>Likes automáticos en posts relevantes de tu nicho</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">💬</div>
+                                    <h4>Comentarios IA</h4>
+                                    <p>Comentarios inteligentes generados por AI contextual</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">👥</div>
+                                    <h4>Follows Estratégicos</h4>
+                                    <p>Sigue cuentas relevantes para crecimiento orgánico</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">📊</div>
+                                    <h4>Analytics</h4>
+                                    <p>Métricas detalladas y reportes en tiempo real</p>
+                                </div>
+                            </div>
+
+                            <div class="quick-start">
+                                <h3>🚀 Configuración Rápida (5 minutos)</h3>
+                                <div class="step-list">
+                                    <div class="step">
+                                        <span class="step-number">1</span>
+                                        <div class="step-content">
+                                            <strong>Agregar Cuenta</strong>
+                                            <p>Ve a "Automatización" → "Agregar Cuenta" e introduce tus credenciales de Instagram</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <span class="step-number">2</span>
+                                        <div class="step-content">
+                                            <strong>Configurar AI</strong>
+                                            <p>En "Agente AI" selecciona la personalidad que mejor represente tu marca</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <span class="step-number">3</span>
+                                        <div class="step-content">
+                                            <strong>Definir Hashtags</strong>
+                                            <p>Configura los hashtags de tu nicho (ej: #technology, #startup, #ai)</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <span class="step-number">4</span>
+                                        <div class="step-content">
+                                            <strong>¡Comenzar!</strong>
+                                            <p>Haz clic en "Ejecutar Automatización" y observa cómo crece tu cuenta</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Account Section -->
+                        <div id="add-account" class="docs-section">
+                            <h2>📱 Cómo Agregar tu Cuenta de Instagram</h2>
+
+                            <div class="warning-box">
+                                <h4>⚠️ Antes de Empezar</h4>
+                                <p>Asegúrate de que tu cuenta de Instagram esté en buen estado (sin restricciones previas) y que uses una conexión estable.</p>
+                            </div>
+
+                            <div class="step-by-step">
+                                <h3>📋 Paso a Paso</h3>
+
+                                <div class="step-detail">
+                                    <h4>1️⃣ Navegar a Automatización</h4>
+                                    <p>En el menú lateral izquierdo, haz clic en <strong>"Automatización"</strong></p>
+                                </div>
+
+                                <div class="step-detail">
+                                    <h4>2️⃣ Hacer Clic en "Agregar Cuenta"</h4>
+                                    <p>Verás un botón azul que dice "Agregar Cuenta". Haz clic en él.</p>
+                                </div>
+
+                                <div class="step-detail">
+                                    <h4>3️⃣ Llenar el Formulario</h4>
+                                    <div class="form-example">
+                                        <div class="form-field">
+                                            <label>👤 Usuario de Instagram:</label>
+                                            <span class="example">tu_usuario (sin la @)</span>
+                                        </div>
+                                        <div class="form-field">
+                                            <label>🔒 Contraseña:</label>
+                                            <span class="example">Tu contraseña de Instagram</span>
+                                        </div>
+                                        <div class="form-field">
+                                            <label>⚡ Likes por hora:</label>
+                                            <span class="example">30 (recomendado para empezar)</span>
+                                        </div>
+                                        <div class="form-field">
+                                            <label>🎯 Hashtags objetivo:</label>
+                                            <span class="example">#technology, #ai, #startup, #innovation</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="step-detail">
+                                    <h4>4️⃣ Configurar Automatizaciones</h4>
+                                    <div class="automation-options">
+                                        <div class="option">
+                                            <input type="checkbox" checked disabled> <strong>Auto Likes</strong> - Da likes automáticos a posts relevantes
+                                        </div>
+                                        <div class="option">
+                                            <input type="checkbox" checked disabled> <strong>Auto Comentarios</strong> - Genera comentarios inteligentes con IA
+                                        </div>
+                                        <div class="option">
+                                            <input type="checkbox" disabled> <strong>Auto Follows</strong> - Sigue cuentas estratégicamente (opcional)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="success-box">
+                                <h4>✅ ¿Qué Pasa Después?</h4>
+                                <ul>
+                                    <li>Tu cuenta se guarda de forma segura en localStorage</li>
+                                    <li>Aparece en la lista de "Cuentas Activas"</li>
+                                    <li>El contador se actualiza automáticamente</li>
+                                    <li>¡Lista para empezar a automatizar!</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- AI Setup Section -->
+                        <div id="ai-setup" class="docs-section">
+                            <h2>🤖 Configuración del Agente AI</h2>
+
+                            <p class="section-intro">El corazón de Riona AI es su sistema de inteligencia artificial que genera comentarios contextualmente relevantes para tu nicho.</p>
+
+                            <div class="ai-personalities">
+                                <h3>🎭 Personalidades Disponibles</h3>
+
+                                <div class="personality-card">
+                                    <div class="personality-header">
+                                        <span class="personality-icon">🤖</span>
+                                        <h4>ArcanEdge System Agent</h4>
+                                    </div>
+                                    <div class="personality-description">
+                                        <p><strong>Ideal para:</strong> Tecnología, innovación, desarrollo de software</p>
+                                        <p><strong>Estilo:</strong> Técnico, preciso, orientado a la innovación</p>
+                                        <div class="example-comment">
+                                            <strong>Ejemplo:</strong> "Increíble implementación de ML! Este enfoque podría revolucionar la optimización de procesos. 🚀"
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="personality-card">
+                                    <div class="personality-header">
+                                        <span class="personality-icon">🚀</span>
+                                        <h4>Elon Style</h4>
+                                    </div>
+                                    <div class="personality-description">
+                                        <p><strong>Ideal para:</strong> Startups, emprendimiento, disrupción</p>
+                                        <p><strong>Estilo:</strong> Visionario, audaz, orientado al futuro</p>
+                                        <div class="example-comment">
+                                            <strong>Ejemplo:</strong> "El futuro es ahora. Esta innovación cambiará todo lo que conocemos sobre la industria. Mars next! 🌍→🔴"
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="personality-card">
+                                    <div class="personality-header">
+                                        <span class="personality-icon">🎯</span>
+                                        <h4>General Purpose</h4>
+                                    </div>
+                                    <div class="personality-description">
+                                        <p><strong>Ideal para:</strong> Cualquier nicho, contenido variado</p>
+                                        <p><strong>Estilo:</strong> Versátil, adaptable, engagement natural</p>
+                                        <div class="example-comment">
+                                            <strong>Ejemplo:</strong> "¡Excelente contenido! Me encanta cómo explicas conceptos complejos de manera sencilla. 👏"
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ai-testing">
+                                <h3>🧪 Probar la Generación de Contenido</h3>
+                                <div class="test-steps">
+                                    <div class="step">
+                                        <span class="step-number">1</span>
+                                        <p>Ve a la sección <strong>"Agente AI"</strong> en el menú</p>
+                                    </div>
+                                    <div class="step">
+                                        <span class="step-number">2</span>
+                                        <p>Selecciona tu personalidad preferida</p>
+                                    </div>
+                                    <div class="step">
+                                        <span class="step-number">3</span>
+                                        <p>Escribe un contexto de prueba: "nueva tecnología blockchain"</p>
+                                    </div>
+                                    <div class="step">
+                                        <span class="step-number">4</span>
+                                        <p>Haz clic en "Generar Contenido" y revisa el resultado</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Automation Section -->
+                        <div id="automation" class="docs-section">
+                            <h2>⚡ Ejecutar Automatizaciones</h2>
+
+                            <div class="automation-overview">
+                                <h3>🎯 ¿Qué Hace la Automatización?</h3>
+                                <p>Cuando ejecutas una automatización, Riona AI realiza una serie de acciones inteligentes en tu cuenta de Instagram:</p>
+                            </div>
+
+                            <div class="automation-process">
+                                <div class="process-step">
+                                    <div class="process-icon">🔍</div>
+                                    <div class="process-content">
+                                        <h4>1. Búsqueda Inteligente</h4>
+                                        <p>Busca posts usando tus hashtags objetivo (#technology, #ai, etc.)</p>
+                                        <p>Analiza la relevancia del contenido para tu nicho</p>
+                                    </div>
+                                </div>
+
+                                <div class="process-step">
+                                    <div class="process-icon">❤️</div>
+                                    <div class="process-content">
+                                        <h4>2. Likes Automáticos</h4>
+                                        <p>Da likes de forma natural y espaciada</p>
+                                        <p>Respeta límites: 30-60 likes por hora máximo</p>
+                                        <p>Evita ser detectado como bot con pausas aleatorias</p>
+                                    </div>
+                                </div>
+
+                                <div class="process-step">
+                                    <div class="process-icon">💬</div>
+                                    <div class="process-content">
+                                        <h4>3. Comentarios IA</h4>
+                                        <p>Lee y comprende el contenido del post</p>
+                                        <p>Genera comentarios contextualmente relevantes</p>
+                                        <p>Usa la personalidad AI seleccionada</p>
+                                        <p>Incluye emojis y tono natural</p>
+                                    </div>
+                                </div>
+
+                                <div class="process-step">
+                                    <div class="process-icon">👥</div>
+                                    <div class="process-content">
+                                        <h4>4. Follows Estratégicos</h4>
+                                        <p>Identifica cuentas relevantes en tu nicho</p>
+                                        <p>Sigue perfiles con engagement activo</p>
+                                        <p>Balancea follows/unfollows para crecimiento orgánico</p>
+                                    </div>
+                                </div>
+
+                                <div class="process-step">
+                                    <div class="process-icon">📊</div>
+                                    <div class="process-content">
+                                        <h4>5. Recolección de Métricas</h4>
+                                        <p>Registra todas las acciones realizadas</p>
+                                        <p>Calcula engagement rate y crecimiento</p>
+                                        <p>Actualiza estadísticas en tiempo real</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="execution-guide">
+                                <h3>🚀 Cómo Ejecutar</h3>
+                                <div class="execution-steps">
+                                    <div class="exec-step">
+                                        <span class="exec-number">1</span>
+                                        <div class="exec-content">
+                                            <strong>Ve a "Redes Sociales"</strong>
+                                            <p>En el menú lateral, haz clic en "Redes Sociales"</p>
+                                        </div>
+                                    </div>
+                                    <div class="exec-step">
+                                        <span class="exec-number">2</span>
+                                        <div class="exec-content">
+                                            <strong>Localiza tu Cuenta</strong>
+                                            <p>Verás tu cuenta de Instagram listada con su estado</p>
+                                        </div>
+                                    </div>
+                                    <div class="exec-step">
+                                        <span class="exec-number">3</span>
+                                        <div class="exec-content">
+                                            <strong>Haz Clic en "Ejecutar"</strong>
+                                            <p>Botón azul que inicia la automatización inmediatamente</p>
+                                        </div>
+                                    </div>
+                                    <div class="exec-step">
+                                        <span class="exec-number">4</span>
+                                        <div class="exec-content">
+                                            <strong>Monitorea la Actividad</strong>
+                                            <p>Ve el progreso en tiempo real en el feed de actividad</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="results" class="docs-section">
+                            <h2>📊 Resultados y Analytics</h2>
+
+                            <div class="results-overview">
+                                <h3>📈 ¿Qué Resultados Esperar?</h3>
+                                <p>Los resultados varían según tu nicho, pero aquí tienes expectativas realistas:</p>
+                            </div>
+
+                            <div class="results-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-badge">24h</div>
+                                    <div class="timeline-content">
+                                        <h4>Primeras 24 Horas</h4>
+                                        <div class="metrics">
+                                            <div class="metric">✅ 720 likes dados (30/hora × 24h)</div>
+                                            <div class="metric">✅ 240 comentarios AI generados</div>
+                                            <div class="metric">✅ 120 nuevas cuentas seguidas</div>
+                                            <div class="metric">✅ 15-30 nuevos seguidores</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-badge">7d</div>
+                                    <div class="timeline-content">
+                                        <h4>Primera Semana</h4>
+                                        <div class="metrics">
+                                            <div class="metric">✅ 5,000+ likes dados</div>
+                                            <div class="metric">✅ 1,500+ comentarios inteligentes</div>
+                                            <div class="metric">✅ 100-300 nuevos seguidores</div>
+                                            <div class="metric">✅ 3-8% engagement rate</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-badge">30d</div>
+                                    <div class="timeline-content">
+                                        <h4>Primer Mes</h4>
+                                        <div class="metrics">
+                                            <div class="metric">✅ 20,000+ interacciones realizadas</div>
+                                            <div class="metric">✅ 500-1,500 nuevos seguidores</div>
+                                            <div class="metric">✅ Engagement rate estabilizado</div>
+                                            <div class="metric">✅ Presencia establecida en tu nicho</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="analytics-features">
+                                <h3>📊 Funciones de Analytics</h3>
+
+                                <div class="analytics-grid">
+                                    <div class="analytics-card">
+                                        <h4>📈 Métricas en Tiempo Real</h4>
+                                        <ul>
+                                            <li>Total de likes dados</li>
+                                            <li>Comentarios generados</li>
+                                            <li>Nuevos follows realizados</li>
+                                            <li>Tasa de engagement</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="analytics-card">
+                                        <h4>🎯 Rendimiento por Hashtag</h4>
+                                        <ul>
+                                            <li>Hashtags más efectivos</li>
+                                            <li>Engagement por tag</li>
+                                            <li>Número de posts encontrados</li>
+                                            <li>Sugerencias de optimización</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="analytics-card">
+                                        <h4>⏰ Actividad Temporal</h4>
+                                        <ul>
+                                            <li>Horarios más activos</li>
+                                            <li>Días de mejor rendimiento</li>
+                                            <li>Patrones de engagement</li>
+                                            <li>Optimización temporal</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="analytics-card">
+                                        <h4>🔍 Análisis de Cuentas</h4>
+                                        <ul>
+                                            <li>Crecimiento de seguidores</li>
+                                            <li>Ratio de conversión</li>
+                                            <li>Calidad de audiencia</li>
+                                            <li>Comparativas por cuenta</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tips-box">
+                                <h4>💡 Tips para Mejores Resultados</h4>
+                                <ul>
+                                    <li><strong>Consistencia:</strong> Ejecuta automatizaciones diariamente</li>
+                                    <li><strong>Hashtags específicos:</strong> Usa hashtags de nicho, no genéricos</li>
+                                    <li><strong>Contenido propio:</strong> Sube contenido de calidad regularmente</li>
+                                    <li><strong>Interacción manual:</strong> Complementa con interacciones manuales</li>
+                                    <li><strong>Horarios óptimos:</strong> Ejecuta en horarios de mayor actividad</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Security Section -->
+                        <div id="security" class="docs-section">
+                            <h2>🛡️ Seguridad y Mejores Prácticas</h2>
+
+                            <div class="security-overview">
+                                <p>Riona AI está diseñado con seguridad avanzada para proteger tu cuenta y evitar restricciones de Instagram.</p>
+                            </div>
+
+                            <div class="security-features">
+                                <h3>🔒 Características de Seguridad</h3>
+
+                                <div class="security-grid">
+                                    <div class="security-item">
+                                        <div class="security-icon">🤖</div>
+                                        <h4>Anti-Detección Avanzada</h4>
+                                        <ul>
+                                            <li>Pausas aleatorias entre acciones</li>
+                                            <li>Patrones de comportamiento humano</li>
+                                            <li>Velocidad variable de ejecución</li>
+                                            <li>Simulación de navegación natural</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="security-item">
+                                        <div class="security-icon">⚡</div>
+                                        <h4>Límites Inteligentes</h4>
+                                        <ul>
+                                            <li>Máximo 60 likes por hora</li>
+                                            <li>Límite de follows por día</li>
+                                            <li>Pausas automáticas preventivas</li>
+                                            <li>Ajuste según historial de cuenta</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="security-item">
+                                        <div class="security-icon">🔐</div>
+                                        <h4>Protección de Credenciales</h4>
+                                        <ul>
+                                            <li>Almacenamiento local encriptado</li>
+                                            <li>Nunca enviamos datos a servidores externos</li>
+                                            <li>Sesiones seguras</li>
+                                            <li>Logout automático por inactividad</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="security-item">
+                                        <div class="security-icon">📊</div>
+                                        <h4>Monitoreo Continuo</h4>
+                                        <ul>
+                                            <li>Detección de bloqueos automática</li>
+                                            <li>Alertas de actividad inusual</li>
+                                            <li>Logs de todas las acciones</li>
+                                            <li>Reportes de estado en tiempo real</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="best-practices">
+                                <h3>✅ Mejores Prácticas</h3>
+
+                                <div class="practice-category">
+                                    <h4>🚀 Para Empezar</h4>
+                                    <ul>
+                                        <li>Comienza con 20-30 acciones por hora</li>
+                                        <li>Usa hashtags específicos de tu nicho</li>
+                                        <li>Ejecuta en horarios de actividad normal</li>
+                                        <li>Monitorea los primeros días de cerca</li>
+                                    </ul>
+                                </div>
+
+                                <div class="practice-category">
+                                    <h4>📈 Para Crecer</h4>
+                                    <ul>
+                                        <li>Incrementa gradualmente la actividad</li>
+                                        <li>Varía los hashtags regularmente</li>
+                                        <li>Complementa con contenido propio</li>
+                                        <li>Interactúa manualmente también</li>
+                                    </ul>
+                                </div>
+
+                                <div class="practice-category">
+                                    <h4>🛡️ Para Proteger</h4>
+                                    <ul>
+                                        <li>Nunca excedas 60 acciones por hora</li>
+                                        <li>Toma descansos de 2-3 horas ocasionalmente</li>
+                                        <li>No automatices 24/7, simula horarios humanos</li>
+                                        <li>Mantén tu cuenta activa manualmente también</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="warning-box">
+                                <h4>⚠️ Qué Evitar</h4>
+                                <ul>
+                                    <li><strong>No usar hashtags prohibidos</strong> o spam</li>
+                                    <li><strong>No exceder límites</strong> recomendados</li>
+                                    <li><strong>No automatizar cuentas nuevas</strong> (úsalas manualmente primero)</li>
+                                    <li><strong>No usar múltiples herramientas</strong> de automatización simultáneamente</li>
+                                    <li><strong>No ignorar las alertas</strong> del sistema</li>
+                                </ul>
+                            </div>
+
+                            <div class="support-box">
+                                <h4>🆘 Si Algo Sale Mal</h4>
+                                <p>Si tu cuenta recibe alguna restricción:</p>
+                                <ol>
+                                    <li>Pausa inmediatamente todas las automatizaciones</li>
+                                    <li>Usa tu cuenta manualmente por 48-72 horas</li>
+                                    <li>Revisa el log de actividad para identificar causas</li>
+                                    <li>Reduce la velocidad cuando reanudar</li>
+                                    <li>Contacta soporte si necesitas ayuda</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <style>
+                    .docs-container { max-width: 1000px; margin: 0 auto; }
+                    .docs-header { text-align: center; margin-bottom: 2rem; }
+                    .docs-subtitle { color: #6b7280; font-size: 1.1rem; }
+                    .docs-navigation { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+                    .docs-nav-btn { padding: 0.5rem 1rem; border: 1px solid #e5e7eb; background: white; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; }
+                    .docs-nav-btn.active, .docs-nav-btn:hover { background: #6366f1; color: white; }
+                    .docs-section { display: none; }
+                    .docs-section.active { display: block; }
+                    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+                    .feature-card { background: #f8fafc; padding: 1.5rem; border-radius: 0.5rem; text-align: center; }
+                    .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+                    .step-list, .step-by-step { margin: 1.5rem 0; }
+                    .step { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+                    .step-number { background: #6366f1; color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+                    .warning-box, .success-box, .tips-box, .support-box { background: #fef3cd; border: 1px solid #f59e0b; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; }
+                    .success-box { background: #d1fae5; border-color: #10b981; }
+                    .tips-box { background: #dbeafe; border-color: #3b82f6; }
+                    .support-box { background: #fee2e2; border-color: #ef4444; }
+                    .form-example { background: #f9fafb; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; }
+                    .form-field { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+                    .example { color: #6b7280; font-style: italic; }
+                    .personality-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; }
+                    .personality-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+                    .personality-icon { font-size: 1.5rem; }
+                    .example-comment { background: #f3f4f6; padding: 0.5rem; border-radius: 0.25rem; margin-top: 0.5rem; font-style: italic; }
+                    .process-step { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+                    .process-icon { font-size: 2rem; flex-shrink: 0; }
+                    .timeline-item { display: flex; gap: 1rem; margin-bottom: 2rem; }
+                    .timeline-badge { background: #6366f1; color: white; padding: 0.5rem; border-radius: 0.5rem; font-weight: bold; min-width: 3rem; text-align: center; }
+                    .metrics { margin-top: 0.5rem; }
+                    .metric { margin: 0.25rem 0; }
+                    .analytics-grid, .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+                    .analytics-card, .security-item { background: #f8fafc; padding: 1rem; border-radius: 0.5rem; }
+                    .security-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+                    .practice-category { margin-bottom: 1.5rem; }
+                    .exec-step { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+                    .exec-number { background: #10b981; color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+                </style>
+
+                <script>
+                    // Add navigation functionality
+                    document.querySelector('.docs-container').showDocsSection = function(sectionId) {
+                        // Hide all sections
+                        document.querySelectorAll('.docs-section').forEach(section => {
+                            section.classList.remove('active');
+                        });
+
+                        // Remove active from all nav buttons
+                        document.querySelectorAll('.docs-nav-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+
+                        // Show target section
+                        document.getElementById(sectionId).classList.add('active');
+
+                        // Add active to clicked button
+                        event.target.classList.add('active');
+                    };
+                </script>
             `;
     }
   }
