@@ -3,15 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Riona AI Agent - Dashboard</title>
+    <title>Riona AI Agent - Dashboard Completo</title>
     <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
     />
   </head>
   <body>
@@ -21,898 +23,911 @@
         <div class="sidebar-header">
           <div class="logo">
             <i class="fas fa-robot"></i>
-            <h2>Riona AI</h2>
+            <span class="logo-text">Riona AI</span>
           </div>
-          <div class="status-indicator" id="connectionStatus">
-            <div class="status-dot"></div>
-            <span>Conectado</span>
-          </div>
+          <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
         </div>
 
-        <ul class="nav-menu">
-          <li class="nav-item active" data-page="dashboard">
+        <div class="nav-menu">
+          <a href="#dashboard" class="nav-item active" data-page="dashboard">
             <i class="fas fa-tachometer-alt"></i>
             <span>Dashboard</span>
-          </li>
-          <li class="nav-item" data-page="agent">
+          </a>
+          <a href="#agent" class="nav-item" data-page="agent">
             <i class="fas fa-brain"></i>
             <span>Agente AI</span>
-          </li>
-          <li class="nav-item" data-page="social">
+          </a>
+          <a href="#social" class="nav-item" data-page="social">
             <i class="fas fa-share-alt"></i>
             <span>Redes Sociales</span>
-          </li>
-          <li class="nav-item" data-page="automation">
+          </a>
+          <a href="#automation" class="nav-item" data-page="automation">
             <i class="fas fa-cogs"></i>
             <span>Automatización</span>
-          </li>
-          <li class="nav-item" data-page="analytics">
+          </a>
+          <a href="#analytics" class="nav-item" data-page="analytics">
             <i class="fas fa-chart-line"></i>
             <span>Analíticas</span>
-          </li>
-          <li class="nav-item" data-page="settings">
+          </a>
+          <a href="#settings" class="nav-item" data-page="settings">
             <i class="fas fa-cog"></i>
             <span>Configuración</span>
-          </li>
-          <li class="nav-item" data-page="documentation">
+          </a>
+          <a href="#documentation" class="nav-item" data-page="documentation">
             <i class="fas fa-book"></i>
             <span>Documentación</span>
-          </li>
-        </ul>
+          </a>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="system-status">
+            <div class="status-indicator active"></div>
+            <span>Sistema Activo</span>
+          </div>
+        </div>
       </nav>
 
       <!-- Main Content -->
       <main class="main-content">
-        <header class="top-header">
+        <!-- Header -->
+        <header class="header">
           <div class="header-left">
             <h1 id="pageTitle">Dashboard Principal</h1>
-            <p id="pageSubtitle">Monitoreo en tiempo real del sistema AI</p>
+            <div class="breadcrumb">
+              <span id="breadcrumbText">Inicio / Dashboard</span>
+            </div>
           </div>
           <div class="header-right">
             <div class="header-stats">
               <div class="stat-item">
+                <span class="stat-value" id="systemUptime">0h 0m</span>
                 <span class="stat-label">Uptime</span>
-                <span class="stat-value" id="uptime">--</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">Memoria</span>
-                <span class="stat-value" id="memory">--</span>
+                <span class="stat-value" id="activeAccounts">0</span>
+                <span class="stat-label">Cuentas Activas</span>
               </div>
             </div>
-            <button class="refresh-btn" id="refreshBtn">
-              <i class="fas fa-sync-alt"></i>
-            </button>
+            <div class="header-controls">
+              <button class="header-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i>
+              </button>
+              <button class="header-btn" id="settingsQuickBtn">
+                <i class="fas fa-cog"></i>
+              </button>
+            </div>
           </div>
         </header>
 
-        <!-- Dashboard Content -->
-        <div id="dashboard" class="page-content active">
-          <!-- System Status Cards -->
-          <div class="cards-grid">
-            <div class="status-card">
-              <div class="card-header">
-                <h3>Estado del Sistema</h3>
-                <div class="status-badge" id="systemStatus">
-                  <div class="status-dot active"></div>
-                  <span>Activo</span>
+        <!-- Page Content Container -->
+        <div class="content-container">
+          <!-- Dashboard Principal -->
+          <div id="dashboard" class="page-content active">
+            <div class="dashboard-section">
+              <!-- System Overview -->
+              <div class="overview-cards">
+                <div class="overview-card primary">
+                  <div class="card-icon">
+                    <i class="fas fa-robot"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3>Sistema AI</h3>
+                    <p class="card-value">Activo</p>
+                    <span class="card-subtitle">Google Gemini 2.0</span>
+                  </div>
+                  <div class="card-badge success">
+                    <i class="fas fa-check"></i>
+                  </div>
                 </div>
-              </div>
-              <div class="card-content">
-                <div class="metric">
-                  <span class="metric-label">Servidor</span>
-                  <span class="metric-value" id="serverStatus">--</span>
-                </div>
-                <div class="metric">
-                  <span class="metric-label">Base de Datos</span>
-                  <span class="metric-value" id="dbStatus">--</span>
-                </div>
-                <div class="metric">
-                  <span class="metric-label">IA</span>
-                  <span class="metric-value" id="aiStatus">--</span>
-                </div>
-              </div>
-            </div>
 
-            <div class="status-card">
-              <div class="card-header">
-                <h3>Agente AI</h3>
-                <div class="status-badge" id="agentStatus">
-                  <div class="status-dot"></div>
-                  <span>Cargando...</span>
-                </div>
-              </div>
-              <div class="card-content">
-                <div class="metric">
-                  <span class="metric-label">Carácter Activo</span>
-                  <span class="metric-value" id="activeCharacter">--</span>
-                </div>
-                <div class="metric">
-                  <span class="metric-label">Modo</span>
-                  <span class="metric-value" id="agentMode">--</span>
-                </div>
-                <div class="metric">
-                  <span class="metric-label">Última Actividad</span>
-                  <span class="metric-value" id="lastActivity">--</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="status-card">
-              <div class="card-header">
-                <h3>Redes Sociales</h3>
-                <div class="platform-indicators">
-                  <div class="platform-dot instagram" title="Instagram"></div>
-                  <div class="platform-dot twitter" title="Twitter"></div>
-                  <div class="platform-dot github" title="GitHub"></div>
-                </div>
-              </div>
-              <div class="card-content">
-                <div class="platform-status">
-                  <div class="platform-item">
+                <div class="overview-card info">
+                  <div class="card-icon">
                     <i class="fab fa-instagram"></i>
-                    <span>Instagram</span>
-                    <span class="platform-status-text" id="instagramStatus"
-                      >--</span
-                    >
                   </div>
-                  <div class="platform-item">
-                    <i class="fab fa-twitter"></i>
-                    <span>Twitter</span>
-                    <span class="platform-status-text" id="twitterStatus"
-                      >--</span
-                    >
+                  <div class="card-content">
+                    <h3>Instagram</h3>
+                    <p class="card-value" id="totalAccounts">0</p>
+                    <span class="card-subtitle">Cuentas Configuradas</span>
                   </div>
-                  <div class="platform-item">
-                    <i class="fab fa-github"></i>
-                    <span>GitHub</span>
-                    <span class="platform-status-text" id="githubStatus"
-                      >--</span
-                    >
+                  <div class="card-badge warning">
+                    <i class="fas fa-play"></i>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="status-card">
-              <div class="card-header">
-                <h3>Métricas de Rendimiento</h3>
-              </div>
-              <div class="card-content">
-                <div class="metric">
-                  <span class="metric-label">CPU</span>
-                  <div class="progress-bar">
-                    <div
-                      class="progress-fill"
-                      id="cpuUsage"
-                      style="width: 0%"
-                    ></div>
+                <div class="overview-card success">
+                  <div class="card-icon">
+                    <i class="fas fa-heart"></i>
+                  </div>
+                  <div class="card-content">
+                    <h3>Actividad Hoy</h3>
+                    <p class="card-value" id="todayLikes">0</p>
+                    <span class="card-subtitle">Likes Automáticos</span>
+                  </div>
+                  <div class="card-badge primary">
+                    <i class="fas fa-arrow-up"></i>
                   </div>
                 </div>
-                <div class="metric">
-                  <span class="metric-label">RAM</span>
-                  <div class="progress-bar">
-                    <div
-                      class="progress-fill"
-                      id="ramUsage"
-                      style="width: 0%"
-                    ></div>
+
+                <div class="overview-card secondary">
+                  <div class="card-icon">
+                    <i class="fas fa-comments"></i>
                   </div>
-                </div>
-                <div class="metric">
-                  <span class="metric-label">Requests/min</span>
-                  <span class="metric-value" id="requestsPerMin">0</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Activity Log -->
-          <div class="activity-section">
-            <div class="section-header">
-              <h3>Registro de Actividad</h3>
-              <button class="clear-log-btn" id="clearLogBtn">
-                <i class="fas fa-trash"></i>
-                Limpiar
-              </button>
-            </div>
-            <div class="activity-log" id="activityLog">
-              <div class="log-entry">
-                <span class="log-time">--:--:--</span>
-                <span class="log-level info">INFO</span>
-                <span class="log-message">Iniciando dashboard...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Agent Page -->
-        <div id="agent" class="page-content">
-          <div class="agent-section">
-            <div class="section-header">
-              <h3>Configuración del Agente AI</h3>
-              <button class="primary-btn" id="testAgentBtn">
-                <i class="fas fa-play"></i>
-                Probar Agente
-              </button>
-            </div>
-
-            <div class="cards-grid">
-              <div class="config-card">
-                <h4>Caracteres Disponibles</h4>
-                <div class="characters-list" id="charactersList">
-                  <!-- Characters will be loaded here -->
-                </div>
-              </div>
-
-              <div class="config-card">
-                <h4>Generar Contenido AI</h4>
-                <div class="ai-generator">
-                  <textarea
-                    id="promptInput"
-                    placeholder="Escribe tu prompt aquí..."
-                    rows="4"
-                  ></textarea>
-                  <div class="generator-controls">
-                    <select id="contentType">
-                      <option value="comment">Comentario de Instagram</option>
-                      <option value="tweet">Tweet</option>
-                      <option value="post">Post General</option>
-                    </select>
-                    <button class="primary-btn" id="generateBtn">
-                      <i class="fas fa-magic"></i>
-                      Generar
-                    </button>
+                  <div class="card-content">
+                    <h3>Comentarios</h3>
+                    <p class="card-value" id="todayComments">0</p>
+                    <span class="card-subtitle">Generados por AI</span>
                   </div>
-                  <div class="ai-output" id="aiOutput">
-                    <div class="output-placeholder">
-                      El contenido generado aparecerá aquí...
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Social Media Page -->
-        <div id="social" class="page-content">
-          <div class="social-section">
-            <div class="section-header">
-              <h3>Gestión de Redes Sociales</h3>
-            </div>
-
-            <div class="platforms-grid">
-              <div class="platform-card instagram-card">
-                <div class="platform-header">
-                  <i class="fab fa-instagram"></i>
-                  <h4>Instagram</h4>
-                  <div
-                    class="platform-status-indicator"
-                    id="instagramIndicator"
-                  ></div>
-                </div>
-                <div class="platform-content">
-                  <div class="platform-stats">
-                    <div class="stat">
-                      <span class="stat-number" id="instagramPosts">0</span>
-                      <span class="stat-label">Posts Procesados</span>
-                    </div>
-                    <div class="stat">
-                      <span class="stat-number" id="instagramComments">0</span>
-                      <span class="stat-label">Comentarios</span>
-                    </div>
-                  </div>
-                  <div class="platform-controls">
-                    <button class="control-btn" id="instagramStartBtn">
-                      <i class="fas fa-play"></i>
-                      Iniciar
-                    </button>
-                    <button class="control-btn secondary" id="instagramStopBtn">
-                      <i class="fas fa-stop"></i>
-                      Detener
-                    </button>
+                  <div class="card-badge info">
+                    <i class="fas fa-comment"></i>
                   </div>
                 </div>
               </div>
 
-              <div class="platform-card twitter-card">
-                <div class="platform-header">
-                  <i class="fab fa-twitter"></i>
-                  <h4>Twitter</h4>
-                  <div
-                    class="platform-status-indicator"
-                    id="twitterIndicator"
-                  ></div>
-                </div>
-                <div class="platform-content">
-                  <div class="platform-stats">
-                    <div class="stat">
-                      <span class="stat-number" id="twitterTweets">0</span>
-                      <span class="stat-label">Tweets</span>
-                    </div>
-                    <div class="stat">
-                      <span class="stat-number" id="twitterEngagement">0</span>
-                      <span class="stat-label">Engagement</span>
-                    </div>
-                  </div>
-                  <div class="platform-controls">
-                    <button class="control-btn" id="twitterStartBtn">
-                      <i class="fas fa-play"></i>
-                      Iniciar
-                    </button>
-                    <button class="control-btn secondary" id="twitterStopBtn">
-                      <i class="fas fa-stop"></i>
-                      Detener
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="platform-card github-card">
-                <div class="platform-header">
-                  <i class="fab fa-github"></i>
-                  <h4>GitHub</h4>
-                  <div
-                    class="platform-status-indicator"
-                    id="githubIndicator"
-                  ></div>
-                </div>
-                <div class="platform-content">
-                  <div class="platform-stats">
-                    <div class="stat">
-                      <span class="stat-number" id="githubRepos">0</span>
-                      <span class="stat-label">Repositorios</span>
-                    </div>
-                    <div class="stat">
-                      <span class="stat-number" id="githubIssues">0</span>
-                      <span class="stat-label">Issues</span>
-                    </div>
-                  </div>
-                  <div class="platform-controls">
-                    <button class="control-btn" id="githubStartBtn">
-                      <i class="fas fa-play"></i>
-                      Iniciar
-                    </button>
-                    <button class="control-btn secondary" id="githubStopBtn">
-                      <i class="fas fa-stop"></i>
-                      Detener
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Documentation Page -->
-        <div id="documentation" class="page-content">
-          <div class="docs-section">
-            <div class="section-header">
-              <h3>Documentación del Sistema</h3>
-            </div>
-
-            <div class="docs-content">
-              <div class="docs-nav">
-                <ul>
-                  <li class="docs-nav-item active" data-doc="overview">
-                    Resumen General
-                  </li>
-                  <li class="docs-nav-item" data-doc="agent">
-                    Sistema de Agentes
-                  </li>
-                  <li class="docs-nav-item" data-doc="social">
-                    Redes Sociales
-                  </li>
-                  <li class="docs-nav-item" data-doc="api">API Reference</li>
-                  <li class="docs-nav-item" data-doc="troubleshooting">
-                    Solución de Problemas
-                  </li>
-                </ul>
-              </div>
-
-              <div class="docs-main">
-                <div id="docs-overview" class="docs-page active">
-                  <h2>Riona AI Agent - Resumen General</h2>
-                  <p>
-                    Riona AI Agent es un sistema de automatización inteligente
-                    diseñado para gestionar múltiples plataformas de redes
-                    sociales utilizando inteligencia artificial.
-                  </p>
-
-                  <h3>Características Principales</h3>
-                  <ul>
-                    <li>
-                      <strong>IA Generativa:</strong> Utiliza Google Gemini para
-                      generar contenido inteligente
-                    </li>
-                    <li>
-                      <strong>Multi-Plataforma:</strong> Soporte para Instagram,
-                      Twitter y GitHub
-                    </li>
-                    <li>
-                      <strong>Automatización:</strong> Procesos automáticos de
-                      interacción y publicación
-                    </li>
-                    <li>
-                      <strong>Caracteres AI:</strong> Personalidades
-                      configurables para diferentes contextos
-                    </li>
-                    <li>
-                      <strong>Monitoreo:</strong> Dashboard en tiempo real con
-                      métricas detalladas
-                    </li>
-                  </ul>
-
-                  <h3>Arquitectura del Sistema</h3>
-                  <div class="code-block">
-                    <pre><code>Backend API (Node.js + Express)
-├── Sistema de Agentes AI (Google Gemini)
-├── Automatización de Redes Sociales
-├── Procesamiento de Contenido
-├── Base de Datos (MongoDB - Opcional)
-└── Dashboard Web (Frontend)</code></pre>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Automation Section -->
-        <div id="automation" class="page-content">
-          <div class="automation-section">
-            <div class="section-header">
-              <h3>Centro de Automatización</h3>
-              <button class="primary-btn" id="addUserBtn">
-                <i class="fas fa-user-plus"></i>
-                Agregar Usuario
-              </button>
-            </div>
-
-            <!-- Users Management -->
-            <div class="users-grid" id="usersGrid">
-              <!-- Users will be loaded here -->
-            </div>
-
-            <!-- Instagram Accounts Management -->
-            <div class="accounts-section">
-              <div class="section-header">
-                <h3>Cuentas de Instagram</h3>
-                <button class="primary-btn" id="addAccountBtn">
-                  <i class="fab fa-instagram"></i>
-                  Agregar Cuenta
-                </button>
-              </div>
-              <div class="accounts-grid" id="accountsGrid">
-                <!-- Instagram accounts will be loaded here -->
-              </div>
-            </div>
-
-            <!-- Automation Rules -->
-            <div class="rules-section">
-              <div class="section-header">
-                <h3>Reglas de Automatización</h3>
-              </div>
-              <div class="rules-grid">
-                <div class="rule-card">
-                  <h4>Automatización de Likes</h4>
-                  <div class="rule-settings">
-                    <label>
-                      <input type="checkbox" id="autoLikeGlobal" />
-                      Activar likes automáticos
-                    </label>
-                    <label>
-                      Max likes por hora:
-                      <input
-                        type="number"
-                        id="maxLikesGlobal"
-                        value="60"
-                        min="1"
-                        max="200"
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                <div class="rule-card">
-                  <h4>Automatización de Comentarios</h4>
-                  <div class="rule-settings">
-                    <label>
-                      <input type="checkbox" id="autoCommentGlobal" />
-                      Activar comentarios automáticos
-                    </label>
-                    <label>
-                      Max comentarios por hora:
-                      <input
-                        type="number"
-                        id="maxCommentsGlobal"
-                        value="30"
-                        min="1"
-                        max="100"
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                <div class="rule-card">
-                  <h4>Automatización de Follows</h4>
-                  <div class="rule-settings">
-                    <label>
-                      <input type="checkbox" id="autoFollowGlobal" />
-                      Activar follows automáticos
-                    </label>
-                    <label>
-                      Max follows por hora:
-                      <input
-                        type="number"
-                        id="maxFollowsGlobal"
-                        value="20"
-                        min="1"
-                        max="50"
-                      />
-                    </label>
-                  </div>
-                </div>
-
-                <div class="rule-card">
-                  <h4>Hashtags Objetivo</h4>
-                  <div class="hashtags-input">
-                    <textarea
-                      id="targetHashtags"
-                      placeholder="technology, AI, programming, startup"
-                      rows="3"
-                    ></textarea>
-                    <small>Separar hashtags con comas</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="analytics" class="page-content">
-          <div class="analytics-section">
-            <div class="section-header">
-              <h3>Analíticas y Métricas</h3>
-              <select id="analyticsTimeRange">
-                <option value="24h">Últimas 24 horas</option>
-                <option value="7d">Últimos 7 días</option>
-                <option value="30d">Últimos 30 días</option>
-              </select>
-            </div>
-
-            <!-- Key Metrics -->
-            <div class="analytics-metrics">
-              <div class="metric-card">
-                <div class="metric-icon">
-                  <i class="fas fa-heart"></i>
-                </div>
-                <div class="metric-info">
-                  <h4 id="totalLikes">0</h4>
-                  <p>Likes Totales</p>
-                  <span class="metric-change positive">+12%</span>
-                </div>
-              </div>
-
-              <div class="metric-card">
-                <div class="metric-icon">
-                  <i class="fas fa-comments"></i>
-                </div>
-                <div class="metric-info">
-                  <h4 id="totalComments">0</h4>
-                  <p>Comentarios</p>
-                  <span class="metric-change positive">+8%</span>
-                </div>
-              </div>
-
-              <div class="metric-card">
-                <div class="metric-icon">
-                  <i class="fas fa-user-plus"></i>
-                </div>
-                <div class="metric-info">
-                  <h4 id="totalFollows">0</h4>
-                  <p>Nuevos Follows</p>
-                  <span class="metric-change positive">+5%</span>
-                </div>
-              </div>
-
-              <div class="metric-card">
-                <div class="metric-icon">
-                  <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="metric-info">
-                  <h4 id="engagementRate">0%</h4>
-                  <p>Engagement Rate</p>
-                  <span class="metric-change positive">+15%</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Charts -->
-            <div class="charts-grid">
-              <div class="chart-card">
-                <h4>Actividad por Hora</h4>
-                <div class="chart-placeholder" id="hourlyChart">
-                  <canvas
-                    id="hourlyActivityChart"
-                    width="400"
-                    height="200"
-                  ></canvas>
-                </div>
-              </div>
-
-              <div class="chart-card">
-                <h4>Engagement por Hashtag</h4>
-                <div class="hashtag-analytics" id="hashtagAnalytics">
-                  <!-- Hashtag performance will be loaded here -->
-                </div>
-              </div>
-            </div>
-
-            <!-- Account Performance -->
-            <div class="account-performance">
-              <h4>Rendimiento por Cuenta</h4>
-              <div class="performance-table">
-                <table id="accountPerformanceTable">
-                  <thead>
-                    <tr>
-                      <th>Cuenta</th>
-                      <th>Seguidores</th>
-                      <th>Likes</th>
-                      <th>Comentarios</th>
-                      <th>Engagement</th>
-                      <th>Estado</th>
-                    </tr>
-                  </thead>
-                  <tbody id="performanceTableBody">
-                    <!-- Performance data will be loaded here -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="settings" class="page-content">
-          <div class="settings-section">
-            <div class="section-header">
-              <h3>Configuración del Sistema</h3>
-              <button class="primary-btn" id="saveSettingsBtn">
-                <i class="fas fa-save"></i>
-                Guardar Configuración
-              </button>
-            </div>
-
-            <div class="settings-grid">
-              <!-- General Settings -->
-              <div class="settings-card">
-                <h4>Configuración General</h4>
-                <div class="setting-item">
-                  <label for="systemLanguage">Idioma del Sistema</label>
-                  <select id="systemLanguage">
-                    <option value="es">Español</option>
-                    <option value="en">English</option>
-                    <option value="fr">Français</option>
-                  </select>
-                </div>
-                <div class="setting-item">
-                  <label for="systemTheme">Tema</label>
-                  <select id="systemTheme">
-                    <option value="light">Claro</option>
-                    <option value="dark">Oscuro</option>
-                    <option value="auto">Automático</option>
-                  </select>
-                </div>
-                <div class="setting-item">
-                  <label for="refreshInterval"
-                    >Intervalo de Actualización (segundos)</label
+              <!-- Quick Actions -->
+              <div class="quick-actions">
+                <h3>Acciones Rápidas</h3>
+                <div class="actions-grid">
+                  <button
+                    class="action-card"
+                    onclick="dashboard.showPage('automation')"
                   >
-                  <input
-                    type="number"
-                    id="refreshInterval"
-                    value="30"
-                    min="10"
-                    max="300"
-                  />
-                </div>
-              </div>
-
-              <!-- AI Settings -->
-              <div class="settings-card">
-                <h4>Configuración de IA</h4>
-                <div class="setting-item">
-                  <label for="defaultCharacter">Carácter por Defecto</label>
-                  <select id="defaultCharacter">
-                    <option value="ArcanEdge.System.Agent">
-                      ArcanEdge System Agent
-                    </option>
-                    <option value="elon.character">Elon Character</option>
-                    <option value="sample.character">Sample Character</option>
-                  </select>
-                </div>
-                <div class="setting-item">
-                  <label for="contentStyle">Estilo de Contenido</label>
-                  <select id="contentStyle">
-                    <option value="professional">Profesional</option>
-                    <option value="casual">Casual</option>
-                    <option value="creative">Creativo</option>
-                    <option value="humorous">Humorístico</option>
-                  </select>
-                </div>
-                <div class="setting-item">
-                  <label for="responseLength">Longitud de Respuesta</label>
-                  <select id="responseLength">
-                    <option value="short">Corta (1-2 líneas)</option>
-                    <option value="medium">Media (3-5 líneas)</option>
-                    <option value="long">Larga (6+ líneas)</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Instagram Settings -->
-              <div class="settings-card">
-                <h4>Configuración de Instagram</h4>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableInstagramLogs" />
-                    Habilitar logs detallados
-                  </label>
-                </div>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableScreenshots" />
-                    Tomar capturas de pantalla
-                  </label>
-                </div>
-                <div class="setting-item">
-                  <label for="operationDelay"
-                    >Retraso entre operaciones (ms)</label
+                    <i class="fas fa-plus"></i>
+                    <span>Agregar Cuenta IG</span>
+                  </button>
+                  <button
+                    class="action-card"
+                    onclick="dashboard.generateContent()"
                   >
-                  <input
-                    type="number"
-                    id="operationDelay"
-                    value="3000"
-                    min="1000"
-                    max="10000"
-                  />
-                </div>
-                <div class="setting-item">
-                  <label for="sessionTimeout"
-                    >Timeout de sesión (minutos)</label
+                    <i class="fas fa-magic"></i>
+                    <span>Generar Contenido</span>
+                  </button>
+                  <button
+                    class="action-card"
+                    onclick="dashboard.runAllAutomations()"
                   >
-                  <input
-                    type="number"
-                    id="sessionTimeout"
-                    value="30"
-                    min="5"
-                    max="120"
-                  />
-                </div>
-              </div>
-
-              <!-- Security Settings -->
-              <div class="settings-card">
-                <h4>Configuración de Seguridad</h4>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableRateLimit" />
-                    Habilitar límite de requests
-                  </label>
-                </div>
-                <div class="setting-item">
-                  <label for="maxRequestsPerMinute"
-                    >Max requests por minuto</label
+                    <i class="fas fa-play-circle"></i>
+                    <span>Ejecutar Todo</span>
+                  </button>
+                  <button
+                    class="action-card"
+                    onclick="dashboard.showPage('analytics')"
                   >
-                  <input
-                    type="number"
-                    id="maxRequestsPerMinute"
-                    value="60"
-                    min="10"
-                    max="200"
-                  />
-                </div>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableApiKeyRotation" />
-                    Rotación automática de API keys
-                  </label>
-                </div>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableDataEncryption" />
-                    Cifrado de datos sensibles
-                  </label>
-                </div>
-              </div>
-
-              <!-- Notification Settings -->
-              <div class="settings-card">
-                <h4>Configuración de Notificaciones</h4>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableEmailNotifications" />
-                    Notificaciones por email
-                  </label>
-                </div>
-                <div class="setting-item">
-                  <label for="notificationEmail"
-                    >Email para notificaciones</label
-                  >
-                  <input
-                    type="email"
-                    id="notificationEmail"
-                    placeholder="admin@ejemplo.com"
-                  />
-                </div>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableErrorAlerts" />
-                    Alertas de errores
-                  </label>
-                </div>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableSuccessNotifications" />
-                    Notificaciones de éxito
-                  </label>
-                </div>
-              </div>
-
-              <!-- Backup Settings -->
-              <div class="settings-card">
-                <h4>Configuración de Respaldos</h4>
-                <div class="setting-item">
-                  <label>
-                    <input type="checkbox" id="enableAutoBackup" />
-                    Respaldo automático
-                  </label>
-                </div>
-                <div class="setting-item">
-                  <label for="backupFrequency">Frecuencia de respaldo</label>
-                  <select id="backupFrequency">
-                    <option value="daily">Diario</option>
-                    <option value="weekly">Semanal</option>
-                    <option value="monthly">Mensual</option>
-                  </select>
-                </div>
-                <div class="setting-item">
-                  <label for="backupRetention">Retención (días)</label>
-                  <input
-                    type="number"
-                    id="backupRetention"
-                    value="30"
-                    min="1"
-                    max="365"
-                  />
-                </div>
-                <div class="setting-item">
-                  <button class="secondary-btn" id="backupNowBtn">
-                    <i class="fas fa-download"></i>
-                    Respaldar Ahora
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Ver Analíticas</span>
                   </button>
                 </div>
               </div>
-            </div>
 
-            <!-- System Information -->
-            <div class="system-info">
-              <h4>Información del Sistema</h4>
-              <div class="info-grid">
-                <div class="info-item">
-                  <span class="info-label">Versión</span>
-                  <span class="info-value">1.0.0</span>
+              <!-- Recent Activity -->
+              <div class="recent-activity">
+                <h3>Actividad Reciente</h3>
+                <div class="activity-feed" id="activityFeed">
+                  <!-- Activity items will be added dynamically -->
                 </div>
-                <div class="info-item">
-                  <span class="info-label">Node.js</span>
-                  <span class="info-value" id="nodeVersion">--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agente AI Section -->
+          <div id="agent" class="page-content">
+            <div class="agent-section">
+              <div class="section-header">
+                <h3>Control del Agente AI</h3>
+                <div class="agent-status online">
+                  <div class="status-dot"></div>
+                  <span>Agente Activo</span>
                 </div>
-                <div class="info-item">
-                  <span class="info-label">Plataforma</span>
-                  <span class="info-value" id="platform">--</span>
+              </div>
+
+              <!-- Character Selection -->
+              <div class="character-selection">
+                <h4>Personalidad del Agente</h4>
+                <div class="characters-grid">
+                  <div
+                    class="character-card active"
+                    data-character="arcane-edge"
+                  >
+                    <div class="character-avatar">
+                      <i class="fas fa-robot"></i>
+                    </div>
+                    <h5>ArcanEdge</h5>
+                    <p>Especialista en tecnología y automatización</p>
+                    <div class="character-stats">
+                      <span class="stat">Profesional</span>
+                      <span class="stat">Técnico</span>
+                    </div>
+                  </div>
+
+                  <div class="character-card" data-character="elon">
+                    <div class="character-avatar">
+                      <i class="fas fa-rocket"></i>
+                    </div>
+                    <h5>Elon Style</h5>
+                    <p>Visionario y emprendedor disruptivo</p>
+                    <div class="character-stats">
+                      <span class="stat">Innovador</span>
+                      <span class="stat">Directo</span>
+                    </div>
+                  </div>
+
+                  <div class="character-card" data-character="sample">
+                    <div class="character-avatar">
+                      <i class="fas fa-user"></i>
+                    </div>
+                    <h5>General</h5>
+                    <p>Personalidad equilibrada y versátil</p>
+                    <div class="character-stats">
+                      <span class="stat">Amigable</span>
+                      <span class="stat">Adaptable</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="info-item">
-                  <span class="info-label">Uptime</span>
-                  <span class="info-value" id="systemUptime">--</span>
+              </div>
+
+              <!-- Content Generation -->
+              <div class="content-generation">
+                <h4>Generación de Contenido</h4>
+                <div class="generation-form">
+                  <div class="form-group">
+                    <label for="contentType">Tipo de Contenido</label>
+                    <select id="contentType">
+                      <option value="comment">Comentario Instagram</option>
+                      <option value="caption">Caption para Post</option>
+                      <option value="reply">Respuesta a Comentario</option>
+                      <option value="dm">Mensaje Directo</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="contentContext">Contexto/Tema</label>
+                    <textarea
+                      id="contentContext"
+                      placeholder="Describe el contenido, hashtag, o tema para el cual generar contenido..."
+                    ></textarea>
+                  </div>
+
+                  <div class="form-actions">
+                    <button
+                      class="primary-btn"
+                      onclick="dashboard.generateAIContent()"
+                    >
+                      <i class="fas fa-magic"></i>
+                      Generar Contenido
+                    </button>
+                    <button
+                      class="secondary-btn"
+                      onclick="dashboard.clearContentForm()"
+                    >
+                      <i class="fas fa-trash"></i>
+                      Limpiar
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="generated-content"
+                  id="generatedContent"
+                  style="display: none"
+                >
+                  <h5>Contenido Generado</h5>
+                  <div class="content-output" id="contentOutput"></div>
+                  <div class="content-actions">
+                    <button
+                      class="primary-btn"
+                      onclick="dashboard.copyContent()"
+                    >
+                      <i class="fas fa-copy"></i>
+                      Copiar
+                    </button>
+                    <button
+                      class="secondary-btn"
+                      onclick="dashboard.regenerateContent()"
+                    >
+                      <i class="fas fa-redo"></i>
+                      Regenerar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Redes Sociales Section -->
+          <div id="social" class="page-content">
+            <div class="social-section">
+              <div class="section-header">
+                <h3>Plataformas Sociales</h3>
+                <button class="primary-btn" id="addPlatformBtn">
+                  <i class="fas fa-plus"></i>
+                  Conectar Plataforma
+                </button>
+              </div>
+
+              <!-- Platform Cards -->
+              <div class="platforms-grid">
+                <div class="platform-card instagram active">
+                  <div class="platform-header">
+                    <div class="platform-info">
+                      <i class="fab fa-instagram"></i>
+                      <div>
+                        <h4>Instagram</h4>
+                        <p>Automatización completa</p>
+                      </div>
+                    </div>
+                    <div class="platform-status active">
+                      <i class="fas fa-check-circle"></i>
+                      <span>Conectado</span>
+                    </div>
+                  </div>
+
+                  <div class="platform-features">
+                    <div class="feature-item">
+                      <i class="fas fa-heart"></i>
+                      <span>Likes Automáticos</span>
+                      <div class="feature-toggle active"></div>
+                    </div>
+                    <div class="feature-item">
+                      <i class="fas fa-comment"></i>
+                      <span>Comentarios AI</span>
+                      <div class="feature-toggle active"></div>
+                    </div>
+                    <div class="feature-item">
+                      <i class="fas fa-user-plus"></i>
+                      <span>Follows Inteligentes</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                    <div class="feature-item">
+                      <i class="fas fa-paper-plane"></i>
+                      <span>Mensajes Directos</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                  </div>
+
+                  <div class="platform-stats">
+                    <div class="stat-box">
+                      <span class="stat-number">2</span>
+                      <span class="stat-label">Cuentas</span>
+                    </div>
+                    <div class="stat-box">
+                      <span class="stat-number">156</span>
+                      <span class="stat-label">Acciones/día</span>
+                    </div>
+                    <div class="stat-box">
+                      <span class="stat-number">94%</span>
+                      <span class="stat-label">Éxito</span>
+                    </div>
+                  </div>
+
+                  <div class="platform-actions">
+                    <button class="action-btn primary">
+                      <i class="fas fa-play"></i>
+                      Ejecutar Ahora
+                    </button>
+                    <button class="action-btn secondary">
+                      <i class="fas fa-cog"></i>
+                      Configurar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="platform-card twitter">
+                  <div class="platform-header">
+                    <div class="platform-info">
+                      <i class="fab fa-twitter"></i>
+                      <div>
+                        <h4>Twitter/X</h4>
+                        <p>Próximamente disponible</p>
+                      </div>
+                    </div>
+                    <div class="platform-status inactive">
+                      <i class="fas fa-clock"></i>
+                      <span>Disponible</span>
+                    </div>
+                  </div>
+
+                  <div class="platform-features">
+                    <div class="feature-item disabled">
+                      <i class="fas fa-retweet"></i>
+                      <span>Auto Retweets</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                    <div class="feature-item disabled">
+                      <i class="fas fa-heart"></i>
+                      <span>Auto Likes</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                    <div class="feature-item disabled">
+                      <i class="fas fa-reply"></i>
+                      <span>Respuestas AI</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                  </div>
+
+                  <div class="platform-actions">
+                    <button class="action-btn secondary disabled">
+                      <i class="fas fa-plug"></i>
+                      Conectar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="platform-card github">
+                  <div class="platform-header">
+                    <div class="platform-info">
+                      <i class="fab fa-github"></i>
+                      <div>
+                        <h4>GitHub</h4>
+                        <p>Monitoreo de repositorios</p>
+                      </div>
+                    </div>
+                    <div class="platform-status inactive">
+                      <i class="fas fa-clock"></i>
+                      <span>Disponible</span>
+                    </div>
+                  </div>
+
+                  <div class="platform-features">
+                    <div class="feature-item disabled">
+                      <i class="fas fa-eye"></i>
+                      <span>Monitoreo Issues</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                    <div class="feature-item disabled">
+                      <i class="fas fa-code-branch"></i>
+                      <span>Auto PR Reviews</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                  </div>
+
+                  <div class="platform-actions">
+                    <button class="action-btn secondary disabled">
+                      <i class="fas fa-plug"></i>
+                      Conectar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Automatización Section -->
+          <div id="automation" class="page-content">
+            <div class="automation-section">
+              <div class="section-header">
+                <h3>Centro de Automatización</h3>
+                <button class="primary-btn" id="addUserBtn">
+                  <i class="fas fa-user-plus"></i>
+                  Agregar Usuario
+                </button>
+              </div>
+
+              <!-- Users Management -->
+              <div class="users-section">
+                <h4>Gestión de Usuarios</h4>
+                <div class="users-grid" id="usersGrid">
+                  <!-- Users will be loaded here -->
+                </div>
+              </div>
+
+              <!-- Instagram Accounts Management -->
+              <div class="accounts-section">
+                <div class="section-header">
+                  <h4>Cuentas de Instagram</h4>
+                  <button class="primary-btn" id="addAccountBtn">
+                    <i class="fab fa-instagram"></i>
+                    Agregar Cuenta
+                  </button>
+                </div>
+                <div class="accounts-grid" id="accountsGrid">
+                  <!-- Instagram accounts will be loaded here -->
+                </div>
+              </div>
+
+              <!-- Automation Rules -->
+              <div class="rules-section">
+                <h4>Configuración Global</h4>
+                <div class="rules-grid">
+                  <div class="rule-card">
+                    <h5>Automatización de Likes</h5>
+                    <div class="rule-settings">
+                      <label>
+                        <input type="checkbox" id="autoLikeGlobal" />
+                        Activar likes automáticos
+                      </label>
+                      <label>
+                        Max likes por hora:
+                        <input
+                          type="number"
+                          id="maxLikesGlobal"
+                          value="60"
+                          min="1"
+                          max="200"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="rule-card">
+                    <h5>Automatización de Comentarios</h5>
+                    <div class="rule-settings">
+                      <label>
+                        <input type="checkbox" id="autoCommentGlobal" />
+                        Activar comentarios automáticos
+                      </label>
+                      <label>
+                        Max comentarios por hora:
+                        <input
+                          type="number"
+                          id="maxCommentsGlobal"
+                          value="30"
+                          min="1"
+                          max="100"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="rule-card">
+                    <h5>Automatización de Follows</h5>
+                    <div class="rule-settings">
+                      <label>
+                        <input type="checkbox" id="autoFollowGlobal" />
+                        Activar follows automáticos
+                      </label>
+                      <label>
+                        Max follows por hora:
+                        <input
+                          type="number"
+                          id="maxFollowsGlobal"
+                          value="20"
+                          min="1"
+                          max="50"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="rule-card">
+                    <h5>Hashtags Objetivo</h5>
+                    <div class="hashtags-input">
+                      <textarea
+                        id="targetHashtags"
+                        placeholder="technology, AI, programming, startup"
+                        rows="3"
+                      ></textarea>
+                      <small>Separar hashtags con comas</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analytics Section -->
+          <div id="analytics" class="page-content">
+            <div class="analytics-section">
+              <div class="section-header">
+                <h3>Analíticas y Métricas</h3>
+                <select id="analyticsTimeRange">
+                  <option value="24h">Últimas 24 horas</option>
+                  <option value="7d">Últimos 7 días</option>
+                  <option value="30d">Últimos 30 días</option>
+                </select>
+              </div>
+
+              <!-- Key Metrics -->
+              <div class="analytics-metrics">
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-heart"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="totalLikes">0</h4>
+                    <p>Likes Totales</p>
+                    <span class="metric-change positive">+12%</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-comments"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="totalComments">0</h4>
+                    <p>Comentarios</p>
+                    <span class="metric-change positive">+8%</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-user-plus"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="totalFollows">0</h4>
+                    <p>Nuevos Follows</p>
+                    <span class="metric-change positive">+5%</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-chart-line"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="engagementRate">0%</h4>
+                    <p>Engagement Rate</p>
+                    <span class="metric-change positive">+15%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Charts -->
+              <div class="charts-grid">
+                <div class="chart-card">
+                  <h4>Actividad por Hora</h4>
+                  <div class="chart-placeholder" id="hourlyChart">
+                    <canvas
+                      id="hourlyActivityChart"
+                      width="400"
+                      height="200"
+                    ></canvas>
+                  </div>
+                </div>
+
+                <div class="chart-card">
+                  <h4>Engagement por Hashtag</h4>
+                  <div class="hashtag-analytics" id="hashtagAnalytics">
+                    <!-- Hashtag performance will be loaded here -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Account Performance -->
+              <div class="account-performance">
+                <h4>Rendimiento por Cuenta</h4>
+                <div class="performance-table">
+                  <table id="accountPerformanceTable">
+                    <thead>
+                      <tr>
+                        <th>Cuenta</th>
+                        <th>Seguidores</th>
+                        <th>Likes</th>
+                        <th>Comentarios</th>
+                        <th>Engagement</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody id="performanceTableBody">
+                      <!-- Performance data will be loaded here -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Section -->
+          <div id="settings" class="page-content">
+            <div class="settings-section">
+              <div class="section-header">
+                <h3>Configuración del Sistema</h3>
+                <button class="primary-btn" id="saveSettingsBtn">
+                  <i class="fas fa-save"></i>
+                  Guardar Configuración
+                </button>
+              </div>
+
+              <div class="settings-grid">
+                <!-- AI Configuration -->
+                <div class="settings-card">
+                  <h4>Configuración de AI</h4>
+                  <div class="settings-form">
+                    <div class="form-group">
+                      <label for="aiCharacter">Carácter AI por Defecto</label>
+                      <select id="aiCharacter">
+                        <option value="arcane-edge">ArcanEdge System</option>
+                        <option value="elon">Elon Style</option>
+                        <option value="sample">General Purpose</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="contentStyle">Estilo de Contenido</label>
+                      <select id="contentStyle">
+                        <option value="professional">Profesional</option>
+                        <option value="casual">Casual</option>
+                        <option value="friendly">Amigable</option>
+                        <option value="technical">Técnico</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="defaultLanguage">Idioma por Defecto</label>
+                      <select id="defaultLanguage">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="pt">Português</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- System Configuration -->
+                <div class="settings-card">
+                  <h4>Configuración del Sistema</h4>
+                  <div class="settings-form">
+                    <div class="form-group">
+                      <label>
+                        <input type="checkbox" id="enableLogging" checked />
+                        Habilitar logs detallados
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label>
+                        <input type="checkbox" id="autoBackup" checked />
+                        Backup automático diario
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label>
+                        <input
+                          type="checkbox"
+                          id="enableNotifications"
+                          checked
+                        />
+                        Notificaciones del sistema
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="maxConcurrentOperations"
+                        >Operaciones Concurrentes</label
+                      >
+                      <input
+                        type="number"
+                        id="maxConcurrentOperations"
+                        value="3"
+                        min="1"
+                        max="10"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="settings-card">
+                  <h4>Configuración de Seguridad</h4>
+                  <div class="settings-form">
+                    <div class="form-group">
+                      <label>
+                        <input type="checkbox" id="useProxy" checked />
+                        Usar proxies para navegación
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label>
+                        <input type="checkbox" id="randomizeTimings" checked />
+                        Aleatorizar tiempos (anti-detección)
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="requestDelay"
+                        >Delay entre Requests (ms)</label
+                      >
+                      <input
+                        type="number"
+                        id="requestDelay"
+                        value="3000"
+                        min="1000"
+                        max="10000"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Backup & Export -->
+                <div class="settings-card">
+                  <h4>Backup y Exportación</h4>
+                  <div class="settings-form">
+                    <div class="form-group">
+                      <button
+                        class="secondary-btn full-width"
+                        id="backupNowBtn"
+                      >
+                        <i class="fas fa-download"></i>
+                        Crear Backup Ahora
+                      </button>
+                    </div>
+
+                    <div class="form-group">
+                      <button
+                        class="secondary-btn full-width"
+                        id="exportDataBtn"
+                      >
+                        <i class="fas fa-file-export"></i>
+                        Exportar Datos
+                      </button>
+                    </div>
+
+                    <div class="form-group">
+                      <input
+                        type="file"
+                        id="importDataFile"
+                        accept=".json"
+                        style="display: none"
+                      />
+                      <button
+                        class="secondary-btn full-width"
+                        onclick="document.getElementById('importDataFile').click()"
+                      >
+                        <i class="fas fa-file-import"></i>
+                        Importar Datos
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documentation Section -->
+          <div id="documentation" class="page-content">
+            <div class="documentation-section">
+              <div class="section-header">
+                <h3>Documentación y Guías</h3>
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Buscar en documentación..."
+                    id="docsSearch"
+                  />
+                </div>
+              </div>
+
+              <div class="docs-content">
+                <div class="docs-sidebar">
+                  <div class="docs-nav">
+                    <a href="#getting-started" class="docs-nav-item active">
+                      <i class="fas fa-play"></i>
+                      Primeros Pasos
+                    </a>
+                    <a href="#instagram-setup" class="docs-nav-item">
+                      <i class="fab fa-instagram"></i>
+                      Configurar Instagram
+                    </a>
+                    <a href="#automation-guide" class="docs-nav-item">
+                      <i class="fas fa-cogs"></i>
+                      Guía de Automatización
+                    </a>
+                    <a href="#ai-configuration" class="docs-nav-item">
+                      <i class="fas fa-brain"></i>
+                      Configuración AI
+                    </a>
+                    <a href="#best-practices" class="docs-nav-item">
+                      <i class="fas fa-star"></i>
+                      Mejores Prácticas
+                    </a>
+                    <a href="#troubleshooting" class="docs-nav-item">
+                      <i class="fas fa-wrench"></i>
+                      Solución de Problemas
+                    </a>
+                    <a href="#api-reference" class="docs-nav-item">
+                      <i class="fas fa-code"></i>
+                      API Reference
+                    </a>
+                  </div>
+                </div>
+
+                <div class="docs-main" id="docsMain">
+                  <!-- Documentation content will be loaded here -->
                 </div>
               </div>
             </div>
@@ -921,45 +936,57 @@
       </main>
     </div>
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-      <div class="spinner"></div>
-      <p>Cargando...</p>
-    </div>
-
+    <!-- Modals -->
     <!-- Add User Modal -->
     <div class="modal" id="addUserModal">
       <div class="modal-content">
         <div class="modal-header">
           <h3>Agregar Nuevo Usuario</h3>
-          <button class="modal-close" id="closeUserModal">&times;</button>
+          <button class="modal-close" id="closeUserModal">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-        <form id="addUserForm">
+        <form id="addUserForm" class="modal-body">
           <div class="form-group">
             <label for="userName">Nombre Completo</label>
-            <input type="text" id="userName" required />
+            <input type="text" id="userName" name="userName" required />
           </div>
+
           <div class="form-group">
             <label for="userEmail">Email</label>
-            <input type="email" id="userEmail" required />
+            <input type="email" id="userEmail" name="userEmail" required />
           </div>
+
           <div class="form-group">
             <label for="userRole">Rol</label>
-            <select id="userRole">
+            <select id="userRole" name="userRole">
               <option value="user">Usuario</option>
               <option value="admin">Administrador</option>
             </select>
           </div>
+
           <div class="form-group">
             <label for="subscriptionPlan">Plan de Suscripción</label>
-            <select id="subscriptionPlan">
+            <select id="subscriptionPlan" name="subscriptionPlan">
               <option value="free">Gratuito (1 cuenta)</option>
               <option value="basic">Básico (5 cuentas)</option>
-              <option value="premium">Premium (20 cuentas)</option>
-              <option value="enterprise">Empresarial (Ilimitado)</option>
+              <option value="premium">Premium (15 cuentas)</option>
+              <option value="enterprise">Enterprise (ilimitado)</option>
             </select>
           </div>
-          <div class="form-actions">
+
+          <div class="form-group">
+            <label for="accountsLimit">Límite de Cuentas</label>
+            <input
+              type="number"
+              id="accountsLimit"
+              name="accountsLimit"
+              value="1"
+              min="1"
+            />
+          </div>
+
+          <div class="modal-actions">
             <button type="button" class="secondary-btn" id="cancelUserBtn">
               Cancelar
             </button>
@@ -969,94 +996,120 @@
       </div>
     </div>
 
-    <!-- Add Instagram Account Modal -->
+    <!-- Add Account Modal -->
     <div class="modal" id="addAccountModal">
       <div class="modal-content">
         <div class="modal-header">
           <h3>Agregar Cuenta de Instagram</h3>
-          <button class="modal-close" id="closeAccountModal">&times;</button>
+          <button class="modal-close" id="closeAccountModal">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-        <form id="addAccountForm">
+        <form id="addAccountForm" class="modal-body">
           <div class="form-group">
             <label for="selectUser">Seleccionar Usuario</label>
-            <select id="selectUser" required>
+            <select id="selectUser" name="selectUser" required>
               <option value="">Seleccionar...</option>
-              <!-- Users will be loaded here -->
             </select>
           </div>
+
           <div class="form-group">
             <label for="igUsername">Usuario de Instagram</label>
-            <input type="text" id="igUsername" required />
+            <input
+              type="text"
+              id="igUsername"
+              name="igUsername"
+              placeholder="@usuario_instagram"
+              required
+            />
           </div>
+
           <div class="form-group">
             <label for="igPassword">Contraseña</label>
-            <input type="password" id="igPassword" required />
-          </div>
-          <div class="form-group">
-            <label for="targetHashtagsInput">Hashtags Objetivo</label>
-            <textarea
-              id="targetHashtagsInput"
-              placeholder="technology, ai, programming, startup"
-              rows="3"
-            ></textarea>
-            <small>Separar con comas</small>
+            <input type="password" id="igPassword" name="igPassword" required />
+            <small
+              >Las credenciales se almacenan de forma segura y encriptada</small
+            >
           </div>
 
-          <h4 style="margin: 1.5rem 0 1rem 0; color: #2d3748">
-            Configuración de Automatización
-          </h4>
+          <div class="form-section">
+            <h4>Configuración de Automatización</h4>
 
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="enableAutoLike" checked />
-              Activar likes automáticos
-            </label>
-          </div>
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="enableAutoComment" checked />
-              Activar comentarios automáticos
-            </label>
-          </div>
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="enableAutoFollow" />
-              Activar follows automáticos
-            </label>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" name="autoLike" checked />
+                Activar likes automáticos
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label>
+                <input type="checkbox" name="autoComment" checked />
+                Activar comentarios automáticos
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label>
+                <input type="checkbox" name="autoFollow" />
+                Activar follows automáticos
+              </label>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="maxLikes">Max Likes/hora</label>
+                <input
+                  type="number"
+                  id="maxLikes"
+                  name="maxLikes"
+                  value="60"
+                  min="1"
+                  max="200"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="maxComments">Max Comentarios/hora</label>
+                <input
+                  type="number"
+                  id="maxComments"
+                  name="maxComments"
+                  value="30"
+                  min="1"
+                  max="100"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="maxFollows">Max Follows/hora</label>
+                <input
+                  type="number"
+                  id="maxFollows"
+                  name="maxFollows"
+                  value="20"
+                  min="1"
+                  max="50"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="targetHashtags">Hashtags Objetivo</label>
+              <textarea
+                id="targetHashtags"
+                name="targetHashtags"
+                placeholder="technology, AI, programming, startup"
+                rows="3"
+              ></textarea>
+              <small
+                >Separar con comas. Estos hashtags se usarán para encontrar
+                contenido relevante.</small
+              >
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="maxLikesInput">Máximo likes por hora</label>
-            <input
-              type="number"
-              id="maxLikesInput"
-              value="60"
-              min="1"
-              max="200"
-            />
-          </div>
-          <div class="form-group">
-            <label for="maxCommentsInput">Máximo comentarios por hora</label>
-            <input
-              type="number"
-              id="maxCommentsInput"
-              value="30"
-              min="1"
-              max="100"
-            />
-          </div>
-          <div class="form-group">
-            <label for="maxFollowsInput">Máximo follows por hora</label>
-            <input
-              type="number"
-              id="maxFollowsInput"
-              value="20"
-              min="1"
-              max="50"
-            />
-          </div>
-
-          <div class="form-actions">
+          <div class="modal-actions">
             <button type="button" class="secondary-btn" id="cancelAccountBtn">
               Cancelar
             </button>
