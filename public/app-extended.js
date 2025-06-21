@@ -492,78 +492,120 @@ class ExtendedDashboard extends RionaAIDashboard {
       this.setLoading(true);
       this.addLogEntry(
         "info",
-        `🚀 Ejecutando automatización para ${account.username}...`,
+        `🚀 Ejecutando automatización REAL para ${account.username}...`,
       );
-
-      // Use direct simulation - no API dependency
-      const simulatedActions = {
-        likes:
-          Math.floor(
-            Math.random() * (account.settings?.maxLikesPerHour || 30),
-          ) + 5,
-        comments: account.settings?.autoComment
-          ? Math.floor(Math.random() * 8) + 2
-          : 0,
-        follows: account.settings?.autoFollow
-          ? Math.floor(Math.random() * 5) + 1
-          : 0,
-      };
-
-      // Simulate realistic processing time
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1500 + Math.random() * 1000),
-      );
-
       this.addLogEntry(
-        "success",
-        `✅ Automatización completada para ${account.username}`,
+        "info",
+        `🔐 Conectando a Instagram con credenciales reales...`,
       );
-      this.addLogEntry("info", `❤️ ${simulatedActions.likes} likes dados`);
-      if (simulatedActions.comments > 0) {
+
+      // Call REAL backend automation with actual credentials
+      try {
+        const response = await fetch("/api/social/instagram/automation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accountId: account.id,
+            username: account.username,
+            password: account.password, // Real password for real login
+            settings: account.settings,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Backend error: ${response.status} ${response.statusText}`,
+          );
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          const results = data.data;
+
+          this.addLogEntry(
+            "success",
+            `✅ ¡AUTOMATIZACIÓN REAL COMPLETADA! ${account.username}`,
+          );
+          this.addLogEntry("info", `📊 Resultados reales:`);
+          this.addLogEntry(
+            "info",
+            `❤️ ${results.actions.likes} likes REALES dados en Instagram`,
+          );
+          this.addLogEntry(
+            "info",
+            `💬 ${results.actions.comments} comentarios AI REALES publicados`,
+          );
+          this.addLogEntry(
+            "info",
+            `👥 ${results.actions.follows} follows REALES realizados`,
+          );
+          this.addLogEntry("info", `⏱️ Duración: ${results.duration} segundos`);
+
+          // Show detailed logs from backend
+          if (results.logs && results.logs.length > 0) {
+            results.logs.forEach((log) => {
+              this.addLogEntry("info", `🤖 ${log}`);
+            });
+          }
+
+          // Update analytics with REAL data
+          const currentAnalytics = this.getFromStorage("analyticsData", {
+            totalLikes: 0,
+            totalComments: 0,
+            totalFollows: 0,
+            totalExecutions: 0,
+          });
+
+          currentAnalytics.totalLikes =
+            (currentAnalytics.totalLikes || 0) + results.actions.likes;
+          currentAnalytics.totalComments =
+            (currentAnalytics.totalComments || 0) + results.actions.comments;
+          currentAnalytics.totalFollows =
+            (currentAnalytics.totalFollows || 0) + results.actions.follows;
+          currentAnalytics.totalExecutions =
+            (currentAnalytics.totalExecutions || 0) + 1;
+          currentAnalytics.lastExecution = new Date().toISOString();
+          this.saveToStorage("analyticsData", currentAnalytics);
+
+          // Save execution to history with REAL data
+          this.saveExecutionHistory(account.id, results.actions);
+
+          // Update account stats with REAL data
+          account.lastActivity = new Date().toISOString();
+          if (!account.stats) account.stats = {};
+          account.stats.totalLikes =
+            (account.stats.totalLikes || 0) + results.actions.likes;
+          account.stats.totalComments =
+            (account.stats.totalComments || 0) + results.actions.comments;
+          account.stats.totalFollows =
+            (account.stats.totalFollows || 0) + results.actions.follows;
+          account.stats.executions = (account.stats.executions || 0) + 1;
+          account.stats.lastRealExecution = new Date().toISOString();
+
+          // Mark as verified real account
+          account.verified = true;
+          account.lastRealResults = results.actions;
+        } else {
+          throw new Error(data.message || "Backend automation failed");
+        }
+      } catch (apiError) {
+        this.addLogEntry(
+          "error",
+          `❌ Error conectando con backend: ${apiError.message}`,
+        );
+        this.addLogEntry(
+          "warning",
+          `⚠️ Verifique que el servidor backend esté funcionando`,
+        );
         this.addLogEntry(
           "info",
-          `💬 ${simulatedActions.comments} comentarios AI generados`,
+          `🔧 Para activar automatización real, asegúrese de que el backend con Puppeteer esté ejecutándose`,
         );
+        throw apiError;
       }
-      if (simulatedActions.follows > 0) {
-        this.addLogEntry(
-          "info",
-          `👥 ${simulatedActions.follows} nuevos follows`,
-        );
-      }
-
-      // Update analytics
-      const currentAnalytics = this.getFromStorage("analyticsData", {
-        totalLikes: 0,
-        totalComments: 0,
-        totalFollows: 0,
-        totalExecutions: 0,
-      });
-
-      currentAnalytics.totalLikes =
-        (currentAnalytics.totalLikes || 0) + simulatedActions.likes;
-      currentAnalytics.totalComments =
-        (currentAnalytics.totalComments || 0) + simulatedActions.comments;
-      currentAnalytics.totalFollows =
-        (currentAnalytics.totalFollows || 0) + simulatedActions.follows;
-      currentAnalytics.totalExecutions =
-        (currentAnalytics.totalExecutions || 0) + 1;
-      currentAnalytics.lastExecution = new Date().toISOString();
-      this.saveToStorage("analyticsData", currentAnalytics);
-
-      // Save execution to history
-      this.saveExecutionHistory(account.id, simulatedActions);
-
-      // Update account stats
-      account.lastActivity = new Date().toISOString();
-      if (!account.stats) account.stats = {};
-      account.stats.totalLikes =
-        (account.stats.totalLikes || 0) + simulatedActions.likes;
-      account.stats.totalComments =
-        (account.stats.totalComments || 0) + simulatedActions.comments;
-      account.stats.totalFollows =
-        (account.stats.totalFollows || 0) + simulatedActions.follows;
-      account.stats.executions = (account.stats.executions || 0) + 1;
 
       // Save updated account
       this.saveAccount(account);
@@ -577,7 +619,14 @@ class ExtendedDashboard extends RionaAIDashboard {
         this.loadAnalytics("24h", "all");
       }
     } catch (error) {
-      this.addLogEntry("error", `❌ Error en automatización: ${error.message}`);
+      this.addLogEntry(
+        "error",
+        `❌ Error en automatización REAL: ${error.message}`,
+      );
+      this.addLogEntry(
+        "info",
+        `💡 Tip: Para automatización real, verifique que el backend esté ejecutándose`,
+      );
     } finally {
       this.setLoading(false);
     }
