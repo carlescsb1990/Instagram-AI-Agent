@@ -199,28 +199,11 @@ app.get("/api/characters", (_req: Request, res: Response) => {
 });
 
 // Platform control endpoints
-app.post("/api/social/:platform/:action", (req: Request, res: Response) => {
-  const { platform, action } = req.params;
-
-  if (!["instagram", "twitter", "github"].includes(platform)) {
-    return res.status(400).json({
-      success: false,
-      error: "Invalid platform",
-    });
-  }
-
-  if (!["start", "stop"].includes(action)) {
-    return res.status(400).json({
-      success: false,
-      error: "Invalid action",
-    });
-  }
-
-  return res.json({
+app.post("/api/social/:platform/:action", (_req: Request, res: Response) => {
+  res.json({
     success: true,
-    message: `${action} action for ${platform} executed`,
-    platform,
-    action,
+    message: "Platform control executed",
+    timestamp: new Date().toISOString(),
   });
 });
 
