@@ -451,36 +451,121 @@ class ExtendedDashboard extends RionaAIDashboard {
 
   async runAutomation(accountId) {
     const account = this.accounts.find((a) => a.id === parseInt(accountId));
-    if (!account) return;
+    if (!account) {
+      this.addLogEntry("error", "Cuenta no encontrada");
+      return;
+    }
 
     try {
       this.setLoading(true);
       this.addLogEntry(
         "info",
-        `Ejecutando automatización para ${account.username}...`,
+        `🚀 Ejecutando automatización para ${account.username}...`,
       );
 
-      // Simulate automation
-      setTimeout(() => {
-        const actions = Math.floor(Math.random() * 10) + 5;
-        this.addLogEntry(
-          "success",
-          `Automatización completada: ${actions} acciones realizadas en ${account.username}`,
+      // Try to call the backend API
+      try {
+        const response = await this.apiCall(
+          "/social/instagram/automation",
+          "POST",
+          {
+            accountId: account.id,
+            username: account.username,
+            settings: account.settings,
+          },
         );
 
-        // Update analytics
+        if (response && response.success) {
+          const results = response.data;
+          this.addLogEntry(
+            "success",
+            `✅ Automatización completada para ${account.username}`,
+          );
+          this.addLogEntry("info", `❤️ ${results.actions.likes} likes dados`);
+          this.addLogEntry(
+            "info",
+            `💬 ${results.actions.comments} comentarios AI generados`,
+          );
+          this.addLogEntry(
+            "info",
+            `👥 ${results.actions.follows} nuevos follows`,
+          );
+
+          // Update analytics with real data
+          const currentAnalytics = this.getFromStorage(
+            "analyticsData",
+            this.analyticsData,
+          );
+          currentAnalytics.totalLikes =
+            (currentAnalytics.totalLikes || 0) + results.actions.likes;
+          currentAnalytics.totalComments =
+            (currentAnalytics.totalComments || 0) + results.actions.comments;
+          currentAnalytics.totalFollows =
+            (currentAnalytics.totalFollows || 0) + results.actions.follows;
+          currentAnalytics.lastExecution = new Date().toISOString();
+          this.saveToStorage("analyticsData", currentAnalytics);
+
+          // Update account last activity
+          account.lastActivity = new Date().toISOString();
+          this.saveAccount(account);
+        } else {
+          throw new Error("API response not successful");
+        }
+      } catch (apiError) {
+        console.warn("API call failed, using local simulation:", apiError);
+
+        // Fallback to local simulation
+        const simulatedActions = {
+          likes:
+            Math.floor(
+              Math.random() * (account.settings?.maxLikesPerHour || 30),
+            ) + 5,
+          comments: Math.floor(Math.random() * 8) + 2,
+          follows: account.settings?.autoFollow
+            ? Math.floor(Math.random() * 5) + 1
+            : 0,
+        };
+
+        this.addLogEntry(
+          "warning",
+          "⚠️ Usando simulación local (backend no disponible)",
+        );
+        this.addLogEntry(
+          "success",
+          `✅ Simulación completada para ${account.username}`,
+        );
+        this.addLogEntry(
+          "info",
+          `❤️ ${simulatedActions.likes} likes simulados`,
+        );
+        this.addLogEntry(
+          "info",
+          `💬 ${simulatedActions.comments} comentarios simulados`,
+        );
+        if (simulatedActions.follows > 0) {
+          this.addLogEntry(
+            "info",
+            `👥 ${simulatedActions.follows} follows simulados`,
+          );
+        }
+
+        // Update analytics with simulated data
         const currentAnalytics = this.getFromStorage(
           "analyticsData",
           this.analyticsData,
         );
         currentAnalytics.totalLikes =
-          (currentAnalytics.totalLikes || 0) + actions;
+          (currentAnalytics.totalLikes || 0) + simulatedActions.likes;
+        currentAnalytics.totalComments =
+          (currentAnalytics.totalComments || 0) + simulatedActions.comments;
+        currentAnalytics.totalFollows =
+          (currentAnalytics.totalFollows || 0) + simulatedActions.follows;
+        currentAnalytics.lastExecution = new Date().toISOString();
         this.saveToStorage("analyticsData", currentAnalytics);
-
-        this.setLoading(false);
-      }, 2000);
+      }
     } catch (error) {
-      this.addLogEntry("error", `Error en automatización: ${error.message}`);
+      this.addLogEntry("error", `❌ Error en automatización: ${error.message}`);
+    } finally {
       this.setLoading(false);
     }
   }

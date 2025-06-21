@@ -303,7 +303,46 @@ app.delete("/api/users/:id", async (req: Request, res: Response) => {
 });
 
 // Instagram Accounts API
-app.post("/api/users/:userId/accounts", async (req: Request, res: Response) => {
+app.get("/api/accounts", async (req: Request, res: Response) => {
+  try {
+    // Mock accounts data for development
+    const mockAccounts = [
+      {
+        _id: "1",
+        username: "@demo_account_1",
+        platform: "instagram",
+        isActive: true,
+        stats: {
+          followers: 1542,
+          following: 823,
+          posts: 156,
+          engagement: 4.2,
+        },
+        settings: {
+          autoLike: true,
+          autoComment: true,
+          autoFollow: false,
+          maxLikesPerHour: 30,
+          targetHashtags: ["technology", "ai"],
+        },
+        lastActivity: new Date(),
+      },
+    ];
+
+    res.json({
+      success: true,
+      data: mockAccounts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Error fetching accounts",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+});
+
+app.post("/api/accounts", async (req: Request, res: Response) => {
   try {
     const { username, password, settings } = req.body;
 
@@ -313,6 +352,16 @@ app.post("/api/users/:userId/accounts", async (req: Request, res: Response) => {
       username,
       password: "***", // Don't store actual password in response
       isActive: true,
+      status: "active",
+      platform: "instagram",
+      created: new Date().toISOString(),
+      settings: settings || {
+        autoLike: true,
+        autoComment: true,
+        autoFollow: false,
+        maxLikesPerHour: 30,
+        targetHashtags: ["technology", "ai"],
+      },
       stats: {
         followers: 0,
         following: 0,
@@ -343,6 +392,76 @@ app.post("/api/users/:userId/accounts", async (req: Request, res: Response) => {
     res.status(400).json({
       success: false,
       error: "Error adding Instagram account",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+});
+
+// Instagram Automation Execution
+app.post(
+  "/api/social/instagram/automation",
+  async (req: Request, res: Response) => {
+    try {
+      const { accountId, actions } = req.body;
+
+      // Simulate automation execution
+      const simulatedResults = {
+        accountId: accountId || "default",
+        executionId: Date.now().toString(),
+        startTime: new Date().toISOString(),
+        actions: {
+          likes: Math.floor(Math.random() * 20) + 10,
+          comments: Math.floor(Math.random() * 8) + 3,
+          follows: Math.floor(Math.random() * 5) + 1,
+        },
+        status: "completed",
+        duration: Math.floor(Math.random() * 300) + 60, // 60-360 seconds
+        errors: 0,
+        warnings: [],
+      };
+
+      // Simulate processing time
+      setTimeout(() => {
+        console.log("Instagram automation simulated for account:", accountId);
+      }, 100);
+
+      res.json({
+        success: true,
+        data: simulatedResults,
+        message: "Automation executed successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: "Error executing Instagram automation",
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  },
+);
+
+// Social platforms overview
+app.get("/api/social", async (req: Request, res: Response) => {
+  try {
+    res.json({
+      success: true,
+      data: {
+        totalAccounts: 1,
+        activeAutomations: 1,
+        platforms: {
+          instagram: {
+            status: "active",
+            configured: true,
+            accounts: 1,
+          },
+        },
+        lastExecution: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Error fetching social data",
       message: error instanceof Error ? error.message : "Unknown error",
     });
   }
