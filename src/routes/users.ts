@@ -92,13 +92,13 @@ router.get("/:id", (req: Request, res: Response) => {
         error: "User not found",
       });
     }
-    res.json({
+    return res.json({
       success: true,
       data: user,
     });
   } catch (error) {
     logger.error("Error fetching user:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "Error fetching user",
       message: error instanceof Error ? error.message : "Unknown error",
@@ -127,14 +127,14 @@ router.put("/:id", (req: Request, res: Response) => {
       `User updated: ${mockUsers[userIndex].name} (${mockUsers[userIndex].email})`,
     );
 
-    res.json({
+    return res.json({
       success: true,
       data: mockUsers[userIndex],
       message: "User updated successfully",
     });
   } catch (error) {
     logger.error("Error updating user:", error);
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       error: "Error updating user",
       message: error instanceof Error ? error.message : "Unknown error",
@@ -156,13 +156,13 @@ router.delete("/:id", (req: Request, res: Response) => {
     const deletedUser = mockUsers.splice(userIndex, 1)[0];
     logger.info(`User deleted: ${deletedUser.name} (${deletedUser.email})`);
 
-    res.json({
+    return res.json({
       success: true,
       message: "User deleted successfully",
     });
   } catch (error) {
     logger.error("Error deleting user:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "Error deleting user",
       message: error instanceof Error ? error.message : "Unknown error",

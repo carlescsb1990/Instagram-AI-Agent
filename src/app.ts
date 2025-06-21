@@ -408,7 +408,7 @@ app.post("/api/generate", async (req: Request, res: Response) => {
     }
 
     const schema = getInstagramCommentSchema();
-    const result = await runAgent(schema, prompt, character);
+    const result = await runAgent(schema, prompt);
 
     res.json({
       success: true,
