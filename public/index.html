@@ -927,6 +927,145 @@
       <p>Cargando...</p>
     </div>
 
+    <!-- Add User Modal -->
+    <div class="modal" id="addUserModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Agregar Nuevo Usuario</h3>
+          <button class="modal-close" id="closeUserModal">&times;</button>
+        </div>
+        <form id="addUserForm">
+          <div class="form-group">
+            <label for="userName">Nombre Completo</label>
+            <input type="text" id="userName" required />
+          </div>
+          <div class="form-group">
+            <label for="userEmail">Email</label>
+            <input type="email" id="userEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="userRole">Rol</label>
+            <select id="userRole">
+              <option value="user">Usuario</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="subscriptionPlan">Plan de Suscripción</label>
+            <select id="subscriptionPlan">
+              <option value="free">Gratuito (1 cuenta)</option>
+              <option value="basic">Básico (5 cuentas)</option>
+              <option value="premium">Premium (20 cuentas)</option>
+              <option value="enterprise">Empresarial (Ilimitado)</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn" id="cancelUserBtn">
+              Cancelar
+            </button>
+            <button type="submit" class="primary-btn">Crear Usuario</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Instagram Account Modal -->
+    <div class="modal" id="addAccountModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Agregar Cuenta de Instagram</h3>
+          <button class="modal-close" id="closeAccountModal">&times;</button>
+        </div>
+        <form id="addAccountForm">
+          <div class="form-group">
+            <label for="selectUser">Seleccionar Usuario</label>
+            <select id="selectUser" required>
+              <option value="">Seleccionar...</option>
+              <!-- Users will be loaded here -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="igUsername">Usuario de Instagram</label>
+            <input type="text" id="igUsername" required />
+          </div>
+          <div class="form-group">
+            <label for="igPassword">Contraseña</label>
+            <input type="password" id="igPassword" required />
+          </div>
+          <div class="form-group">
+            <label for="targetHashtagsInput">Hashtags Objetivo</label>
+            <textarea
+              id="targetHashtagsInput"
+              placeholder="technology, ai, programming, startup"
+              rows="3"
+            ></textarea>
+            <small>Separar con comas</small>
+          </div>
+
+          <h4 style="margin: 1.5rem 0 1rem 0; color: #2d3748">
+            Configuración de Automatización
+          </h4>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableAutoLike" checked />
+              Activar likes automáticos
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableAutoComment" checked />
+              Activar comentarios automáticos
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="enableAutoFollow" />
+              Activar follows automáticos
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="maxLikesInput">Máximo likes por hora</label>
+            <input
+              type="number"
+              id="maxLikesInput"
+              value="60"
+              min="1"
+              max="200"
+            />
+          </div>
+          <div class="form-group">
+            <label for="maxCommentsInput">Máximo comentarios por hora</label>
+            <input
+              type="number"
+              id="maxCommentsInput"
+              value="30"
+              min="1"
+              max="100"
+            />
+          </div>
+          <div class="form-group">
+            <label for="maxFollowsInput">Máximo follows por hora</label>
+            <input
+              type="number"
+              id="maxFollowsInput"
+              value="20"
+              min="1"
+              max="50"
+            />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="secondary-btn" id="cancelAccountBtn">
+              Cancelar
+            </button>
+            <button type="submit" class="primary-btn">Agregar Cuenta</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Scripts -->
     <script src="app.js"></script>
     <script src="docs.js"></script>
