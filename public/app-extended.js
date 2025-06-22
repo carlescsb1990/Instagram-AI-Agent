@@ -322,9 +322,21 @@ class ExtendedDashboard extends RionaAIDashboard {
     event.preventDefault();
 
     const formData = new FormData(event.target);
+    const username = formData.get("username")?.trim();
+    const password = formData.get("password")?.trim();
+
+    // Validate required fields
+    if (!username || !password) {
+      this.addLogEntry("error", "Usuario y contraseña son obligatorios");
+      return;
+    }
+
+    // Clean username (remove @ if present)
+    const cleanUsername = username.replace("@", "");
+
     const accountData = {
-      username: formData.get("username"),
-      password: formData.get("password"),
+      username: cleanUsername,
+      password: password, // Store real password for Instagram login
       platform: formData.get("platform") || "instagram",
       userId: formData.get("userId"),
       settings: {
@@ -332,11 +344,10 @@ class ExtendedDashboard extends RionaAIDashboard {
         autoComment: formData.get("autoComment") === "on",
         autoFollow: formData.get("autoFollow") === "on",
         maxLikesPerHour: parseInt(formData.get("maxLikesPerHour")) || 30,
-        targetHashtags:
-          formData
-            .get("targetHashtags")
-            ?.split(",")
-            .map((h) => h.trim()) || [],
+        targetHashtags: formData
+          .get("targetHashtags")
+          ?.split(",")
+          .map((h) => h.trim().replace("#", "")) || ["technology", "ai"],
       },
     };
 
@@ -354,7 +365,19 @@ class ExtendedDashboard extends RionaAIDashboard {
 
     this.addLogEntry(
       "success",
-      `Cuenta @${savedAccount.username} agregada exitosamente`,
+      `✅ Cuenta @${savedAccount.username} agregada correctamente`,
+    );
+    this.addLogEntry(
+      "info",
+      `🔐 Credenciales guardadas para automatización real`,
+    );
+    this.addLogEntry(
+      "info",
+      `⚙️ Configuración: ${savedAccount.settings.maxLikesPerHour} likes/hora`,
+    );
+    this.addLogEntry(
+      "info",
+      `🎯 Hashtags objetivo: ${savedAccount.settings.targetHashtags.join(", ")}`,
     );
   }
 
