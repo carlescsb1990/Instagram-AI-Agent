@@ -492,11 +492,15 @@ class ExtendedDashboard extends RionaAIDashboard {
       this.setLoading(true);
       this.addLogEntry(
         "info",
-        `🚀 Ejecutando automatización REAL para ${account.username}...`,
+        `🚀 Ejecutando automatización REAL para @${account.username}...`,
       );
       this.addLogEntry(
         "info",
-        `🔐 Conectando a Instagram con credenciales reales...`,
+        `🔐 Conectando a Instagram con tus credenciales...`,
+      );
+      this.addLogEntry(
+        "info",
+        `⚙️ Configuración: ${account.settings?.maxLikesPerHour || 30} likes/hora, hashtags: ${account.settings?.targetHashtags?.join(", ") || "technology, ai"}`,
       );
 
       // Call REAL backend automation with actual credentials
@@ -509,7 +513,7 @@ class ExtendedDashboard extends RionaAIDashboard {
           body: JSON.stringify({
             accountId: account.id,
             username: account.username,
-            password: account.password, // Real password for real login
+            password: account.password, // Send real password for real Instagram login
             settings: account.settings,
           }),
         });
