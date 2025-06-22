@@ -139,7 +139,7 @@ class RionaAIDashboard {
       dashboard: "Dashboard Principal",
       agent: "Agente AI",
       social: "Redes Sociales",
-      automation: "Automatizaci��n",
+      automation: "Automatización",
       analytics: "Analíticas",
       settings: "Configuración",
       documentation: "Documentación",
@@ -1145,6 +1145,8 @@ class RionaAIDashboard {
 
       if (sidebar) {
         sidebar.classList.remove("active");
+        // Force sidebar to be visible on desktop after resize
+        sidebar.style.transform = "translateX(0)";
       }
       if (overlay) {
         overlay.classList.remove("active");
@@ -1299,7 +1301,7 @@ class RionaAIDashboard {
                             </div>
 
                             <div class="success-box">
-                                <h4>✅ ¿Qué Pasa Después?</h4>
+                                <h4>��� ¿Qué Pasa Después?</h4>
                                 <ul>
                                     <li>Tu cuenta se guarda de forma segura en localStorage</li>
                                     <li>Aparece en la lista de "Cuentas Activas"</li>
@@ -1590,7 +1592,7 @@ class RionaAIDashboard {
 
                         <!-- Security Section -->
                         <div id="security" class="docs-section">
-                            <h2>���️ Seguridad y Mejores Prácticas</h2>
+                            <h2>🛡️ Seguridad y Mejores Prácticas</h2>
 
                             <div class="security-overview">
                                 <p>Riona AI está diseñado con seguridad avanzada para proteger tu cuenta y evitar restricciones de Instagram.</p>
