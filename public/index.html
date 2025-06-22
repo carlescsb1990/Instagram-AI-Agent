@@ -1227,6 +1227,13 @@
             "🚀 Riona AI Agent Basic Dashboard initialized successfully",
           );
         }
+
+        // Ensure sidebar is properly configured after initialization
+        setTimeout(() => {
+          if (window.dashboard && window.dashboard.forceSidebarVisibility) {
+            window.dashboard.forceSidebarVisibility();
+          }
+        }, 200);
       });
     </script>
   </body>
