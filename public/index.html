@@ -1283,7 +1283,56 @@
           if (window.dashboard && window.dashboard.forceSidebarVisibility) {
             window.dashboard.forceSidebarVisibility();
           }
+
+          // Additional aggressive fix
+          forceShowSidebar();
         }, 200);
+      });
+
+      // Aggressive sidebar fix function
+      function forceShowSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        if (sidebar) {
+          console.log('🚨 AGGRESSIVE SIDEBAR FIX APPLIED');
+
+          // Remove all classes that might hide it
+          sidebar.classList.remove('hidden', 'collapsed');
+
+          // Force all important styles
+          const importantStyles = {
+            'transform': 'translateX(0px)',
+            'position': 'fixed',
+            'left': '0px',
+            'top': '0px',
+            'display': 'flex',
+            'width': '280px',
+            'height': '100vh',
+            'z-index': '100',
+            'background': '#1e293b',
+            'color': 'white'
+          };
+
+          Object.entries(importantStyles).forEach(([property, value]) => {
+            sidebar.style.setProperty(property, value, 'important');
+          });
+
+          // Force main content margin
+          if (mainContent) {
+            mainContent.style.setProperty('margin-left', '280px', 'important');
+            mainContent.style.setProperty('transition', 'none', 'important');
+          }
+
+          console.log('✅ Sidebar should now be visible');
+        }
+      }
+
+      // Run immediately and repeatedly
+      forceShowSidebar();
+      setTimeout(forceShowSidebar, 100);
+      setTimeout(forceShowSidebar, 500);
+      setTimeout(forceShowSidebar, 1000);
       });
     </script>
   </body>
