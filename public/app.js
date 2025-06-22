@@ -139,7 +139,7 @@ class RionaAIDashboard {
       dashboard: "Dashboard Principal",
       agent: "Agente AI",
       social: "Redes Sociales",
-      automation: "Automatización",
+      automation: "Automatizaci��n",
       analytics: "Analíticas",
       settings: "Configuración",
       documentation: "Documentación",
@@ -1069,10 +1069,25 @@ class RionaAIDashboard {
 
   ensureSidebarVisibility() {
     const sidebar = document.querySelector(".sidebar");
-    if (sidebar && window.innerWidth > 1024) {
-      // Force sidebar to be visible on desktop
-      sidebar.style.transform = "translateX(0)";
-      sidebar.classList.remove("active"); // Remove mobile active state
+    const mainContent = document.querySelector(".main-content");
+
+    if (sidebar) {
+      if (window.innerWidth > 1024) {
+        // Desktop: Sidebar siempre visible
+        sidebar.style.transform = "translateX(0)";
+        sidebar.style.position = "fixed";
+        sidebar.classList.remove("active");
+
+        if (mainContent) {
+          mainContent.style.marginLeft = "280px";
+        }
+      } else {
+        // Mobile: Remover estilos inline para que CSS tome control
+        sidebar.style.transform = "";
+        if (mainContent) {
+          mainContent.style.marginLeft = "0";
+        }
+      }
     }
   }
 
@@ -1575,7 +1590,7 @@ class RionaAIDashboard {
 
                         <!-- Security Section -->
                         <div id="security" class="docs-section">
-                            <h2>🛡️ Seguridad y Mejores Prácticas</h2>
+                            <h2>���️ Seguridad y Mejores Prácticas</h2>
 
                             <div class="security-overview">
                                 <p>Riona AI está diseñado con seguridad avanzada para proteger tu cuenta y evitar restricciones de Instagram.</p>
