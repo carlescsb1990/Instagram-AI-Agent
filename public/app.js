@@ -1065,6 +1065,34 @@ class RionaAIDashboard {
   // Keyboard shortcuts
   handleKeyboardShortcuts(e) {
     // Add keyboard shortcuts if needed
+    if (e.ctrlKey && e.key === "b") {
+      e.preventDefault();
+      this.debugSidebarStatus();
+    }
+  }
+
+  // Debug function to check sidebar status
+  debugSidebarStatus() {
+    const sidebar = document.querySelector(".sidebar");
+    const mainContent = document.querySelector(".main-content");
+
+    if (sidebar) {
+      const computedStyle = window.getComputedStyle(sidebar);
+      console.log("🔧 Sidebar Debug Info:", {
+        transform: sidebar.style.transform,
+        computedTransform: computedStyle.transform,
+        position: computedStyle.position,
+        left: computedStyle.left,
+        display: computedStyle.display,
+        width: computedStyle.width,
+        zIndex: computedStyle.zIndex,
+        classes: sidebar.className,
+        windowWidth: window.innerWidth,
+        mainContentMarginLeft: mainContent
+          ? window.getComputedStyle(mainContent).marginLeft
+          : "N/A",
+      });
+    }
   }
 
   ensureSidebarVisibility() {
@@ -1301,7 +1329,7 @@ class RionaAIDashboard {
                             </div>
 
                             <div class="success-box">
-                                <h4>��� ¿Qué Pasa Después?</h4>
+                                <h4>✅ ¿Qué Pasa Después?</h4>
                                 <ul>
                                     <li>Tu cuenta se guarda de forma segura en localStorage</li>
                                     <li>Aparece en la lista de "Cuentas Activas"</li>
