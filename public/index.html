@@ -1212,6 +1212,55 @@
     <script src="app.js"></script>
     <script src="app-extended.js"></script>
     <script src="docs.js"></script>
+
+    <!-- Immediate Sidebar Fix -->
+    <script>
+      // Force sidebar visibility immediately
+      (function () {
+        const fixSidebar = () => {
+          const sidebar = document.querySelector(".sidebar");
+          const mainContent = document.querySelector(".main-content");
+
+          if (sidebar) {
+            console.log("🔧 Applying immediate sidebar fix...");
+
+            // Remove any transform that hides the sidebar
+            sidebar.style.setProperty(
+              "transform",
+              "translateX(0)",
+              "important",
+            );
+            sidebar.style.setProperty("position", "fixed", "important");
+            sidebar.style.setProperty("left", "0", "important");
+            sidebar.style.setProperty("top", "0", "important");
+            sidebar.style.setProperty("display", "flex", "important");
+            sidebar.style.setProperty("z-index", "100", "important");
+
+            // Ensure main content has margin
+            if (mainContent) {
+              mainContent.style.setProperty(
+                "margin-left",
+                "280px",
+                "important",
+              );
+            }
+
+            console.log("✅ Sidebar fixed and visible");
+          }
+        };
+
+        // Apply fix when DOM is ready
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", fixSidebar);
+        } else {
+          fixSidebar();
+        }
+
+        // Also apply after a short delay
+        setTimeout(fixSidebar, 100);
+        setTimeout(fixSidebar, 500);
+      })();
+    </script>
     <script>
       // Initialize dashboard when DOM is ready
       document.addEventListener("DOMContentLoaded", () => {
