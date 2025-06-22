@@ -1077,34 +1077,47 @@ class RionaAIDashboard {
   }
 
   forceSidebarVisibility() {
-    setTimeout(() => {
+    const applySidebarFix = () => {
       const sidebar = document.querySelector(".sidebar");
       const mainContent = document.querySelector(".main-content");
 
-      console.log("🔧 Verificando sidebar...", {
+      console.log("🔧 Aplicando configuración de sidebar...", {
         sidebar: !!sidebar,
-        sidebarTransform:
-          sidebar?.style.transform || sidebar?.getComputedStyle?.transform,
         windowWidth: window.innerWidth,
+        isDesktop: window.innerWidth > 1024,
       });
 
       if (sidebar) {
-        // Force sidebar to be visible regardless of media queries
-        sidebar.style.transform = "translateX(0)";
-        sidebar.style.left = "0";
-        sidebar.style.position = "fixed";
-        sidebar.style.display = "flex";
+        if (window.innerWidth > 1024) {
+          // Desktop: Sidebar siempre visible y fijo
+          sidebar.style.transform = "translateX(0)";
+          sidebar.style.left = "0";
+          sidebar.style.position = "fixed";
+          sidebar.style.display = "flex";
+          sidebar.classList.remove("active"); // Remove mobile state
 
-        console.log("✅ Sidebar forzado a mostrarse");
+          // Asegurar que el contenido principal tenga margen
+          if (mainContent) {
+            mainContent.style.marginLeft = "280px";
+          }
 
-        // Ensure main content has proper margin
-        if (mainContent && window.innerWidth > 1024) {
-          mainContent.style.marginLeft = "280px";
+          console.log("✅ Sidebar configurado para desktop");
+        } else {
+          // Mobile: Sidebar oculto por defecto
+          sidebar.style.transform = "";
+          if (mainContent) {
+            mainContent.style.marginLeft = "0";
+          }
+          console.log("📱 Sidebar configurado para móvil");
         }
       } else {
         console.error("❌ Sidebar no encontrado en DOM");
       }
-    }, 100);
+    };
+
+    // Aplicar inmediatamente y después de un pequeño delay
+    applySidebarFix();
+    setTimeout(applySidebarFix, 100);
   }
 
   handleResize() {
