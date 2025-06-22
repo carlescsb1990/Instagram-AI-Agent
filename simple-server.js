@@ -212,6 +212,56 @@ app.post("/api/social/instagram/automation", async (req, res) => {
   }
 });
 
+app.get("/api/characters", (req, res) => {
+  res.json({
+    success: true,
+    data: [
+      {
+        id: "arcane-edge",
+        name: "ArcanEdge System",
+        description: "Especialista en tecnología y automatización",
+        personality: "professional",
+        traits: ["Profesional", "Técnico"],
+        active: true,
+        avatar: "fas fa-robot",
+        style: {
+          tone: "professional",
+          language: "technical",
+          emoji_usage: "moderate",
+        },
+      },
+      {
+        id: "elon",
+        name: "Elon Style",
+        description: "Visionario y emprendedor disruptivo",
+        personality: "innovative",
+        traits: ["Innovador", "Directo"],
+        active: false,
+        avatar: "fas fa-rocket",
+        style: {
+          tone: "bold",
+          language: "visionary",
+          emoji_usage: "high",
+        },
+      },
+      {
+        id: "sample",
+        name: "General Purpose",
+        description: "Personalidad equilibrada y versátil",
+        personality: "balanced",
+        traits: ["Amigable", "Adaptable"],
+        active: false,
+        avatar: "fas fa-user",
+        style: {
+          tone: "friendly",
+          language: "casual",
+          emoji_usage: "moderate",
+        },
+      },
+    ],
+  });
+});
+
 app.get("/api/analytics", (req, res) => {
   const { timeRange, account } = req.query;
 
