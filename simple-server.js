@@ -212,7 +212,7 @@ app.post("/api/social/instagram/automation", async (req, res) => {
   }
 });
 
-app.get("/analytics", (req, res) => {
+app.get("/api/analytics", (req, res) => {
   const { timeRange, account } = req.query;
 
   // Generate realistic analytics data based on timeRange
