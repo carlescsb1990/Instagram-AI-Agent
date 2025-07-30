@@ -14,6 +14,7 @@ class RionaAIDashboard {
 
     console.log("🔧 Dashboard inicializando...");
     this.setupEventListeners();
+    this.setupModalListeners();
     this.loadInitialData();
     this.startAutoRefresh();
     this.forceSidebarVisibility();
@@ -1695,7 +1696,7 @@ class RionaAIDashboard {
                                         <li>Incrementa gradualmente la actividad</li>
                                         <li>Varía los hashtags regularmente</li>
                                         <li>Complementa con contenido propio</li>
-                                        <li>Interactúa manualmente tambi��n</li>
+                                        <li>Interactúa manualmente también</li>
                                     </ul>
                                 </div>
 
