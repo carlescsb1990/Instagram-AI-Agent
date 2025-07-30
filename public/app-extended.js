@@ -563,6 +563,23 @@ class ExtendedDashboard extends RionaAIDashboard {
     console.log("✅ Force dashboard update completed");
   }
 
+  // Sync dashboard with localStorage periodically
+  syncDashboard() {
+    const currentAccountCount = this.accounts.length;
+    const storedAccounts = this.getStoredAccounts();
+
+    // Check if accounts have changed
+    if (storedAccounts.length !== currentAccountCount) {
+      console.log(`🔄 Account count changed: ${currentAccountCount} -> ${storedAccounts.length}`);
+
+      // Update internal state
+      this.accounts = storedAccounts;
+
+      // Force UI update
+      this.forceUpdateDashboard();
+    }
+  }
+
   editAccount(accountId) {
     const account = this.accounts.find((a) => a.id === parseInt(accountId));
     if (account) {
