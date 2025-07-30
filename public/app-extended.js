@@ -472,7 +472,7 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   deleteAccount(accountId) {
-    if (confirm("¿Estás seguro de que quieres eliminar esta cuenta?")) {
+    if (confirm("¿Est��s seguro de que quieres eliminar esta cuenta?")) {
       const accounts = this.getStoredAccounts();
       const filteredAccounts = accounts.filter(
         (a) => a.id !== parseInt(accountId),
@@ -498,7 +498,7 @@ class ExtendedDashboard extends RionaAIDashboard {
             <i class="fab fa-instagram"></i>
             <h3>No hay cuentas configuradas</h3>
             <p>Agrega tu primera cuenta de Instagram para comenzar con la automatización</p>
-            <button class="primary-btn" onclick="dashboard.showAddAccountModal()">
+            <button class="primary-btn" onclick="showAddAccountModal()">
               <i class="fas fa-plus"></i>
               Agregar Primera Cuenta
             </button>
@@ -1169,7 +1169,7 @@ class ExtendedDashboard extends RionaAIDashboard {
                 <div class="no-hashtag-data">
                     <i class="fas fa-hashtag"></i>
                     <p>No hay datos de hashtags disponibles</p>
-                    <small>Los hashtags aparecerán después de ejecutar automatizaciones</small>
+                    <small>Los hashtags aparecerán despu��s de ejecutar automatizaciones</small>
                 </div>
             `;
       return;
