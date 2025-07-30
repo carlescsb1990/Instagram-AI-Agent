@@ -1508,8 +1508,16 @@
         if (window.dashboard && typeof window.dashboard.showActivityDetails === 'function') {
           window.dashboard.showActivityDetails(accountId);
         } else {
-          console.warn("Dashboard not available, showing basic notification");
-          alert(`Ver actividad detallada para cuenta ${accountId} - Dashboard no disponible aún`);
+          // Wait a bit and try again
+          console.warn("Dashboard not available yet, retrying in 100ms...");
+          setTimeout(() => {
+            if (window.dashboard && typeof window.dashboard.showActivityDetails === 'function') {
+              window.dashboard.showActivityDetails(accountId);
+            } else {
+              console.error("❌ Dashboard still not available, showing fallback");
+              alert(`Error: La función de registro de actividad no está disponible aún. Por favor, espere un momento y vuelva a intentar.`);
+            }
+          }, 100);
         }
       };
 
@@ -1853,7 +1861,7 @@
         };
 
         window.editAccount = function(accountId) {
-          alert("🔧 Función de editar en desarrollo");
+          alert("🔧 Funci��n de editar en desarrollo");
         };
 
         window.deleteAccount = function(accountId) {
