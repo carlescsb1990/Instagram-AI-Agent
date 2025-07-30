@@ -2005,3 +2005,12 @@ window.debugRiona = function() {
     console.error("❌ Dashboard instance not available");
   }
 };
+
+// Make debug function globally available
+window.debugRiona = function() {
+  if (window.dashboard && window.dashboard.debugSystem) {
+    window.dashboard.debugSystem();
+  } else {
+    console.error("❌ Dashboard instance not available");
+  }
+};
