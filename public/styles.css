@@ -438,6 +438,28 @@ html {
   color: var(--text-light);
 }
 
+.btn.info-btn {
+  background: var(--info-color);
+  color: var(--text-light);
+}
+
+.btn.info-btn:hover {
+  background: var(--info-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn.danger-btn {
+  background: var(--danger-color);
+  color: var(--text-light);
+}
+
+.btn.danger-btn:hover {
+  background: var(--danger-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
 .action-btn:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
