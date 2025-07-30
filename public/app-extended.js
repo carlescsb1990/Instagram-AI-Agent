@@ -1432,6 +1432,323 @@ class ExtendedDashboard extends RionaAIDashboard {
     this.saveToStorage("executionHistory", history);
   }
 
+  // Activity Logging System
+  saveActivityLog(accountId, activityType, details) {
+    const activityLogs = this.getFromStorage("activityLogs", {});
+
+    if (!activityLogs[accountId]) {
+      activityLogs[accountId] = [];
+    }
+
+    const logEntry = {
+      id: Date.now() + Math.random(),
+      timestamp: new Date().toISOString(),
+      type: activityType, // 'like', 'comment', 'follow', 'unfollow', 'view_story'
+      details: details, // URL, text, target user, etc.
+      status: 'success' // 'success', 'failed', 'skipped'
+    };
+
+    activityLogs[accountId].unshift(logEntry);
+
+    // Keep only last 500 logs per account
+    if (activityLogs[accountId].length > 500) {
+      activityLogs[accountId].splice(500);
+    }
+
+    this.saveToStorage("activityLogs", activityLogs);
+    return logEntry;
+  }
+
+  showActivityDetails(accountId) {
+    const account = this.accounts.find(acc => acc.id === parseInt(accountId));
+    if (!account) {
+      this.showError("Cuenta no encontrada");
+      return;
+    }
+
+    const activityLogs = this.getFromStorage("activityLogs", {});
+    const accountLogs = activityLogs[accountId] || [];
+
+    // Create modal content
+    const modalHTML = `
+      <div id="activityModal" class="modal activity-modal active">
+        <div class="modal-content activity-modal-content">
+          <div class="modal-header">
+            <h3><i class="fas fa-list-alt"></i> Registro de Actividad - @${account.username}</h3>
+            <button id="closeActivityModal" class="close-btn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="activity-stats">
+            <div class="stat-card">
+              <div class="stat-value">${account.stats?.totalLikes || 0}</div>
+              <div class="stat-label"><i class="fas fa-heart"></i> Total Likes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${account.stats?.totalComments || 0}</div>
+              <div class="stat-label"><i class="fas fa-comment"></i> Total Comentarios</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${account.stats?.totalFollows || 0}</div>
+              <div class="stat-label"><i class="fas fa-user-plus"></i> Total Follows</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${account.stats?.executions || 0}</div>
+              <div class="stat-label"><i class="fas fa-play"></i> Ejecuciones</div>
+            </div>
+          </div>
+
+          <div class="activity-filters">
+            <select id="activityTypeFilter">
+              <option value="all">Todas las actividades</option>
+              <option value="like">❤️ Likes</option>
+              <option value="comment">💬 Comentarios</option>
+              <option value="follow">👥 Follows</option>
+              <option value="unfollow">👤 Unfollows</option>
+              <option value="view_story">👁️ Ver Historias</option>
+            </select>
+
+            <select id="activityTimeFilter">
+              <option value="all">Todo el tiempo</option>
+              <option value="today">Hoy</option>
+              <option value="week">Esta semana</option>
+              <option value="month">Este mes</option>
+            </select>
+
+            <button id="refreshActivityBtn" class="btn secondary-btn">
+              <i class="fas fa-sync"></i> Actualizar
+            </button>
+
+            <button id="exportActivityBtn" class="btn primary-btn">
+              <i class="fas fa-download"></i> Exportar
+            </button>
+          </div>
+
+          <div class="activity-list" id="activityList">
+            ${this.renderActivityLogs(accountLogs)}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Remove existing modal if any
+    const existingModal = document.getElementById('activityModal');
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Setup event listeners
+    this.setupActivityModalListeners(accountId);
+  }
+
+  renderActivityLogs(logs, typeFilter = 'all', timeFilter = 'all') {
+    if (!logs || logs.length === 0) {
+      return `
+        <div class="no-activity">
+          <i class="fas fa-clock"></i>
+          <h4>No hay actividad registrada</h4>
+          <p>La actividad aparecerá aquí cuando ejecutes automatizaciones</p>
+        </div>
+      `;
+    }
+
+    // Apply filters
+    let filteredLogs = logs;
+
+    if (typeFilter !== 'all') {
+      filteredLogs = filteredLogs.filter(log => log.type === typeFilter);
+    }
+
+    if (timeFilter !== 'all') {
+      const now = new Date();
+      let filterDate;
+
+      switch (timeFilter) {
+        case 'today':
+          filterDate = new Date(now.setHours(0, 0, 0, 0));
+          break;
+        case 'week':
+          filterDate = new Date(now.setDate(now.getDate() - 7));
+          break;
+        case 'month':
+          filterDate = new Date(now.setMonth(now.getMonth() - 1));
+          break;
+      }
+
+      filteredLogs = filteredLogs.filter(log => new Date(log.timestamp) >= filterDate);
+    }
+
+    if (filteredLogs.length === 0) {
+      return `
+        <div class="no-activity">
+          <i class="fas fa-filter"></i>
+          <h4>No hay actividad para estos filtros</h4>
+          <p>Intenta cambiar los filtros para ver más actividad</p>
+        </div>
+      `;
+    }
+
+    return filteredLogs.map(log => {
+      const date = new Date(log.timestamp);
+      const timeAgo = this.getTimeAgo(date);
+      const icon = this.getActivityIcon(log.type);
+      const statusClass = log.status === 'success' ? 'success' : log.status === 'failed' ? 'failed' : 'warning';
+
+      return `
+        <div class="activity-item ${statusClass}">
+          <div class="activity-icon">
+            <i class="${icon}"></i>
+          </div>
+          <div class="activity-content">
+            <div class="activity-header">
+              <span class="activity-type">${this.getActivityName(log.type)}</span>
+              <span class="activity-time">${timeAgo}</span>
+            </div>
+            <div class="activity-details">
+              ${this.formatActivityDetails(log.type, log.details)}
+            </div>
+            <div class="activity-status">
+              <span class="status-indicator ${statusClass}"></span>
+              ${log.status === 'success' ? 'Completado' : log.status === 'failed' ? 'Falló' : 'Omitido'}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  getActivityIcon(type) {
+    const icons = {
+      'like': 'fas fa-heart',
+      'comment': 'fas fa-comment',
+      'follow': 'fas fa-user-plus',
+      'unfollow': 'fas fa-user-minus',
+      'view_story': 'fas fa-eye',
+      'dm': 'fas fa-envelope'
+    };
+    return icons[type] || 'fas fa-circle';
+  }
+
+  getActivityName(type) {
+    const names = {
+      'like': 'Like',
+      'comment': 'Comentario',
+      'follow': 'Follow',
+      'unfollow': 'Unfollow',
+      'view_story': 'Ver Historia',
+      'dm': 'Mensaje Directo'
+    };
+    return names[type] || type;
+  }
+
+  formatActivityDetails(type, details) {
+    switch (type) {
+      case 'like':
+        return `<strong>Post:</strong> ${details.postUrl || 'URL no disponible'}<br>
+                <strong>Usuario:</strong> @${details.targetUser || 'Desconocido'}`;
+      case 'comment':
+        return `<strong>Post:</strong> ${details.postUrl || 'URL no disponible'}<br>
+                <strong>Usuario:</strong> @${details.targetUser || 'Desconocido'}<br>
+                <strong>Comentario:</strong> "${details.commentText || 'Texto no disponible'}"`;
+      case 'follow':
+      case 'unfollow':
+        return `<strong>Usuario:</strong> @${details.targetUser || 'Desconocido'}<br>
+                <strong>Perfil:</strong> ${details.profileUrl || 'URL no disponible'}`;
+      case 'view_story':
+        return `<strong>Usuario:</strong> @${details.targetUser || 'Desconocido'}<br>
+                <strong>Historia:</strong> ${details.storyUrl || 'URL no disponible'}`;
+      default:
+        return JSON.stringify(details, null, 2);
+    }
+  }
+
+  setupActivityModalListeners(accountId) {
+    // Close modal
+    const closeBtn = document.getElementById('closeActivityModal');
+    const modal = document.getElementById('activityModal');
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        modal.remove();
+      });
+    }
+
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+    }
+
+    // Filter listeners
+    const typeFilter = document.getElementById('activityTypeFilter');
+    const timeFilter = document.getElementById('activityTimeFilter');
+    const refreshBtn = document.getElementById('refreshActivityBtn');
+    const exportBtn = document.getElementById('exportActivityBtn');
+
+    const updateActivityList = () => {
+      const activityLogs = this.getFromStorage("activityLogs", {});
+      const accountLogs = activityLogs[accountId] || [];
+      const typeValue = typeFilter?.value || 'all';
+      const timeValue = timeFilter?.value || 'all';
+
+      const activityList = document.getElementById('activityList');
+      if (activityList) {
+        activityList.innerHTML = this.renderActivityLogs(accountLogs, typeValue, timeValue);
+      }
+    };
+
+    if (typeFilter) {
+      typeFilter.addEventListener('change', updateActivityList);
+    }
+
+    if (timeFilter) {
+      timeFilter.addEventListener('change', updateActivityList);
+    }
+
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', updateActivityList);
+    }
+
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => this.exportActivityLogs(accountId));
+    }
+  }
+
+  exportActivityLogs(accountId) {
+    const account = this.accounts.find(acc => acc.id === parseInt(accountId));
+    const activityLogs = this.getFromStorage("activityLogs", {});
+    const accountLogs = activityLogs[accountId] || [];
+
+    const exportData = {
+      account: {
+        id: accountId,
+        username: account?.username || 'Unknown',
+        platform: 'Instagram'
+      },
+      exportDate: new Date().toISOString(),
+      totalLogs: accountLogs.length,
+      logs: accountLogs
+    };
+
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `actividad-${account?.username || accountId}-${new Date().toISOString().split("T")[0]}.json`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+    this.showSuccess(`Actividad de @${account?.username || accountId} exportada correctamente`);
+  }
+
   viewAccountStats(accountId) {
     const account = this.accounts.find((acc) => acc.id === parseInt(accountId));
     if (account) {
