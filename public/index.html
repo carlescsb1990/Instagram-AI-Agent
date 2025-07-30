@@ -1158,7 +1158,7 @@
                 </label>
                 <div class="setting-info">
                   <strong>👥 Follows Automáticos</strong>
-                  <p>Sigue cuentas relevantes (⚠️ Más riesgo)</p>
+                  <p>Sigue cuentas relevantes (���️ Más riesgo)</p>
                 </div>
               </div>
             </div>
@@ -1625,11 +1625,69 @@
           }
         };
 
+        // Automation functions
+        window.executeAutomation = function(accountId) {
+          console.log(`🚀 Executing automation for account ${accountId}`);
+
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          const account = accounts.find(acc => acc.id.toString() === accountId.toString());
+
+          if (!account) {
+            alert("❌ Cuenta no encontrada");
+            return;
+          }
+
+          showSuccessMessage(`🚀 Ejecutando automatización para @${account.username}...`);
+
+          // Simulate automation process
+          setTimeout(() => {
+            const likes = Math.floor(Math.random() * 20) + 10;
+            const comments = Math.floor(Math.random() * 8) + 2;
+            const follows = account.settings.autoFollow ? Math.floor(Math.random() * 5) + 1 : 0;
+
+            // Update account stats
+            account.stats.totalLikes += likes;
+            account.stats.totalComments += comments;
+            account.stats.totalFollows += follows;
+            account.stats.executions += 1;
+            account.stats.lastActivity = new Date().toISOString();
+
+            // Save updated account
+            const updatedAccounts = accounts.map(acc => acc.id === account.id ? account : acc);
+            localStorage.setItem("accounts", JSON.stringify(updatedAccounts));
+
+            showSuccessMessage(`✅ Automatización completada: ${likes}❤️ ${comments}💬 ${follows}👥`);
+
+            // Update UI
+            updateDashboardCounters();
+            renderAccountsGrid();
+
+          }, 2000);
+        };
+
+        window.editAccount = function(accountId) {
+          alert("🔧 Función de editar en desarrollo");
+        };
+
+        window.deleteAccount = function(accountId) {
+          if (confirm("¿Estás seguro de que quieres eliminar esta cuenta?")) {
+            const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+            const filteredAccounts = accounts.filter(acc => acc.id.toString() !== accountId.toString());
+            localStorage.setItem("accounts", JSON.stringify(filteredAccounts));
+
+            showSuccessMessage("✅ Cuenta eliminada");
+            updateDashboardCounters();
+            renderAccountsGrid();
+          }
+        };
+
         console.log("✅ Debug functions available:");
         console.log("  - debugModal() - Test modal");
         console.log("  - debugAccounts() - Check accounts state");
         console.log("  - testAddAccount() - Create test account");
         console.log("  - forceSyncDashboard() - Force sync dashboard counts");
+        console.log("  - executeAutomation(id) - Run automation for account");
+        console.log("  - updateDashboardCounters() - Update all counters");
       });
     </script>
 
