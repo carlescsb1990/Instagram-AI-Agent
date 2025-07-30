@@ -514,55 +514,71 @@ class ExtendedDashboard extends RionaAIDashboard {
     }, 5000);
   }
 
-  // Force update dashboard counters
-  forceUpdateDashboard() {
-    console.log("🔧 forceUpdateDashboard called");
+  // Override parent loadDashboardMetrics with extended functionality
+  loadDashboardMetrics() {
+    try {
+      console.log("🔧 ExtendedDashboard loadDashboardMetrics called");
 
-    // Get fresh data from localStorage
-    const accounts = this.getStoredAccounts();
-    const activeAccounts = accounts.filter(acc => acc.status === 'active').length;
+      // Use localStorage data directly - no API dependency
+      const accounts = this.getStoredAccounts();
+      const users = this.getStoredUsers();
 
-    console.log(`🔧 Force update - Total: ${accounts.length}, Active: ${activeAccounts}`);
+      const totalAccounts = accounts.length;
+      const activeAccounts = accounts.filter(
+        (acc) => acc.status === "active",
+      ).length;
 
-    // Update DOM elements directly
-    const totalAccountsEl = document.getElementById('totalAccounts');
-    const activeAccountsEl = document.getElementById('activeAccounts');
-
-    if (totalAccountsEl) {
-      totalAccountsEl.textContent = accounts.length;
-      console.log(`✅ Updated totalAccounts to ${accounts.length}`);
-    } else {
-      console.error("❌ totalAccounts element not found");
-    }
-
-    if (activeAccountsEl) {
-      activeAccountsEl.textContent = activeAccounts;
-      console.log(`✅ Updated activeAccounts to ${activeAccounts}`);
-    } else {
-      console.error("❌ activeAccounts element not found");
-    }
-
-    // Update today's stats if there are accounts
-    if (accounts.length > 0) {
-      const todayLikesEl = document.getElementById('todayLikes');
-      const todayCommentsEl = document.getElementById('todayComments');
-
-      // Calculate today's activity from all accounts
+      // Calculate real activity from all accounts
       let totalLikes = 0;
       let totalComments = 0;
+      let totalFollows = 0;
+      let totalExecutions = 0;
 
       accounts.forEach(account => {
         totalLikes += account.stats?.totalLikes || 0;
         totalComments += account.stats?.totalComments || 0;
+        totalFollows += account.stats?.totalFollows || 0;
+        totalExecutions += account.stats?.executions || 0;
       });
 
-      if (todayLikesEl) {
-        todayLikesEl.textContent = totalLikes;
-      }
-      if (todayCommentsEl) {
-        todayCommentsEl.textContent = totalComments;
-      }
+      console.log("📊 Calculated totals:", {
+        totalAccounts,
+        activeAccounts,
+        totalLikes,
+        totalComments,
+        totalFollows,
+        totalExecutions
+      });
+
+      // Update all dashboard elements
+      this.updateElement("totalAccounts", totalAccounts);
+      this.updateElement("activeAccounts", activeAccounts);
+      this.updateElement("todayLikes", totalLikes);
+      this.updateElement("todayComments", totalComments);
+
+      // Update uptime with stored data or default
+      const startTime = this.getFromStorage("startTime", Date.now());
+      const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+      this.updateUptime(uptimeSeconds);
+
+      console.log("✅ Dashboard metrics updated successfully");
+    } catch (error) {
+      console.error("❌ Error loading dashboard metrics:", error);
+      // Set safe defaults
+      this.updateElement("totalAccounts", 0);
+      this.updateElement("activeAccounts", 0);
+      this.updateElement("todayLikes", 0);
+      this.updateElement("todayComments", 0);
+      this.updateUptime(0);
     }
+  }
+
+  // Force update dashboard counters
+  forceUpdateDashboard() {
+    console.log("🔧 forceUpdateDashboard called");
+
+    // Use the enhanced loadDashboardMetrics method
+    this.loadDashboardMetrics();
 
     // Force re-render accounts section if we're on automation page
     if (this.currentPage === 'automation') {
