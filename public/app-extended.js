@@ -1028,6 +1028,7 @@ class ExtendedDashboard extends RionaAIDashboard {
       this.updateAnalyticsDisplay();
       this.updateAccountSelector();
       this.updateCharts();
+      this.updateAccountPerformanceTable();
       this.addLogEntry("info", `Analytics actualizados para ${timeRange}`);
     } catch (error) {
       this.addLogEntry("error", `Error cargando analytics: ${error.message}`);
