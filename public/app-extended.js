@@ -1956,7 +1956,53 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 }
 
+  // Global debug function
+  debugSystem() {
+    console.log("=".repeat(50));
+    console.log("🔧 RIONA AI SYSTEM DEBUG REPORT");
+    console.log("=".repeat(50));
+
+    console.log("📱 Current Page:", this.currentPage);
+
+    const accounts = this.getStoredAccounts();
+    console.log(`📊 Total Accounts: ${accounts.length}`);
+    accounts.forEach((account, index) => {
+      console.log(`  ${index + 1}. @${account.username} (ID: ${account.id})`);
+      console.log(`     Stats: ${account.stats?.totalLikes || 0} likes, ${account.stats?.totalComments || 0} comments, ${account.stats?.totalFollows || 0} follows`);
+      console.log(`     Status: ${account.status}, Created: ${account.created}`);
+    });
+
+    const selector = document.getElementById("analyticsAccountSelect");
+    console.log("🔍 Analytics Selector:", {
+      exists: !!selector,
+      optionsCount: selector?.options?.length || 0,
+      innerHTML: selector?.innerHTML || 'N/A'
+    });
+
+    const tableBody = document.getElementById("performanceTableBody");
+    console.log("📋 Performance Table:", {
+      exists: !!tableBody,
+      rowsCount: tableBody?.rows?.length || 0,
+      innerHTML: tableBody?.innerHTML ? 'Has content' : 'Empty'
+    });
+
+    const analyticsData = this.getFromStorage("analyticsData", {});
+    console.log("📈 Analytics Data:", analyticsData);
+
+    console.log("=".repeat(50));
+  }
+}
+
 // Export for use in other scripts
 if (typeof module !== "undefined" && module.exports) {
   module.exports = ExtendedDashboard;
 }
+
+// Make debug function globally available
+window.debugRiona = function() {
+  if (window.dashboard && window.dashboard.debugSystem) {
+    window.dashboard.debugSystem();
+  } else {
+    console.error("❌ Dashboard instance not available");
+  }
+};
