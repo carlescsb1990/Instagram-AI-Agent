@@ -308,13 +308,35 @@ class ExtendedDashboard extends RionaAIDashboard {
 
   // Account CRUD Operations
   showAddAccountModal() {
+    console.log("🔧 Intentando abrir modal de agregar cuenta...");
+
     const modal = document.getElementById("addAccountModal");
     if (modal) {
+      console.log("✅ Modal encontrado, abriendo...");
+
       // Reset form
       const form = document.getElementById("addAccountForm");
-      if (form) form.reset();
+      if (form) {
+        form.reset();
+        console.log("✅ Formulario reseteado");
+      }
 
+      // Force show modal with important styles
+      modal.style.display = 'flex';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      modal.style.zIndex = '1000';
       modal.classList.add("active");
+
+      console.log("✅ Modal debería estar visible ahora");
+      this.showSuccess("🔧 Modal abierto - si no lo ves, revisa la consola");
+    } else {
+      console.error("❌ Modal no encontrado en DOM");
+      this.showError("❌ Modal no encontrado - revisa la consola");
     }
   }
 
