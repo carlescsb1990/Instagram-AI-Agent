@@ -1027,6 +1027,23 @@ html {
   transform: translateY(-4px);
 }
 
+.platform-card.clickable {
+  cursor: pointer;
+}
+
+.platform-card.clickable:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.platform-card.coming-soon {
+  opacity: 0.8;
+}
+
+.platform-card.coming-soon:hover {
+  opacity: 1;
+}
+
 .platform-card.instagram {
   border-left: 4px solid #e4405f;
 }
