@@ -571,6 +571,19 @@ class ExtendedDashboard extends RionaAIDashboard {
         `⚙️ Configuración: ${account.settings?.maxLikesPerHour || 30} likes/hora, hashtags: ${account.settings?.targetHashtags?.join(", ") || "technology, ai"}`,
       );
 
+      // Decrypt password for authentication
+      let realPassword = account.password;
+      if (account.salt && account.password) {
+        try {
+          // Decrypt password using stored salt
+          const decrypted = atob(account.password);
+          realPassword = decrypted.substring(account.salt.length);
+        } catch (e) {
+          // If decryption fails, use password as-is (backward compatibility)
+          realPassword = account.password;
+        }
+      }
+
       // Call REAL backend automation with actual credentials
       try {
         const response = await fetch("/api/social/instagram/automation", {
