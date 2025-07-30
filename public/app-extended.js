@@ -441,6 +441,10 @@ class ExtendedDashboard extends RionaAIDashboard {
       this.renderAccounts();
       this.updateCounts();
 
+      // Force immediate DOM update
+      console.log("🔧 Force updating DOM elements...");
+      this.forceUpdateDashboard();
+
       // Close modal
       const modal = document.getElementById("addAccountModal");
       if (modal) {
