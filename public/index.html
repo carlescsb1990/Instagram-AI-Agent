@@ -1943,6 +1943,20 @@
           );
         }
 
+        // Update global showActivityDetails function to use the initialized dashboard
+        window.showActivityDetails = function(accountId) {
+          console.log(`🔍 Showing activity details for account ${accountId}`);
+
+          if (window.dashboard && typeof window.dashboard.showActivityDetails === 'function') {
+            window.dashboard.showActivityDetails(accountId);
+          } else {
+            console.error("❌ Dashboard.showActivityDetails not available");
+            alert(`Error: Función de actividad no disponible. Dashboard: ${!!window.dashboard}, Method: ${typeof window.dashboard?.showActivityDetails}`);
+          }
+        };
+
+        console.log("✅ showActivityDetails function updated with dashboard instance");
+
         // Ensure sidebar is properly configured after initialization
         setTimeout(() => {
           if (window.dashboard && window.dashboard.forceSidebarVisibility) {
