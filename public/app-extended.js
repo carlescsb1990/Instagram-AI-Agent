@@ -467,37 +467,97 @@ class ExtendedDashboard extends RionaAIDashboard {
 
   renderAccounts() {
     const accountsGrid = document.getElementById("accountsGrid");
-    if (!accountsGrid || this.accounts.length === 0) return;
+    if (!accountsGrid) return;
+
+    if (this.accounts.length === 0) {
+      accountsGrid.innerHTML = `
+        <div class="no-accounts-card">
+          <div class="no-accounts-content">
+            <i class="fab fa-instagram"></i>
+            <h3>No hay cuentas configuradas</h3>
+            <p>Agrega tu primera cuenta de Instagram para comenzar con la automatización</p>
+            <button class="primary-btn" onclick="dashboard.showAddAccountModal()">
+              <i class="fas fa-plus"></i>
+              Agregar Primera Cuenta
+            </button>
+          </div>
+        </div>
+      `;
+      return;
+    }
 
     accountsGrid.innerHTML = this.accounts
       .map(
         (account) => `
-            <div class="account-card">
+            <div class="account-card ${account.status}">
                 <div class="account-header">
                     <div class="account-info">
                         <h4>@${account.username}</h4>
-                        <p>${account.platform}</p>
-                        <div class="account-status ${account.status}">${account.status}</div>
+                        <p class="platform-badge">
+                          <i class="fab fa-instagram"></i>
+                          Instagram
+                        </p>
+                        <div class="account-status ${account.status}">
+                          <i class="fas ${account.status === 'active' ? 'fa-check-circle' : 'fa-pause-circle'}"></i>
+                          ${account.status === 'active' ? 'Activa' : 'Pausada'}
+                        </div>
                     </div>
                     <div class="account-actions">
-                        <button class="btn secondary-btn" onclick="dashboard.editAccount(${account.id})">
+                        <button class="btn primary-btn" onclick="dashboard.runAutomation(${account.id})" title="Ejecutar Automatización">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="btn secondary-btn" onclick="dashboard.editAccount(${account.id})" title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn danger-btn" onclick="dashboard.deleteAccount(${account.id})">
+                        <button class="btn danger-btn" onclick="dashboard.deleteAccount(${account.id})" title="Eliminar">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
                 <div class="account-stats">
                     <div class="stat-item">
-                        <span class="stat-value">${account.stats?.followers || 0}</span>
-                        <span class="stat-label">Seguidores</span>
+                        <span class="stat-value">${account.stats?.totalLikes || 0}</span>
+                        <span class="stat-label">❤️ Likes</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-value">${account.stats?.following || 0}</span>
-                        <span class="stat-label">Siguiendo</span>
+                        <span class="stat-value">${account.stats?.totalComments || 0}</span>
+                        <span class="stat-label">💬 Comentarios</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">${account.stats?.totalFollows || 0}</span>
+                        <span class="stat-label">👥 Follows</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">${account.stats?.executions || 0}</span>
+                        <span class="stat-label">🚀 Ejecuciones</span>
                     </div>
                 </div>
+                <div class="account-settings-preview">
+                    <div class="settings-row">
+                        <span class="setting-item ${account.settings?.autoLike ? 'enabled' : 'disabled'}">
+                            <i class="fas fa-heart"></i> ${account.settings?.maxLikesPerHour || 30}/h
+                        </span>
+                        <span class="setting-item ${account.settings?.autoComment ? 'enabled' : 'disabled'}">
+                            <i class="fas fa-comment"></i> ${account.settings?.maxCommentsPerHour || 15}/h
+                        </span>
+                        <span class="setting-item ${account.settings?.autoFollow ? 'enabled' : 'disabled'}">
+                            <i class="fas fa-user-plus"></i> ${account.settings?.maxFollowsPerHour || 10}/h
+                        </span>
+                    </div>
+                    <div class="hashtags-preview">
+                        <i class="fas fa-hashtag"></i>
+                        ${(account.settings?.targetHashtags || []).slice(0, 3).join(', ')}
+                        ${(account.settings?.targetHashtags || []).length > 3 ? '...' : ''}
+                    </div>
+                </div>
+                ${account.stats?.lastActivity ? `
+                <div class="account-footer">
+                    <small>
+                        <i class="fas fa-clock"></i>
+                        Última actividad: ${new Date(account.stats.lastActivity).toLocaleString()}
+                    </small>
+                </div>
+                ` : ''}
             </div>
         `,
       )
