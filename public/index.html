@@ -1500,7 +1500,20 @@
         console.log(`✅ Rendered ${accounts.length} accounts`);
       };
 
-      console.log("✅ Global showAddAccountModal function defined");
+      // Global function to show activity details
+      window.showActivityDetails = function(accountId) {
+        console.log(`🔍 Showing activity details for account ${accountId}`);
+
+        // Try to use dashboard instance if available
+        if (window.dashboard && typeof window.dashboard.showActivityDetails === 'function') {
+          window.dashboard.showActivityDetails(accountId);
+        } else {
+          console.warn("Dashboard not available, showing basic notification");
+          alert(`Ver actividad detallada para cuenta ${accountId} - Dashboard no disponible aún`);
+        }
+      };
+
+      console.log("✅ Global showAddAccountModal and showActivityDetails functions defined");
       console.log("✅ Global handleFormSubmit function defined");
       console.log("✅ Global utility functions defined");
 
