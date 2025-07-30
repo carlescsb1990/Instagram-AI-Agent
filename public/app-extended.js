@@ -594,7 +594,7 @@ class ExtendedDashboard extends RionaAIDashboard {
           body: JSON.stringify({
             accountId: account.id,
             username: account.username,
-            password: account.password, // Send real password for real Instagram login
+            password: realPassword, // Send decrypted password for real Instagram login
             settings: account.settings,
           }),
         });
