@@ -41,6 +41,9 @@ class ExtendedDashboard extends RionaAIDashboard {
     this.renderAccounts();
     this.updateCounts();
 
+    // Force update dashboard metrics with real data
+    this.loadDashboardMetrics();
+
     // Load real analytics immediately
     this.loadAnalytics("24h", "all");
 
@@ -1620,7 +1623,7 @@ class ExtendedDashboard extends RionaAIDashboard {
               <option value="all">Todas las actividades</option>
               <option value="like">❤️ Likes</option>
               <option value="comment">💬 Comentarios</option>
-              <option value="follow">👥 Follows</option>
+              <option value="follow">���� Follows</option>
               <option value="unfollow">👤 Unfollows</option>
               <option value="view_story">👁️ Ver Historias</option>
             </select>
