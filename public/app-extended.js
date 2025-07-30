@@ -604,8 +604,13 @@ class ExtendedDashboard extends RionaAIDashboard {
       // Update internal state
       this.accounts = storedAccounts;
 
-      // Force UI update
+      // Force UI update with new metrics
+      this.loadDashboardMetrics();
       this.forceUpdateDashboard();
+    } else {
+      // Even if count hasn't changed, stats might have updated
+      // Refresh dashboard metrics every sync
+      this.loadDashboardMetrics();
     }
   }
 
@@ -650,7 +655,7 @@ class ExtendedDashboard extends RionaAIDashboard {
 
   renderAccounts() {
     console.log("🎨 renderAccounts called");
-    console.log("���� Accounts to render:", this.accounts);
+    console.log("📊 Accounts to render:", this.accounts);
     console.log("📊 Accounts length:", this.accounts.length);
 
     const accountsGrid = document.getElementById("accountsGrid");
