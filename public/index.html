@@ -1518,7 +1518,7 @@
             console.log("🔧 Header test button clicked");
             showAddAccountModal();
           });
-          console.log("✅ Header test button listener added");
+          console.log("�� Header test button listener added");
         }
 
         // Automation section button
@@ -1682,7 +1682,22 @@
           console.log("🔧 Debug Accounts Function");
           console.log("Dashboard object:", window.dashboard);
           console.log("Dashboard accounts:", window.dashboard?.accounts);
-          console.log("LocalStorage accounts:", JSON.parse(localStorage.getItem("accounts") || "[]"));
+
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          console.log("LocalStorage accounts:", accounts);
+
+          // Check each account for missing properties
+          accounts.forEach((account, index) => {
+            console.log(`Account ${index + 1}: @${account.username}`);
+            console.log("  - Stats:", account.stats ? "✅" : "❌ MISSING");
+            console.log("  - Settings:", account.settings ? "✅" : "❌ MISSING");
+
+            if (account.stats) {
+              console.log(`    - totalLikes: ${account.stats.totalLikes || 0}`);
+              console.log(`    - totalComments: ${account.stats.totalComments || 0}`);
+              console.log(`    - executions: ${account.stats.executions || 0}`);
+            }
+          });
 
           if (window.dashboard) {
             console.log("Dashboard methods:", Object.getOwnPropertyNames(Object.getPrototypeOf(window.dashboard)));
@@ -1698,6 +1713,15 @@
               window.dashboard.updateCounts();
             }
           }
+        };
+
+        // Fix accounts function
+        window.fixAllAccounts = function() {
+          console.log("🔧 Fixing all accounts...");
+          fixExistingAccounts();
+          updateDashboardCounters();
+          renderAccountsGrid();
+          console.log("✅ All accounts fixed and UI updated");
         };
 
         // Test account creation
