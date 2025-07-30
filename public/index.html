@@ -1157,7 +1157,7 @@
                   <span class="slider"></span>
                 </label>
                 <div class="setting-info">
-                  <strong>�� Follows Automáticos</strong>
+                  <strong>👥 Follows Automáticos</strong>
                   <p>Sigue cuentas relevantes (⚠️ Más riesgo)</p>
                 </div>
               </div>
@@ -1210,6 +1210,76 @@
     <script src="app-extended.js"></script>
     <script src="docs.js"></script>
     <script src="sidebar-debug.js"></script>
+
+    <!-- Global Functions -->
+    <script>
+      // Global backup function for modal - available immediately
+      window.showAddAccountModal = function() {
+        console.log("🔧 Global showAddAccountModal called");
+
+        const modal = document.getElementById("addAccountModal");
+        if (!modal) {
+          console.error("❌ Modal element not found");
+          alert("Modal no encontrado. Verifica que la página esté completamente cargada.");
+          return;
+        }
+
+        console.log("✅ Modal found, opening...");
+
+        // Reset form if it exists
+        const form = document.getElementById("addAccountForm");
+        if (form) {
+          form.reset();
+          console.log("✅ Form reset");
+        }
+
+        // Force show modal with important styles
+        modal.style.display = 'flex';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        modal.style.zIndex = '1000';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.classList.add("active");
+
+        console.log("✅ Modal should be visible now");
+
+        // Add close functionality
+        const closeBtn = document.getElementById("closeAccountModal");
+        const cancelBtn = document.getElementById("cancelAccountBtn");
+
+        function closeModal() {
+          modal.classList.remove("active");
+          modal.style.display = 'none';
+        }
+
+        if (closeBtn) {
+          closeBtn.onclick = closeModal;
+        }
+        if (cancelBtn) {
+          cancelBtn.onclick = closeModal;
+        }
+
+        // Close on backdrop click
+        modal.onclick = function(e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        };
+
+        // Try dashboard method if available
+        if (window.dashboard && window.dashboard.showAddAccountModal) {
+          console.log("🔧 Dashboard available, using dashboard method");
+          // Don't call it again, just use the manual opening above
+        }
+      };
+
+      console.log("✅ Global showAddAccountModal function defined");
+    </script>
 
     <!-- Immediate Sidebar Fix -->
     <script>
