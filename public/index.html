@@ -1165,7 +1165,7 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label for="maxLikesPerHour">❤��� Likes por hora</label>
+                <label for="maxLikesPerHour">❤️ Likes por hora</label>
                 <input type="number" id="maxLikesPerHour" name="maxLikesPerHour" value="30" min="1" max="100" />
               </div>
 
@@ -1288,6 +1288,33 @@
           console.error("❌ showAddAccountModal is NOT available globally");
         }
       }, 100);
+
+      // Setup event listeners when DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log("🔧 Setting up modal button event listeners");
+
+        // Header test button
+        const testModalBtn = document.getElementById('testModalBtn');
+        if (testModalBtn) {
+          testModalBtn.addEventListener('click', function() {
+            console.log("🔧 Header test button clicked");
+            showAddAccountModal();
+          });
+          console.log("✅ Header test button listener added");
+        }
+
+        // Automation section button
+        const addAccountBtn = document.getElementById('addAccountBtn');
+        if (addAccountBtn) {
+          addAccountBtn.addEventListener('click', function() {
+            console.log("🔧 Automation add account button clicked");
+            showAddAccountModal();
+          });
+          console.log("✅ Automation button listener added");
+        }
+
+        console.log("✅ All modal button listeners setup complete");
+      });
     </script>
 
     <!-- Immediate Sidebar Fix -->
