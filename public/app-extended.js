@@ -27,6 +27,15 @@ class ExtendedDashboard extends RionaAIDashboard {
     console.log(`💾 Loaded ${this.accounts.length} accounts and ${this.users.length} users`);
     console.log("💾 Accounts:", this.accounts);
 
+    // Generate sample activity logs for accounts that have stats but no activity logs
+    const activityLogs = this.getFromStorage("activityLogs", {});
+    this.accounts.forEach(account => {
+      if (!activityLogs[account.id] && account.stats && (account.stats.totalLikes > 0 || account.stats.totalComments > 0 || account.stats.totalFollows > 0)) {
+        console.log(`🎯 Generating sample activity logs for @${account.username}`);
+        this.generateSampleActivityLogs(account.id);
+      }
+    });
+
     // Load and render stored users and accounts
     this.renderUsers();
     this.renderAccounts();
@@ -1820,7 +1829,7 @@ class ExtendedDashboard extends RionaAIDashboard {
       'Excelente trabajo 👏',
       'Me encanta este post 💙',
       'Muy inspirador! 🚀',
-      'Gracias por compartir ����',
+      'Gracias por compartir 🙏',
       'Totalmente de acuerdo 💯',
       'Qué interesante! 🤔'
     ];
