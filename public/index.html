@@ -1400,29 +1400,6 @@
       setTimeout(forceShowSidebar, 100);
       setTimeout(forceShowSidebar, 500);
       setTimeout(forceShowSidebar, 1000);
-
-      // Global backup function for modal
-      window.showAddAccountModal = function() {
-        console.log("🔧 Global showAddAccountModal called");
-        if (window.dashboard && window.dashboard.showAddAccountModal) {
-          window.dashboard.showAddAccountModal();
-        } else {
-          console.log("🔧 Dashboard not ready, trying direct modal open");
-          const modal = document.getElementById("addAccountModal");
-          if (modal) {
-            modal.style.display = 'flex';
-            modal.style.position = 'fixed';
-            modal.style.top = '0';
-            modal.style.left = '0';
-            modal.style.width = '100%';
-            modal.style.height = '100%';
-            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            modal.style.zIndex = '1000';
-            modal.classList.add("active");
-            console.log("✅ Modal opened directly");
-          }
-        }
-      };
       });
     </script>
   </body>
