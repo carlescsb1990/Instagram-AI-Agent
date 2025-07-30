@@ -1523,7 +1523,14 @@ class ExtendedDashboard extends RionaAIDashboard {
     }
 
     const activityLogs = this.getFromStorage("activityLogs", {});
-    const accountLogs = activityLogs[accountId] || [];
+    let accountLogs = activityLogs[accountId] || [];
+
+    // If no activity logs exist, generate sample data for demonstration
+    if (accountLogs.length === 0 && account.stats && (account.stats.totalLikes > 0 || account.stats.totalComments > 0 || account.stats.totalFollows > 0)) {
+      this.generateSampleActivityLogs(accountId);
+      const updatedLogs = this.getFromStorage("activityLogs", {});
+      accountLogs = updatedLogs[accountId] || [];
+    }
 
     // Create modal content
     const modalHTML = `
@@ -1813,7 +1820,7 @@ class ExtendedDashboard extends RionaAIDashboard {
       'Excelente trabajo 👏',
       'Me encanta este post 💙',
       'Muy inspirador! 🚀',
-      'Gracias por compartir 🙏',
+      'Gracias por compartir ����',
       'Totalmente de acuerdo 💯',
       'Qué interesante! 🤔'
     ];
