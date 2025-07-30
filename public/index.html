@@ -1985,6 +1985,14 @@
       setTimeout(forceShowSidebar, 100);
       setTimeout(forceShowSidebar, 500);
       setTimeout(forceShowSidebar, 1000);
+
+      // Force reload accounts to ensure activity logs button appears
+      setTimeout(() => {
+        console.log("🔄 Final force reload of accounts to show activity logs button...");
+        if (typeof renderAccountsGrid === 'function') {
+          renderAccountsGrid();
+        }
+      }, 1500);
       });
     </script>
   </body>
