@@ -1000,7 +1000,7 @@
                     </a>
                     <a href="#automation-guide" class="docs-nav-item">
                       <i class="fas fa-cogs"></i>
-                      Gu��a de Automatización
+                      Guía de Automatización
                     </a>
                     <a href="#ai-configuration" class="docs-nav-item">
                       <i class="fas fa-brain"></i>
@@ -1540,9 +1540,13 @@
         const account = accounts.find(acc => acc.id == accountId || acc.id === parseInt(accountId) || acc.id === accountId.toString());
 
         if (!account) {
-          alert("❌ Cuenta no encontrada");
+          console.error(`❌ Account with ID ${accountId} not found`);
+          console.log("Available accounts:", accounts);
+          alert(`❌ Cuenta no encontrada\nID buscado: ${accountId}\nCuentas disponibles: ${accounts.map(acc => `@${acc.username} (ID: ${acc.id})`).join(', ') || 'Ninguna'}`);
           return;
         }
+
+        console.log(`✅ Found account: @${account.username} (ID: ${account.id})`);
 
         // Get activity logs from localStorage
         const activityLogs = JSON.parse(localStorage.getItem("riona_activityLogs") || "{}");
@@ -1935,7 +1939,7 @@
                 targetHashtags: ["technology", "ai", "programming"]
               };
               updated = true;
-              console.log(`🔧 Fixed settings for account @${account.username}`);
+              console.log(`�� Fixed settings for account @${account.username}`);
             }
           });
 
