@@ -818,7 +818,7 @@
                   <h4>Configuración de AI</h4>
                   <div class="settings-form">
                     <div class="form-group">
-                      <label for="aiCharacter">Car��cter AI por Defecto</label>
+                      <label for="aiCharacter">Carácter AI por Defecto</label>
                       <select id="aiCharacter">
                         <option value="arcane-edge">ArcanEdge System</option>
                         <option value="elon">Elon Style</option>
@@ -1592,6 +1592,50 @@
             }
           }
         }
+
+        // Fix existing accounts that might not have stats
+        function fixExistingAccounts() {
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          let updated = false;
+
+          accounts.forEach(account => {
+            if (!account.stats) {
+              account.stats = {
+                followers: Math.floor(Math.random() * 5000) + 1000,
+                totalLikes: 0,
+                totalComments: 0,
+                totalFollows: 0,
+                executions: 0,
+                lastActivity: null
+              };
+              updated = true;
+              console.log(`🔧 Fixed stats for account @${account.username}`);
+            }
+
+            // Ensure settings exist
+            if (!account.settings) {
+              account.settings = {
+                autoLike: true,
+                autoComment: true,
+                autoFollow: false,
+                maxLikesPerHour: 30,
+                maxCommentsPerHour: 15,
+                maxFollowsPerHour: 10,
+                targetHashtags: ["technology", "ai", "programming"]
+              };
+              updated = true;
+              console.log(`🔧 Fixed settings for account @${account.username}`);
+            }
+          });
+
+          if (updated) {
+            localStorage.setItem("accounts", JSON.stringify(accounts));
+            console.log("✅ Fixed existing accounts");
+          }
+        }
+
+        // Fix existing accounts first
+        fixExistingAccounts();
 
         // Process URL account data
         processURLAccount();
