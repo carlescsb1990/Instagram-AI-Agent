@@ -312,11 +312,28 @@ html {
   text-align: center;
 }
 
+.stat-item.clickable {
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.stat-item.clickable:hover {
+  background: rgba(99, 102, 241, 0.1);
+  transform: scale(1.05);
+}
+
+.stat-item.clickable:hover .stat-value {
+  color: var(--primary-dark);
+}
+
 .stat-value {
   display: block;
   font-size: var(--text-lg);
   font-weight: var(--font-semibold);
   color: var(--text-primary);
+  transition: color var(--transition-fast);
 }
 
 .stat-label {
