@@ -341,78 +341,111 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   handleAddAccount(event) {
+    console.log("🔧 handleAddAccount called", event);
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const username = formData.get("username")?.trim();
-    const password = formData.get("password")?.trim();
+    try {
+      const formData = new FormData(event.target);
+      console.log("📋 Form data collected");
 
-    // Validate required fields
-    if (!username || !password) {
-      this.showError("❌ Usuario y contraseña son obligatorios");
-      return;
+      // Debug: Log all form data
+      for (let [key, value] of formData.entries()) {
+        console.log(`📋 ${key}: ${value}`);
+      }
+
+      const username = formData.get("username")?.trim();
+      const password = formData.get("password")?.trim();
+
+      console.log(`👤 Username: ${username}, Password: ${password ? '[PROVIDED]' : '[MISSING]'}`);
+
+      // Validate required fields
+      if (!username || !password) {
+        console.error("❌ Validation failed: missing username or password");
+        this.showError("❌ Usuario y contraseña son obligatorios");
+        return;
+      }
+
+      // Clean username (remove @ if present)
+      const cleanUsername = username.replace("@", "");
+      console.log(`✅ Clean username: ${cleanUsername}`);
+
+      // Simple encryption for password storage
+      const salt = Math.random().toString(36).substring(7);
+      const encryptedPassword = btoa(salt + password);
+      console.log(`🔐 Password encrypted with salt: ${salt}`);
+
+      const accountData = {
+        id: Date.now(), // Simple unique ID
+        username: cleanUsername,
+        password: encryptedPassword, // Encrypted password
+        salt: salt, // Store salt for decryption
+        platform: "instagram",
+        status: "active",
+        isActive: true,
+        created: new Date().toISOString(),
+        verified: false,
+        stats: {
+          followers: 0,
+          totalLikes: 0,
+          totalComments: 0,
+          totalFollows: 0,
+          executions: 0,
+          lastActivity: null
+        },
+        settings: {
+          autoLike: formData.get("autoLike") === "on",
+          autoComment: formData.get("autoComment") === "on",
+          autoFollow: formData.get("autoFollow") === "on",
+          maxLikesPerHour: parseInt(formData.get("maxLikesPerHour")) || 30,
+          maxCommentsPerHour: parseInt(formData.get("maxCommentsPerHour")) || 15,
+          maxFollowsPerHour: parseInt(formData.get("maxFollowsPerHour")) || 10,
+          targetHashtags: formData
+            .get("targetHashtags")
+            ?.split(",")
+            .map((h) => h.trim().replace("#", "")) || ["technology", "ai", "programming"],
+        },
+      };
+
+      console.log("📊 Account data created:", accountData);
+
+      // Save account directly to localStorage
+      const accounts = this.getStoredAccounts();
+      console.log(`💾 Current accounts before adding: ${accounts.length}`);
+
+      accounts.push(accountData);
+      this.saveToStorage("accounts", accounts);
+      this.accounts = accounts;
+
+      console.log(`💾 Accounts after adding: ${accounts.length}`);
+      console.log("💾 Stored accounts:", this.getStoredAccounts());
+
+      // Update UI
+      console.log("🔄 Updating UI...");
+      this.renderAccounts();
+      this.updateCounts();
+
+      // Close modal
+      const modal = document.getElementById("addAccountModal");
+      if (modal) {
+        modal.classList.remove("active");
+        modal.style.display = 'none';
+        console.log("❌ Modal closed");
+      }
+
+      // Success notification and logs
+      this.showSuccess(`✅ Cuenta @${cleanUsername} agregada correctamente`);
+      this.addLogEntry("success", `📱 Instagram: @${cleanUsername} configurada`);
+      this.addLogEntry("info", `🔐 Credenciales guardadas localmente (encriptadas)`);
+      this.addLogEntry("info", `⚙️ Límites: ${accountData.settings.maxLikesPerHour}❤️/h, ${accountData.settings.maxCommentsPerHour}💬/h`);
+      this.addLogEntry("info", `🎯 Hashtags: ${accountData.settings.targetHashtags.join(", ")}`);
+      this.addLogEntry("info", `🚀 Lista para automatización real con Puppeteer`);
+
+      console.log("✅ Account successfully added and UI updated");
+
+    } catch (error) {
+      console.error("❌ Error in handleAddAccount:", error);
+      this.showError(`❌ Error agregando cuenta: ${error.message}`);
     }
-
-    // Clean username (remove @ if present)
-    const cleanUsername = username.replace("@", "");
-
-    // Simple encryption for password storage
-    const salt = Math.random().toString(36).substring(7);
-    const encryptedPassword = btoa(salt + password);
-
-    const accountData = {
-      id: Date.now(), // Simple unique ID
-      username: cleanUsername,
-      password: encryptedPassword, // Encrypted password
-      salt: salt, // Store salt for decryption
-      platform: "instagram",
-      status: "active",
-      isActive: true,
-      created: new Date().toISOString(),
-      verified: false,
-      stats: {
-        followers: 0,
-        totalLikes: 0,
-        totalComments: 0,
-        totalFollows: 0,
-        executions: 0,
-        lastActivity: null
-      },
-      settings: {
-        autoLike: formData.get("autoLike") === "on",
-        autoComment: formData.get("autoComment") === "on",
-        autoFollow: formData.get("autoFollow") === "on",
-        maxLikesPerHour: parseInt(formData.get("maxLikesPerHour")) || 30,
-        maxCommentsPerHour: parseInt(formData.get("maxCommentsPerHour")) || 15,
-        maxFollowsPerHour: parseInt(formData.get("maxFollowsPerHour")) || 10,
-        targetHashtags: formData
-          .get("targetHashtags")
-          ?.split(",")
-          .map((h) => h.trim().replace("#", "")) || ["technology", "ai", "programming"],
-      },
-    };
-
-    // Save account directly to localStorage
-    const accounts = this.getStoredAccounts();
-    accounts.push(accountData);
-    this.saveToStorage("accounts", accounts);
-    this.accounts = accounts;
-
-    // Update UI
-    this.renderAccounts();
-    this.updateCounts();
-
-    // Close modal
-    const modal = document.getElementById("addAccountModal");
-    if (modal) modal.classList.remove("active");
-
-    // Success notification and logs
-    this.showSuccess(`✅ Cuenta @${cleanUsername} agregada correctamente`);
-    this.addLogEntry("success", `📱 Instagram: @${cleanUsername} configurada`);
-    this.addLogEntry("info", `🔐 Credenciales guardadas localmente (encriptadas)`);
-    this.addLogEntry("info", `⚙️ Límites: ${accountData.settings.maxLikesPerHour}❤️/h, ${accountData.settings.maxCommentsPerHour}💬/h`);
-    this.addLogEntry("info", `🎯 Hashtags: ${accountData.settings.targetHashtags.join(", ")}`);
-    this.addLogEntry("info", `🚀 Lista para automatización real con Puppeteer`);
   }
 
   // Helper methods for user feedback
@@ -472,7 +505,7 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   deleteAccount(accountId) {
-    if (confirm("¿Est��s seguro de que quieres eliminar esta cuenta?")) {
+    if (confirm("¿Estás seguro de que quieres eliminar esta cuenta?")) {
       const accounts = this.getStoredAccounts();
       const filteredAccounts = accounts.filter(
         (a) => a.id !== parseInt(accountId),
