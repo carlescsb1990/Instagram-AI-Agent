@@ -1954,7 +1954,6 @@ class ExtendedDashboard extends RionaAIDashboard {
       );
     }
   }
-}
 
   // Global debug function
   debugSystem() {
