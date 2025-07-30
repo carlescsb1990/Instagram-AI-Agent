@@ -310,8 +310,21 @@ class RionaAIDashboard {
         (acc) => acc.status === "active",
       ).length;
 
+      // Calculate today's activity from all accounts
+      let totalLikes = 0;
+      let totalComments = 0;
+      let totalFollows = 0;
+
+      accounts.forEach(account => {
+        totalLikes += account.stats?.totalLikes || 0;
+        totalComments += account.stats?.totalComments || 0;
+        totalFollows += account.stats?.totalFollows || 0;
+      });
+
       this.updateElement("totalAccounts", totalAccounts);
       this.updateElement("activeAccounts", activeAccounts);
+      this.updateElement("todayLikes", totalLikes);
+      this.updateElement("todayComments", totalComments);
 
       // Update uptime with stored data or default
       const startTime = this.getFromStorage("startTime", Date.now());
@@ -321,6 +334,8 @@ class RionaAIDashboard {
       console.log("Dashboard metrics loaded from localStorage:", {
         totalAccounts,
         activeAccounts,
+        totalLikes,
+        totalComments,
         uptimeSeconds,
       });
     } catch (error) {
@@ -328,6 +343,8 @@ class RionaAIDashboard {
       // Set safe defaults
       this.updateElement("totalAccounts", 0);
       this.updateElement("activeAccounts", 0);
+      this.updateElement("todayLikes", 0);
+      this.updateElement("todayComments", 0);
       this.updateUptime(0);
     }
   }
