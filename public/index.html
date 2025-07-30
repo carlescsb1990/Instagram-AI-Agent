@@ -1000,7 +1000,7 @@
                     </a>
                     <a href="#automation-guide" class="docs-nav-item">
                       <i class="fas fa-cogs"></i>
-                      Guía de Automatización
+                      Gu��a de Automatización
                     </a>
                     <a href="#ai-configuration" class="docs-nav-item">
                       <i class="fas fa-brain"></i>
@@ -1514,9 +1514,30 @@
         // Fallback: Implement activity details directly
         console.log("⚡ Using standalone activity details implementation");
 
-        // Get account data from localStorage
-        const accounts = JSON.parse(localStorage.getItem("riona_accounts") || "[]");
-        const account = accounts.find(acc => acc.id == accountId);
+        // Get account data from localStorage - try multiple possible keys
+        let accounts = [];
+
+        // Try different possible localStorage keys
+        const possibleKeys = ["riona_accounts", "accounts", "riona_riona_accounts"];
+        for (const key of possibleKeys) {
+          const stored = localStorage.getItem(key);
+          if (stored) {
+            try {
+              accounts = JSON.parse(stored);
+              if (accounts.length > 0) {
+                console.log(`✅ Found accounts in localStorage key: ${key}`, accounts);
+                break;
+              }
+            } catch (e) {
+              console.warn(`Failed to parse ${key}:`, e);
+            }
+          }
+        }
+
+        console.log(`🔍 Looking for account ID: ${accountId} in ${accounts.length} accounts`);
+        console.log(`📊 Available account IDs:`, accounts.map(acc => acc.id));
+
+        const account = accounts.find(acc => acc.id == accountId || acc.id === parseInt(accountId) || acc.id === accountId.toString());
 
         if (!account) {
           alert("❌ Cuenta no encontrada");
