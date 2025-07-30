@@ -160,6 +160,9 @@ class ExtendedDashboard extends RionaAIDashboard {
 
     // Real-time updates
     setInterval(() => this.updateRealTimeData(), 30000); // Update every 30 seconds
+
+    // Dashboard sync - check for account changes every 5 seconds
+    setInterval(() => this.syncDashboard(), 5000);
   }
 
   setupModalControls() {
