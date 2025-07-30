@@ -1214,10 +1214,15 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   updateAccountSelector() {
+    console.log("🔧 updateAccountSelector called");
     const selector = document.getElementById("analyticsAccountSelect");
-    if (!selector) return;
+    if (!selector) {
+      console.error("❌ analyticsAccountSelect not found");
+      return;
+    }
 
     const accounts = this.getStoredAccounts();
+    console.log(`📊 Found ${accounts.length} accounts for selector:`, accounts);
 
     // Clear existing options except "all"
     selector.innerHTML = '<option value="all">Todas las cuentas</option>';
@@ -1228,7 +1233,10 @@ class ExtendedDashboard extends RionaAIDashboard {
       option.value = account.id;
       option.textContent = `@${account.username}`;
       selector.appendChild(option);
+      console.log(`✅ Added account option: @${account.username} (ID: ${account.id})`);
     });
+
+    console.log(`✅ Account selector updated with ${accounts.length} accounts`);
   }
 
   getTimeAgo(date) {
