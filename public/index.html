@@ -1733,11 +1733,23 @@
             const comments = Math.floor(Math.random() * 8) + 2;
             const follows = account.settings.autoFollow ? Math.floor(Math.random() * 5) + 1 : 0;
 
+            // Ensure stats object exists
+            if (!account.stats) {
+              account.stats = {
+                followers: Math.floor(Math.random() * 5000) + 1000,
+                totalLikes: 0,
+                totalComments: 0,
+                totalFollows: 0,
+                executions: 0,
+                lastActivity: null
+              };
+            }
+
             // Update account stats
-            account.stats.totalLikes += likes;
-            account.stats.totalComments += comments;
-            account.stats.totalFollows += follows;
-            account.stats.executions += 1;
+            account.stats.totalLikes = (account.stats.totalLikes || 0) + likes;
+            account.stats.totalComments = (account.stats.totalComments || 0) + comments;
+            account.stats.totalFollows = (account.stats.totalFollows || 0) + follows;
+            account.stats.executions = (account.stats.executions || 0) + 1;
             account.stats.lastActivity = new Date().toISOString();
 
             // Save updated account
