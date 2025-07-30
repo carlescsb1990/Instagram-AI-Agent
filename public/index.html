@@ -1314,6 +1314,20 @@
         }
 
         console.log("✅ All modal button listeners setup complete");
+
+        // Debug function - can be called from console
+        window.debugModal = function() {
+          console.log("🔧 Debug Modal Function");
+          console.log("Modal element:", document.getElementById("addAccountModal"));
+          console.log("showAddAccountModal function:", typeof showAddAccountModal);
+          console.log("Dashboard object:", window.dashboard);
+
+          // Try to open modal
+          console.log("🔧 Attempting to open modal...");
+          showAddAccountModal();
+        };
+
+        console.log("✅ Debug function window.debugModal() available");
       });
     </script>
 
