@@ -132,6 +132,21 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Clickable Elements */
+.clickable {
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.clickable:hover {
+  opacity: 0.9;
+}
+
+.clickable:active {
+  transform: scale(0.98);
+}
+
 /* App Container */
 .app-container {
   display: flex;
