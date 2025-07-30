@@ -650,7 +650,7 @@ class ExtendedDashboard extends RionaAIDashboard {
 
   renderAccounts() {
     console.log("🎨 renderAccounts called");
-    console.log("📊 Accounts to render:", this.accounts);
+    console.log("���� Accounts to render:", this.accounts);
     console.log("📊 Accounts length:", this.accounts.length);
 
     const accountsGrid = document.getElementById("accountsGrid");
@@ -1010,6 +1010,9 @@ class ExtendedDashboard extends RionaAIDashboard {
 
       // Update UI immediately
       this.renderAccounts();
+
+      // Update dashboard metrics with new data
+      this.loadDashboardMetrics();
 
       // Refresh analytics if on analytics page
       if (this.currentPage === "analytics") {
