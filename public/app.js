@@ -1926,6 +1926,39 @@ class RionaAIDashboard {
     }
   }
 
+  setupModalListeners() {
+    // Account modal
+    const accountModal = document.getElementById("addAccountModal");
+    if (accountModal) {
+      const closeAccountModal = document.getElementById("closeAccountModal");
+      const cancelAccountBtn = document.getElementById("cancelAccountBtn");
+
+      if (closeAccountModal) {
+        closeAccountModal.addEventListener("click", () => {
+          accountModal.classList.remove("active");
+          accountModal.style.display = 'none';
+        });
+      }
+
+      if (cancelAccountBtn) {
+        cancelAccountBtn.addEventListener("click", () => {
+          accountModal.classList.remove("active");
+          accountModal.style.display = 'none';
+        });
+      }
+
+      // Close on backdrop click
+      accountModal.addEventListener("click", (e) => {
+        if (e.target === accountModal) {
+          accountModal.classList.remove("active");
+          accountModal.style.display = 'none';
+        }
+      });
+
+      console.log("✅ Modal listeners setup");
+    }
+  }
+
   showNotification(message, type = 'info') {
     // Create notification element
     const notification = document.createElement('div');
