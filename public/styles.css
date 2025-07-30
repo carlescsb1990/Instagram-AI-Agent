@@ -558,6 +558,21 @@ html {
   box-shadow: var(--shadow-xl);
 }
 
+.overview-card.clickable {
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.overview-card.clickable:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-color);
+}
+
+.overview-card.clickable:active {
+  transform: translateY(-2px);
+}
+
 .overview-card {
   display: flex;
   align-items: center;
