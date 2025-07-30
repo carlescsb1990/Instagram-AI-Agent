@@ -115,61 +115,61 @@
             <div class="dashboard-section">
               <!-- System Overview -->
               <div class="overview-cards">
-                <div class="overview-card primary">
-                  <div class="card-icon">
-                    <i class="fas fa-robot"></i>
-                  </div>
-                  <div class="card-content">
-                    <h3>Sistema AI</h3>
-                    <p class="card-value">Activo</p>
-                    <span class="card-subtitle">Google Gemini 2.0</span>
-                  </div>
-                  <div class="card-badge success">
-                    <i class="fas fa-check"></i>
-                  </div>
-                </div>
+            <div class="overview-card primary clickable" onclick="dashboard.showPage('agent')" title="Ir al Agente AI">
+              <div class="card-icon">
+                <i class="fas fa-robot"></i>
+              </div>
+              <div class="card-content">
+                <h3>Sistema AI</h3>
+                <p class="card-value">Activo</p>
+                <span class="card-subtitle">Google Gemini 2.0</span>
+              </div>
+              <div class="card-badge success">
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
 
-                <div class="overview-card info">
-                  <div class="card-icon">
-                    <i class="fab fa-instagram"></i>
-                  </div>
-                  <div class="card-content">
-                    <h3>Instagram</h3>
-                    <p class="card-value" id="totalAccounts">0</p>
-                    <span class="card-subtitle">Cuentas Configuradas</span>
-                  </div>
-                  <div class="card-badge warning">
-                    <i class="fas fa-play"></i>
-                  </div>
-                </div>
+            <div class="overview-card info clickable" onclick="dashboard.showPage('automation')" title="Ir a Automatización">
+              <div class="card-icon">
+                <i class="fab fa-instagram"></i>
+              </div>
+              <div class="card-content">
+                <h3>Instagram</h3>
+                <p class="card-value" id="totalAccounts">0</p>
+                <span class="card-subtitle">Cuentas Configuradas</span>
+              </div>
+              <div class="card-badge warning">
+                <i class="fas fa-play"></i>
+              </div>
+            </div>
 
-                <div class="overview-card success">
-                  <div class="card-icon">
-                    <i class="fas fa-heart"></i>
-                  </div>
-                  <div class="card-content">
-                    <h3>Actividad Hoy</h3>
-                    <p class="card-value" id="todayLikes">0</p>
-                    <span class="card-subtitle">Likes Automáticos</span>
-                  </div>
-                  <div class="card-badge primary">
-                    <i class="fas fa-arrow-up"></i>
-                  </div>
-                </div>
+            <div class="overview-card success clickable" onclick="dashboard.showPage('analytics')" title="Ver Analíticas Detalladas">
+              <div class="card-icon">
+                <i class="fas fa-heart"></i>
+              </div>
+              <div class="card-content">
+                <h3>Actividad Hoy</h3>
+                <p class="card-value" id="todayLikes">0</p>
+                <span class="card-subtitle">Likes Automáticos</span>
+              </div>
+              <div class="card-badge primary">
+                <i class="fas fa-arrow-up"></i>
+              </div>
+            </div>
 
-                <div class="overview-card secondary">
-                  <div class="card-icon">
-                    <i class="fas fa-comments"></i>
-                  </div>
-                  <div class="card-content">
-                    <h3>Comentarios</h3>
-                    <p class="card-value" id="todayComments">0</p>
-                    <span class="card-subtitle">Generados por AI</span>
-                  </div>
-                  <div class="card-badge info">
-                    <i class="fas fa-comment"></i>
-                  </div>
-                </div>
+            <div class="overview-card secondary clickable" onclick="dashboard.showPage('agent')" title="Generar Más Comentarios">
+              <div class="card-icon">
+                <i class="fas fa-comments"></i>
+              </div>
+              <div class="card-content">
+                <h3>Comentarios</h3>
+                <p class="card-value" id="todayComments">0</p>
+                <span class="card-subtitle">Generados por AI</span>
+              </div>
+              <div class="card-badge info">
+                <i class="fas fa-comment"></i>
+              </div>
+            </div>
               </div>
 
               <!-- Quick Actions -->
@@ -646,7 +646,7 @@
                   <h4>No hay datos disponibles</h4>
                   <p>
                     Agrega una cuenta de Instagram y ejecuta automatizaciones
-                    para ver las métricas.
+                    para ver las m��tricas.
                   </p>
                   <button
                     class="primary-btn"
@@ -1517,7 +1517,7 @@
             console.log("🔧 Header test button clicked");
             showAddAccountModal();
           });
-          console.log("✅ Header test button listener added");
+          console.log("��� Header test button listener added");
         }
 
         // Automation section button
@@ -1725,7 +1725,7 @@
 
         // Test account creation
         window.testAddAccount = function() {
-          console.log("🧪 Testing account creation...");
+          console.log("�� Testing account creation...");
           const testAccount = {
             id: Date.now(),
             username: "test_user_" + Math.random().toString(36).substring(7),
