@@ -869,23 +869,45 @@ class ExtendedDashboard extends RionaAIDashboard {
             });
           } else {
             // Simulate detailed logs for demonstration
+            const sampleUsers = ['tech_guru', 'ai_enthusiast', 'code_wizard', 'dev_life', 'startup_mindset', 'digital_nomad', 'crypto_dev'];
+            const sampleComments = [
+              '¡Increíble contenido! 🔥',
+              'Excelente trabajo 👏',
+              'Me encanta este post 💙',
+              'Muy inspirador! 🚀',
+              'Gracias por compartir 🙏',
+              'Totalmente de acuerdo 💯',
+              'Qué interesante! 🤔'
+            ];
+
+            // Generate like activities
             for (let i = 0; i < results.actions.likes; i++) {
+              const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+              const postId = Math.random().toString(36).substr(2, 11);
               this.saveActivityLog(account.id, 'like', {
-                postUrl: `https://instagram.com/p/example${i}`,
-                targetUser: `user${i + 1}`
+                postUrl: `https://instagram.com/p/${postId}/`,
+                targetUser: user
               });
             }
+
+            // Generate comment activities
             for (let i = 0; i < results.actions.comments; i++) {
+              const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+              const comment = sampleComments[Math.floor(Math.random() * sampleComments.length)];
+              const postId = Math.random().toString(36).substr(2, 11);
               this.saveActivityLog(account.id, 'comment', {
-                postUrl: `https://instagram.com/p/comment${i}`,
-                targetUser: `user${i + 1}`,
-                commentText: `¡Increíble contenido! 🔥`
+                postUrl: `https://instagram.com/p/${postId}/`,
+                targetUser: user,
+                commentText: comment
               });
             }
+
+            // Generate follow activities
             for (let i = 0; i < results.actions.follows; i++) {
+              const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
               this.saveActivityLog(account.id, 'follow', {
-                targetUser: `user${i + 1}`,
-                profileUrl: `https://instagram.com/user${i + 1}`
+                targetUser: user,
+                profileUrl: `https://instagram.com/${user}/`
               });
             }
           }
@@ -1540,7 +1562,7 @@ class ExtendedDashboard extends RionaAIDashboard {
               <option value="comment">💬 Comentarios</option>
               <option value="follow">👥 Follows</option>
               <option value="unfollow">👤 Unfollows</option>
-              <option value="view_story">👁��� Ver Historias</option>
+              <option value="view_story">👁�� Ver Historias</option>
             </select>
 
             <select id="activityTimeFilter">
