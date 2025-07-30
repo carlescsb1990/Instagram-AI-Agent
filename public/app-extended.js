@@ -670,6 +670,9 @@ class ExtendedDashboard extends RionaAIDashboard {
                         <button class="btn primary-btn" onclick="dashboard.runAutomation(${account.id})" title="Ejecutar Automatización">
                             <i class="fas fa-play"></i>
                         </button>
+                        <button class="btn info-btn" onclick="dashboard.showActivityDetails(${account.id})" title="Ver Registro de Actividad">
+                            <i class="fas fa-list-alt"></i>
+                        </button>
                         <button class="btn secondary-btn" onclick="dashboard.editAccount(${account.id})" title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
