@@ -18,6 +18,15 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   loadStoredData() {
+    console.log("💾 Loading stored data...");
+
+    // Force reload accounts from localStorage
+    this.accounts = this.getStoredAccounts();
+    this.users = this.getStoredUsers();
+
+    console.log(`💾 Loaded ${this.accounts.length} accounts and ${this.users.length} users`);
+    console.log("💾 Accounts:", this.accounts);
+
     // Load and render stored users and accounts
     this.renderUsers();
     this.renderAccounts();
@@ -25,6 +34,8 @@ class ExtendedDashboard extends RionaAIDashboard {
 
     // Load real analytics immediately
     this.loadAnalytics("24h", "all");
+
+    console.log("✅ Stored data loaded and UI updated");
   }
 
   updateCounts() {
