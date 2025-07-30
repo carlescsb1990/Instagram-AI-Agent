@@ -1358,8 +1358,145 @@
         return false;
       };
 
+      // Utility functions
+      window.updateDashboardCounters = function() {
+        console.log("🔢 Updating dashboard counters...");
+        const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+        const activeAccounts = accounts.filter(acc => acc.status === 'active').length;
+
+        // Update counter elements
+        const totalAccountsEl = document.getElementById('totalAccounts');
+        const activeAccountsEl = document.getElementById('activeAccounts');
+
+        if (totalAccountsEl) {
+          totalAccountsEl.textContent = accounts.length;
+        }
+        if (activeAccountsEl) {
+          activeAccountsEl.textContent = activeAccounts;
+        }
+
+        console.log(`✅ Counters updated: ${accounts.length} total, ${activeAccounts} active`);
+      };
+
+      window.showSuccessMessage = function(message) {
+        // Create and show success notification
+        const notification = document.createElement('div');
+        notification.className = 'notification success';
+        notification.innerHTML = `
+          <div class="notification-content">
+            <span>${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          if (notification.parentElement) {
+            notification.remove();
+          }
+        }, 5000);
+      };
+
+      window.renderAccountsGrid = function() {
+        console.log("🎨 Rendering accounts grid...");
+        const accountsGrid = document.getElementById("accountsGrid");
+        const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+
+        if (!accountsGrid) {
+          console.error("❌ accountsGrid element not found");
+          return;
+        }
+
+        if (accounts.length === 0) {
+          accountsGrid.innerHTML = `
+            <div class="no-accounts-card">
+              <div class="no-accounts-content">
+                <i class="fab fa-instagram"></i>
+                <h3>No hay cuentas configuradas</h3>
+                <p>Agrega tu primera cuenta de Instagram para comenzar con la automatización</p>
+                <button class="primary-btn" onclick="showAddAccountModal()">
+                  <i class="fas fa-plus"></i>
+                  Agregar Primera Cuenta
+                </button>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        accountsGrid.innerHTML = accounts.map(account => `
+          <div class="account-card active">
+            <div class="account-header">
+              <div class="account-info">
+                <h4>@${account.username}</h4>
+                <p class="platform-badge">
+                  <i class="fab fa-instagram"></i>
+                  Instagram
+                </p>
+                <div class="account-status active">
+                  <i class="fas fa-check-circle"></i>
+                  Activa
+                </div>
+              </div>
+              <div class="account-actions">
+                <button class="btn primary-btn" onclick="executeAutomation('${account.id}')" title="Ejecutar Automatización">
+                  <i class="fas fa-play"></i>
+                </button>
+                <button class="btn secondary-btn" onclick="editAccount('${account.id}')" title="Editar">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn danger-btn" onclick="deleteAccount('${account.id}')" title="Eliminar">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="account-stats">
+              <div class="stat-item">
+                <span class="stat-value">${account.stats?.totalLikes || 0}</span>
+                <span class="stat-label">❤️ Likes</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">${account.stats?.totalComments || 0}</span>
+                <span class="stat-label">💬 Comentarios</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">${account.stats?.totalFollows || 0}</span>
+                <span class="stat-label">👥 Follows</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">${account.stats?.executions || 0}</span>
+                <span class="stat-label">🚀 Ejecuciones</span>
+              </div>
+            </div>
+            <div class="account-settings-preview">
+              <div class="settings-row">
+                <span class="setting-item enabled">
+                  <i class="fas fa-heart"></i> ${account.settings?.maxLikesPerHour || 30}/h
+                </span>
+                <span class="setting-item enabled">
+                  <i class="fas fa-comment"></i> ${account.settings?.maxCommentsPerHour || 15}/h
+                </span>
+                <span class="setting-item ${account.settings?.autoFollow ? 'enabled' : 'disabled'}">
+                  <i class="fas fa-user-plus"></i> ${account.settings?.maxFollowsPerHour || 10}/h
+                </span>
+              </div>
+              <div class="hashtags-preview">
+                <i class="fas fa-hashtag"></i>
+                ${(account.settings?.targetHashtags || []).slice(0, 3).join(', ')}
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        console.log(`✅ Rendered ${accounts.length} accounts`);
+      };
+
       console.log("✅ Global showAddAccountModal function defined");
       console.log("✅ Global handleFormSubmit function defined");
+      console.log("✅ Global utility functions defined");
 
       // Test function availability
       setTimeout(function() {
