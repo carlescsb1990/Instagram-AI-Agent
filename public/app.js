@@ -93,6 +93,13 @@ class RionaAIDashboard {
       this.handleResize();
     });
 
+    // Handle browser back/forward buttons
+    window.addEventListener("popstate", (event) => {
+      const path = window.location.pathname;
+      const page = path === '/' ? 'dashboard' : path.substring(1);
+      this.showPageWithoutHistory(page);
+    });
+
     // Force sidebar visibility on page load
     this.ensureSidebarVisibility();
   }
