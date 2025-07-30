@@ -456,8 +456,9 @@ class ExtendedDashboard extends RionaAIDashboard {
       this.renderAccounts();
       this.updateCounts();
 
-      // Force immediate DOM update
+      // Force immediate DOM update with real metrics
       console.log("🔧 Force updating DOM elements...");
+      this.loadDashboardMetrics();
       this.forceUpdateDashboard();
 
       // Close modal
@@ -1623,7 +1624,7 @@ class ExtendedDashboard extends RionaAIDashboard {
               <option value="all">Todas las actividades</option>
               <option value="like">❤️ Likes</option>
               <option value="comment">💬 Comentarios</option>
-              <option value="follow">���� Follows</option>
+              <option value="follow">👥 Follows</option>
               <option value="unfollow">👤 Unfollows</option>
               <option value="view_story">👁️ Ver Historias</option>
             </select>
