@@ -907,7 +907,7 @@ class ExtendedDashboard extends RionaAIDashboard {
             const sampleComments = [
               '¡Increíble contenido! 🔥',
               'Excelente trabajo 👏',
-              'Me encanta este post 💙',
+              'Me encanta este post ����',
               'Muy inspirador! 🚀',
               'Gracias por compartir 🙏',
               'Totalmente de acuerdo 💯',
@@ -1581,11 +1581,17 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   showActivityDetails(accountId) {
+    console.log(`🔍 ExtendedDashboard.showActivityDetails called with accountId: ${accountId}`);
+    console.log(`📊 Available accounts:`, this.accounts.map(acc => acc.id));
+
     const account = this.accounts.find(acc => acc.id === parseInt(accountId));
     if (!account) {
+      console.error(`❌ Account with ID ${accountId} not found`);
       this.showError("Cuenta no encontrada");
       return;
     }
+
+    console.log(`✅ Found account: @${account.username}`);
 
     const activityLogs = this.getFromStorage("activityLogs", {});
     let accountLogs = activityLogs[accountId] || [];
@@ -1887,7 +1893,7 @@ class ExtendedDashboard extends RionaAIDashboard {
       'Muy inspirador! 🚀',
       'Gracias por compartir 🙏',
       'Totalmente de acuerdo 💯',
-      'Qué interesante! 🤔'
+      'Qué interesante! ���'
     ];
 
     // Generate activities over the last 7 days
