@@ -521,10 +521,20 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   renderAccounts() {
+    console.log("🎨 renderAccounts called");
+    console.log("📊 Accounts to render:", this.accounts);
+    console.log("📊 Accounts length:", this.accounts.length);
+
     const accountsGrid = document.getElementById("accountsGrid");
-    if (!accountsGrid) return;
+    if (!accountsGrid) {
+      console.error("❌ accountsGrid element not found");
+      return;
+    }
+
+    console.log("✅ accountsGrid found");
 
     if (this.accounts.length === 0) {
+      console.log("📝 Rendering no accounts message");
       accountsGrid.innerHTML = `
         <div class="no-accounts-card">
           <div class="no-accounts-content">
