@@ -382,7 +382,7 @@ class ExtendedDashboard extends RionaAIDashboard {
 
       // Debug: Log all form data
       for (let [key, value] of formData.entries()) {
-        console.log(`📋 ${key}: ${value}`);
+        console.log(`��� ${key}: ${value}`);
       }
 
       const username = formData.get("username")?.trim();
@@ -2017,6 +2017,12 @@ class ExtendedDashboard extends RionaAIDashboard {
     console.log("📈 Analytics Data:", analyticsData);
 
     console.log("=".repeat(50));
+  }
+
+  // Show coming soon notification
+  showComingSoon(platform) {
+    this.showNotification(`🚀 ${platform} estará disponible pronto! Mantente atento a las actualizaciones.`, 'info');
+    this.addLogEntry('info', `👀 Usuario interesado en ${platform} - próximamente disponible`);
   }
 }
 
