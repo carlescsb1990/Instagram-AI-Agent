@@ -1445,16 +1445,24 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   updateAccountPerformanceTable() {
+    console.log("🔧 updateAccountPerformanceTable called");
     const tableBody = document.getElementById("performanceTableBody");
-    if (!tableBody) return;
+    if (!tableBody) {
+      console.error("❌ performanceTableBody not found");
+      return;
+    }
 
     const accounts = this.getStoredAccounts();
     const noAccountsRow = document.getElementById("noAccountsRow");
 
+    console.log(`📊 Found ${accounts.length} accounts for performance table:`, accounts);
+
     if (accounts.length === 0) {
+      console.log("⚠️ No accounts found, showing no data message");
       if (noAccountsRow) noAccountsRow.style.display = "table-row";
       return;
     } else {
+      console.log("✅ Hiding no accounts row, showing account data");
       if (noAccountsRow) noAccountsRow.style.display = "none";
     }
 
