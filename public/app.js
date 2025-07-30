@@ -99,6 +99,10 @@ class RionaAIDashboard {
 
   // Page Navigation
   showPage(pageName) {
+    // Update URL without page reload
+    const newUrl = pageName === 'dashboard' ? '/' : `/${pageName}`;
+    window.history.pushState({ page: pageName }, '', newUrl);
+
     // Update navigation
     document.querySelectorAll(".nav-item").forEach((item) => {
       item.classList.remove("active");
