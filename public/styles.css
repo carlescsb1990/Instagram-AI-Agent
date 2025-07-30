@@ -447,6 +447,13 @@ html {
   width: 100%;
 }
 
+.big-btn {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  min-height: 50px;
+}
+
 /* Cards */
 .card {
   background: var(--bg-primary);
