@@ -1386,7 +1386,61 @@
           showAddAccountModal();
         };
 
-        console.log("✅ Debug function window.debugModal() available");
+        // Debug accounts function
+        window.debugAccounts = function() {
+          console.log("🔧 Debug Accounts Function");
+          console.log("Dashboard object:", window.dashboard);
+          console.log("Dashboard accounts:", window.dashboard?.accounts);
+          console.log("LocalStorage accounts:", JSON.parse(localStorage.getItem("accounts") || "[]"));
+
+          if (window.dashboard) {
+            console.log("Dashboard methods:", Object.getOwnPropertyNames(Object.getPrototypeOf(window.dashboard)));
+
+            // Force render
+            if (window.dashboard.renderAccounts) {
+              console.log("🔄 Force rendering accounts...");
+              window.dashboard.renderAccounts();
+            }
+
+            if (window.dashboard.updateCounts) {
+              console.log("🔢 Force updating counts...");
+              window.dashboard.updateCounts();
+            }
+          }
+        };
+
+        // Test account creation
+        window.testAddAccount = function() {
+          console.log("🧪 Testing account creation...");
+          const testAccount = {
+            id: Date.now(),
+            username: "test_user_" + Math.random().toString(36).substring(7),
+            password: btoa("test_password"),
+            platform: "instagram",
+            status: "active",
+            created: new Date().toISOString(),
+            settings: {
+              autoLike: true,
+              autoComment: true,
+              autoFollow: false,
+              maxLikesPerHour: 30,
+              targetHashtags: ["test", "demo"]
+            }
+          };
+
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          accounts.push(testAccount);
+          localStorage.setItem("accounts", JSON.stringify(accounts));
+
+          console.log("✅ Test account created:", testAccount);
+          console.log("🔄 Refreshing page to show changes...");
+          window.location.reload();
+        };
+
+        console.log("✅ Debug functions available:");
+        console.log("  - debugModal() - Test modal");
+        console.log("  - debugAccounts() - Check accounts state");
+        console.log("  - testAddAccount() - Create test account");
       });
     </script>
 
