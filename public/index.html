@@ -818,7 +818,7 @@
                   <h4>Configuración de AI</h4>
                   <div class="settings-form">
                     <div class="form-group">
-                      <label for="aiCharacter">Carácter AI por Defecto</label>
+                      <label for="aiCharacter">Car��cter AI por Defecto</label>
                       <select id="aiCharacter">
                         <option value="arcane-edge">ArcanEdge System</option>
                         <option value="elon">Elon Style</option>
@@ -1455,19 +1455,19 @@
             </div>
             <div class="account-stats">
               <div class="stat-item">
-                <span class="stat-value">${account.stats?.totalLikes || 0}</span>
+                <span class="stat-value">${(account.stats && account.stats.totalLikes) || 0}</span>
                 <span class="stat-label">❤️ Likes</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">${account.stats?.totalComments || 0}</span>
+                <span class="stat-value">${(account.stats && account.stats.totalComments) || 0}</span>
                 <span class="stat-label">💬 Comentarios</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">${account.stats?.totalFollows || 0}</span>
+                <span class="stat-value">${(account.stats && account.stats.totalFollows) || 0}</span>
                 <span class="stat-label">👥 Follows</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">${account.stats?.executions || 0}</span>
+                <span class="stat-value">${(account.stats && account.stats.executions) || 0}</span>
                 <span class="stat-label">🚀 Ejecuciones</span>
               </div>
             </div>
