@@ -759,6 +759,27 @@ html {
   font-weight: var(--font-semibold);
 }
 
+.section-header.clickable {
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.section-header.clickable:hover {
+  background: var(--bg-secondary);
+  transform: translateX(4px);
+}
+
+.section-header.clickable i {
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.section-header.clickable:hover i {
+  opacity: 1;
+}
+
 /* Character Selection */
 .character-selection {
   margin-bottom: var(--spacing-2xl);
