@@ -82,11 +82,11 @@
           </div>
           <div class="header-right">
             <div class="header-stats">
-              <div class="stat-item">
+              <div class="stat-item clickable" onclick="dashboard.showPage('settings')" title="Ver configuración del sistema">
                 <span class="stat-value" id="systemUptime">0h 0m</span>
                 <span class="stat-label">Uptime</span>
               </div>
-              <div class="stat-item">
+              <div class="stat-item clickable" onclick="dashboard.showPage('automation')" title="Ver cuentas configuradas">
                 <span class="stat-value" id="activeAccounts">0</span>
                 <span class="stat-label">Cuentas Activas</span>
               </div>
@@ -646,7 +646,7 @@
                   <h4>No hay datos disponibles</h4>
                   <p>
                     Agrega una cuenta de Instagram y ejecuta automatizaciones
-                    para ver las m��tricas.
+                    para ver las métricas.
                   </p>
                   <button
                     class="primary-btn"
@@ -1517,7 +1517,7 @@
             console.log("🔧 Header test button clicked");
             showAddAccountModal();
           });
-          console.log("��� Header test button listener added");
+          console.log("✅ Header test button listener added");
         }
 
         // Automation section button
