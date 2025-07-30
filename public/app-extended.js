@@ -425,17 +425,6 @@ class ExtendedDashboard extends RionaAIDashboard {
       }
     }, 5000);
   }
-      `🔐 Credenciales guardadas para automatización real`,
-    );
-    this.addLogEntry(
-      "info",
-      `⚙️ Configuración: ${savedAccount.settings.maxLikesPerHour} likes/hora`,
-    );
-    this.addLogEntry(
-      "info",
-      `🎯 Hashtags objetivo: ${savedAccount.settings.targetHashtags.join(", ")}`,
-    );
-  }
 
   editAccount(accountId) {
     const account = this.accounts.find((a) => a.id === parseInt(accountId));
