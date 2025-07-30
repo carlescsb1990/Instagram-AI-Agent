@@ -1230,7 +1230,7 @@
         const form = document.getElementById("addAccountForm");
         if (form) {
           form.reset();
-          console.log("�� Form reset");
+          console.log("✅ Form reset");
         }
 
         // Force show modal with important styles
@@ -1595,6 +1595,31 @@
 
         // Process URL account data
         processURLAccount();
+
+        // Setup navigation to render accounts when going to automation page
+        document.querySelectorAll('.nav-item').forEach(navItem => {
+          navItem.addEventListener('click', function(e) {
+            const page = this.getAttribute('data-page');
+            console.log(`🧭 Navigating to page: ${page}`);
+
+            // Wait for page transition then render accounts if automation page
+            setTimeout(() => {
+              if (page === 'automation') {
+                renderAccountsGrid();
+                updateDashboardCounters();
+              }
+            }, 100);
+          });
+        });
+
+        // Initial render if we're already on automation page
+        setTimeout(() => {
+          const automationNav = document.querySelector('[data-page="automation"]');
+          if (automationNav && automationNav.classList.contains('active')) {
+            renderAccountsGrid();
+          }
+          updateDashboardCounters();
+        }, 500);
 
         // Debug function - can be called from console
         window.debugModal = function() {
