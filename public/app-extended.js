@@ -660,7 +660,7 @@ class ExtendedDashboard extends RionaAIDashboard {
 
     const accountsGrid = document.getElementById("accountsGrid");
     if (!accountsGrid) {
-      console.error("❌ accountsGrid element not found");
+      console.error("�� accountsGrid element not found");
       return;
     }
 
@@ -2046,11 +2046,15 @@ window.debugRiona = function() {
   }
 };
 
-// Make debug function globally available
-window.debugRiona = function() {
-  if (window.dashboard && window.dashboard.debugSystem) {
-    window.dashboard.debugSystem();
+// Make showActivityDetails available globally for debugging
+window.testActivityDetails = function(accountId) {
+  console.log("🧪 Testing showActivityDetails function...");
+  console.log("Dashboard instance:", !!window.dashboard);
+  console.log("showActivityDetails method:", typeof window.dashboard?.showActivityDetails);
+
+  if (window.dashboard && window.dashboard.showActivityDetails) {
+    window.dashboard.showActivityDetails(accountId || 'test');
   } else {
-    console.error("❌ Dashboard instance not available");
+    console.error("❌ Method not available");
   }
 };
