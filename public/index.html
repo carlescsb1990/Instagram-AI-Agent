@@ -1158,7 +1158,7 @@
                 </label>
                 <div class="setting-info">
                   <strong>👥 Follows Automáticos</strong>
-                  <p>Sigue cuentas relevantes (���️ Más riesgo)</p>
+                  <p>Sigue cuentas relevantes (⚠️ Más riesgo)</p>
                 </div>
               </div>
             </div>
@@ -1230,7 +1230,7 @@
         const form = document.getElementById("addAccountForm");
         if (form) {
           form.reset();
-          console.log("✅ Form reset");
+          console.log("�� Form reset");
         }
 
         // Force show modal with important styles
@@ -1532,6 +1532,69 @@
         }
 
         console.log("✅ All modal button listeners setup complete");
+
+        // Process URL parameters if account data is present
+        function processURLAccount() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const username = urlParams.get('username');
+          const password = urlParams.get('password');
+
+          if (username && password) {
+            console.log("🔧 Found account data in URL, processing...");
+
+            const newAccount = {
+              id: Date.now(),
+              username: username.replace("@", ""),
+              password: btoa(Math.random().toString(36) + password),
+              platform: "instagram",
+              status: "active",
+              isActive: true,
+              created: new Date().toISOString(),
+              verified: false,
+              stats: {
+                followers: Math.floor(Math.random() * 5000) + 1000,
+                totalLikes: 0,
+                totalComments: 0,
+                totalFollows: 0,
+                executions: 0,
+                lastActivity: null
+              },
+              settings: {
+                autoLike: urlParams.get('autoLike') === 'on',
+                autoComment: urlParams.get('autoComment') === 'on',
+                autoFollow: urlParams.get('autoFollow') === 'on',
+                maxLikesPerHour: parseInt(urlParams.get('maxLikesPerHour')) || 30,
+                maxCommentsPerHour: parseInt(urlParams.get('maxCommentsPerHour')) || 15,
+                maxFollowsPerHour: parseInt(urlParams.get('maxFollowsPerHour')) || 10,
+                targetHashtags: (urlParams.get('targetHashtags') || 'technology,ai,programming').split(',').map(h => h.trim().replace('#', ''))
+              }
+            };
+
+            // Save account
+            const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+
+            // Check if account already exists
+            const existingAccount = accounts.find(acc => acc.username === newAccount.username);
+            if (!existingAccount) {
+              accounts.push(newAccount);
+              localStorage.setItem("accounts", JSON.stringify(accounts));
+
+              console.log("✅ Account recovered from URL and saved:", newAccount);
+              showSuccessMessage(`✅ Cuenta @${newAccount.username} recuperada y guardada correctamente!`);
+
+              // Update dashboard
+              updateDashboardCounters();
+
+              // Clear URL parameters
+              window.history.replaceState({}, document.title, window.location.pathname);
+            } else {
+              console.log("ℹ️ Account already exists, skipping");
+            }
+          }
+        }
+
+        // Process URL account data
+        processURLAccount();
 
         // Debug function - can be called from console
         window.debugModal = function() {
