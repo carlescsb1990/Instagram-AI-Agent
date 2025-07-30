@@ -1009,6 +1009,17 @@ class ExtendedDashboard extends RionaAIDashboard {
     }
   }
 
+  // Override parent class loadAnalyticsData method
+  async loadAnalyticsData() {
+    try {
+      // Load analytics using the extended method instead of API
+      await this.loadAnalytics("24h", "all");
+    } catch (error) {
+      console.warn("Could not load analytics data:", error);
+      this.showNoDataMessage();
+    }
+  }
+
   // Analytics - REAL DATA ONLY
   async loadAnalytics(timeRange = "24h", accountId = "all") {
     try {
