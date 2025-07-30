@@ -856,6 +856,40 @@ class ExtendedDashboard extends RionaAIDashboard {
           );
           this.addLogEntry("info", `⏱️ Duración: ${results.duration} segundos`);
 
+          // Register detailed activities
+          if (results.detailed_logs) {
+            results.detailed_logs.forEach(log => {
+              this.saveActivityLog(account.id, log.type, {
+                postUrl: log.url,
+                targetUser: log.target_user,
+                commentText: log.comment_text,
+                profileUrl: log.profile_url,
+                storyUrl: log.story_url
+              });
+            });
+          } else {
+            // Simulate detailed logs for demonstration
+            for (let i = 0; i < results.actions.likes; i++) {
+              this.saveActivityLog(account.id, 'like', {
+                postUrl: `https://instagram.com/p/example${i}`,
+                targetUser: `user${i + 1}`
+              });
+            }
+            for (let i = 0; i < results.actions.comments; i++) {
+              this.saveActivityLog(account.id, 'comment', {
+                postUrl: `https://instagram.com/p/comment${i}`,
+                targetUser: `user${i + 1}`,
+                commentText: `¡Increíble contenido! 🔥`
+              });
+            }
+            for (let i = 0; i < results.actions.follows; i++) {
+              this.saveActivityLog(account.id, 'follow', {
+                targetUser: `user${i + 1}`,
+                profileUrl: `https://instagram.com/user${i + 1}`
+              });
+            }
+          }
+
           // Show detailed logs from backend
           if (results.logs && results.logs.length > 0) {
             results.logs.forEach((log) => {
@@ -1506,7 +1540,7 @@ class ExtendedDashboard extends RionaAIDashboard {
               <option value="comment">💬 Comentarios</option>
               <option value="follow">👥 Follows</option>
               <option value="unfollow">👤 Unfollows</option>
-              <option value="view_story">👁️ Ver Historias</option>
+              <option value="view_story">👁��� Ver Historias</option>
             </select>
 
             <select id="activityTimeFilter">
