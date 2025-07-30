@@ -28,6 +28,8 @@ class ExtendedDashboard extends RionaAIDashboard {
   }
 
   updateCounts() {
+    console.log("🔢 updateCounts called");
+
     // Update counts in dashboard
     const totalUsers = this.users.length;
     const totalAccounts = this.accounts.length;
@@ -35,9 +37,13 @@ class ExtendedDashboard extends RionaAIDashboard {
       (acc) => acc.status === "active",
     ).length;
 
+    console.log(`📊 Counts - Users: ${totalUsers}, Total Accounts: ${totalAccounts}, Active: ${activeAccounts}`);
+
     this.updateElement("totalUsers", totalUsers);
     this.updateElement("totalAccounts", totalAccounts);
     this.updateElement("activeAccounts", activeAccounts);
+
+    console.log("✅ Counts updated in UI");
   }
 
   setupExtendedEventListeners() {
