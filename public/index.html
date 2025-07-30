@@ -844,7 +844,7 @@
                       <select id="defaultLanguage">
                         <option value="es">Español</option>
                         <option value="en">English</option>
-                        <option value="pt">Português</option>
+                        <option value="pt">Portugu��s</option>
                       </select>
                     </div>
                   </div>
@@ -1122,7 +1122,7 @@
             </div>
 
             <div class="form-group">
-              <label for="password">��� Contraseña</label>
+              <label for="password">🔑 Contraseña</label>
               <input type="password" id="password" name="password" required autocomplete="new-password" />
               <small>Se guardará encriptada localmente para automatización</small>
             </div>
@@ -1821,6 +1821,54 @@
 
         // Sort by timestamp descending (newest first)
         return logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      };
+
+      // Debug function to show all localStorage data
+      window.debugLocalStorage = function() {
+        console.log("=".repeat(50));
+        console.log("🔍 LOCALSTORAGE DEBUG REPORT");
+        console.log("=".repeat(50));
+
+        console.log("📦 All localStorage keys:");
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const value = localStorage.getItem(key);
+          console.log(`  ${key}: ${value ? value.substring(0, 100) + (value.length > 100 ? '...' : '') : 'null'}`);
+        }
+
+        console.log("\n🔍 Searching for accounts...");
+        const accountKeys = ["riona_accounts", "accounts", "riona_riona_accounts"];
+        accountKeys.forEach(key => {
+          const data = localStorage.getItem(key);
+          if (data) {
+            try {
+              const parsed = JSON.parse(data);
+              console.log(`✅ ${key}:`, parsed);
+            } catch (e) {
+              console.log(`❌ ${key}: Failed to parse`, e);
+            }
+          } else {
+            console.log(`⚪ ${key}: Not found`);
+          }
+        });
+
+        console.log("\n🔍 Searching for activity logs...");
+        const logKeys = ["riona_activityLogs", "activityLogs", "riona_riona_activityLogs"];
+        logKeys.forEach(key => {
+          const data = localStorage.getItem(key);
+          if (data) {
+            try {
+              const parsed = JSON.parse(data);
+              console.log(`✅ ${key}:`, parsed);
+            } catch (e) {
+              console.log(`❌ ${key}: Failed to parse`, e);
+            }
+          } else {
+            console.log(`⚪ ${key}: Not found`);
+          }
+        });
+
+        console.log("=".repeat(50));
       };
 
       console.log("✅ Global showAddAccountModal and showActivityDetails functions defined");
