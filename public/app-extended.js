@@ -502,6 +502,64 @@ class ExtendedDashboard extends RionaAIDashboard {
     }, 5000);
   }
 
+  // Force update dashboard counters
+  forceUpdateDashboard() {
+    console.log("🔧 forceUpdateDashboard called");
+
+    // Get fresh data from localStorage
+    const accounts = this.getStoredAccounts();
+    const activeAccounts = accounts.filter(acc => acc.status === 'active').length;
+
+    console.log(`🔧 Force update - Total: ${accounts.length}, Active: ${activeAccounts}`);
+
+    // Update DOM elements directly
+    const totalAccountsEl = document.getElementById('totalAccounts');
+    const activeAccountsEl = document.getElementById('activeAccounts');
+
+    if (totalAccountsEl) {
+      totalAccountsEl.textContent = accounts.length;
+      console.log(`✅ Updated totalAccounts to ${accounts.length}`);
+    } else {
+      console.error("❌ totalAccounts element not found");
+    }
+
+    if (activeAccountsEl) {
+      activeAccountsEl.textContent = activeAccounts;
+      console.log(`✅ Updated activeAccounts to ${activeAccounts}`);
+    } else {
+      console.error("❌ activeAccounts element not found");
+    }
+
+    // Update today's stats if there are accounts
+    if (accounts.length > 0) {
+      const todayLikesEl = document.getElementById('todayLikes');
+      const todayCommentsEl = document.getElementById('todayComments');
+
+      // Calculate today's activity from all accounts
+      let totalLikes = 0;
+      let totalComments = 0;
+
+      accounts.forEach(account => {
+        totalLikes += account.stats?.totalLikes || 0;
+        totalComments += account.stats?.totalComments || 0;
+      });
+
+      if (todayLikesEl) {
+        todayLikesEl.textContent = totalLikes;
+      }
+      if (todayCommentsEl) {
+        todayCommentsEl.textContent = totalComments;
+      }
+    }
+
+    // Force re-render accounts section if we're on automation page
+    if (this.currentPage === 'automation') {
+      this.renderAccounts();
+    }
+
+    console.log("✅ Force dashboard update completed");
+  }
+
   editAccount(accountId) {
     const account = this.accounts.find((a) => a.id === parseInt(accountId));
     if (account) {
