@@ -1419,6 +1419,14 @@
             platform: "instagram",
             status: "active",
             created: new Date().toISOString(),
+            stats: {
+              followers: 0,
+              totalLikes: 0,
+              totalComments: 0,
+              totalFollows: 0,
+              executions: 0,
+              lastActivity: null
+            },
             settings: {
               autoLike: true,
               autoComment: true,
@@ -1433,8 +1441,29 @@
           localStorage.setItem("accounts", JSON.stringify(accounts));
 
           console.log("✅ Test account created:", testAccount);
-          console.log("🔄 Refreshing page to show changes...");
-          window.location.reload();
+
+          // Force sync instead of reload
+          if (window.dashboard && window.dashboard.forceUpdateDashboard) {
+            window.dashboard.accounts = accounts;
+            window.dashboard.forceUpdateDashboard();
+            console.log("🔄 Dashboard synced without reload");
+          } else {
+            console.log("🔄 Refreshing page to show changes...");
+            window.location.reload();
+          }
+        };
+
+        // Manual sync function
+        window.forceSyncDashboard = function() {
+          console.log("🔄 Manual dashboard sync...");
+          if (window.dashboard && window.dashboard.forceUpdateDashboard) {
+            const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+            window.dashboard.accounts = accounts;
+            window.dashboard.forceUpdateDashboard();
+            console.log("✅ Dashboard synced manually");
+          } else {
+            console.log("❌ Dashboard not available");
+          }
         };
 
         console.log("✅ Debug functions available:");
