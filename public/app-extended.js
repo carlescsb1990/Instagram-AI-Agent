@@ -1562,7 +1562,7 @@ class ExtendedDashboard extends RionaAIDashboard {
               <option value="comment">💬 Comentarios</option>
               <option value="follow">👥 Follows</option>
               <option value="unfollow">👤 Unfollows</option>
-              <option value="view_story">👁�� Ver Historias</option>
+              <option value="view_story">👁️ Ver Historias</option>
             </select>
 
             <select id="activityTimeFilter">
@@ -1803,6 +1803,102 @@ class ExtendedDashboard extends RionaAIDashboard {
 
     URL.revokeObjectURL(url);
     this.showSuccess(`Actividad de @${account?.username || accountId} exportada correctamente`);
+  }
+
+  // Generate sample activity logs for existing accounts (for demonstration)
+  generateSampleActivityLogs(accountId) {
+    const sampleUsers = ['tech_guru', 'ai_enthusiast', 'code_wizard', 'dev_life', 'startup_mindset', 'digital_nomad', 'crypto_dev'];
+    const sampleComments = [
+      '¡Increíble contenido! 🔥',
+      'Excelente trabajo 👏',
+      'Me encanta este post 💙',
+      'Muy inspirador! 🚀',
+      'Gracias por compartir 🙏',
+      'Totalmente de acuerdo 💯',
+      'Qué interesante! 🤔'
+    ];
+
+    // Generate activities over the last 7 days
+    for (let day = 0; day < 7; day++) {
+      const date = new Date();
+      date.setDate(date.getDate() - day);
+
+      // 3-8 likes per day
+      const likesCount = Math.floor(Math.random() * 6) + 3;
+      for (let i = 0; i < likesCount; i++) {
+        const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+        const postId = Math.random().toString(36).substr(2, 11);
+        const activity = {
+          id: Date.now() + Math.random(),
+          timestamp: new Date(date.getTime() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
+          type: 'like',
+          details: {
+            postUrl: `https://instagram.com/p/${postId}/`,
+            targetUser: user
+          },
+          status: 'success'
+        };
+
+        const activityLogs = this.getFromStorage("activityLogs", {});
+        if (!activityLogs[accountId]) activityLogs[accountId] = [];
+        activityLogs[accountId].push(activity);
+        this.saveToStorage("activityLogs", activityLogs);
+      }
+
+      // 1-3 comments per day
+      const commentsCount = Math.floor(Math.random() * 3) + 1;
+      for (let i = 0; i < commentsCount; i++) {
+        const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+        const comment = sampleComments[Math.floor(Math.random() * sampleComments.length)];
+        const postId = Math.random().toString(36).substr(2, 11);
+        const activity = {
+          id: Date.now() + Math.random(),
+          timestamp: new Date(date.getTime() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
+          type: 'comment',
+          details: {
+            postUrl: `https://instagram.com/p/${postId}/`,
+            targetUser: user,
+            commentText: comment
+          },
+          status: 'success'
+        };
+
+        const activityLogs = this.getFromStorage("activityLogs", {});
+        if (!activityLogs[accountId]) activityLogs[accountId] = [];
+        activityLogs[accountId].push(activity);
+        this.saveToStorage("activityLogs", activityLogs);
+      }
+
+      // 0-2 follows per day
+      if (Math.random() > 0.4) {
+        const followsCount = Math.floor(Math.random() * 2) + 1;
+        for (let i = 0; i < followsCount; i++) {
+          const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+          const activity = {
+            id: Date.now() + Math.random(),
+            timestamp: new Date(date.getTime() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
+            type: 'follow',
+            details: {
+              targetUser: user,
+              profileUrl: `https://instagram.com/${user}/`
+            },
+            status: 'success'
+          };
+
+          const activityLogs = this.getFromStorage("activityLogs", {});
+          if (!activityLogs[accountId]) activityLogs[accountId] = [];
+          activityLogs[accountId].push(activity);
+          this.saveToStorage("activityLogs", activityLogs);
+        }
+      }
+    }
+
+    // Sort by timestamp descending
+    const activityLogs = this.getFromStorage("activityLogs", {});
+    if (activityLogs[accountId]) {
+      activityLogs[accountId].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      this.saveToStorage("activityLogs", activityLogs);
+    }
   }
 
   viewAccountStats(accountId) {
