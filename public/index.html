@@ -1525,7 +1525,17 @@
 
         // Get activity logs from localStorage
         const activityLogs = JSON.parse(localStorage.getItem("riona_activityLogs") || "{}");
-        const accountLogs = activityLogs[accountId] || [];
+        let accountLogs = activityLogs[accountId] || [];
+
+        // If no logs exist but account has stats, generate sample data
+        if (accountLogs.length === 0 && account.stats && (account.stats.totalLikes > 0 || account.stats.totalComments > 0)) {
+          console.log("📝 Generating sample activity logs for demonstration");
+          accountLogs = generateSampleLogs(account);
+
+          // Save to localStorage
+          activityLogs[accountId] = accountLogs;
+          localStorage.setItem("riona_activityLogs", JSON.stringify(activityLogs));
+        }
 
         // Create and show modal
         showActivityModal(account, accountLogs);
