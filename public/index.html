@@ -1279,6 +1279,15 @@
       };
 
       console.log("✅ Global showAddAccountModal function defined");
+
+      // Test function availability
+      setTimeout(function() {
+        if (typeof showAddAccountModal === 'function') {
+          console.log("✅ showAddAccountModal is available globally");
+        } else {
+          console.error("❌ showAddAccountModal is NOT available globally");
+        }
+      }, 100);
     </script>
 
     <!-- Immediate Sidebar Fix -->
