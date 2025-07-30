@@ -193,6 +193,38 @@ class RionaAIDashboard {
     return names[pageName] || pageName;
   }
 
+  // Navigate without adding to browser history (for popstate events)
+  showPageWithoutHistory(pageName) {
+    // Update navigation
+    document.querySelectorAll(".nav-item").forEach((item) => {
+      item.classList.remove("active");
+    });
+
+    const activeNavItem = document.querySelector(`[data-page="${pageName}"]`);
+    if (activeNavItem) {
+      activeNavItem.classList.add("active");
+    }
+
+    // Hide all pages
+    document.querySelectorAll(".page-content").forEach((page) => {
+      page.classList.remove("active");
+    });
+
+    // Show selected page
+    const targetPage = document.getElementById(pageName);
+    if (targetPage) {
+      targetPage.classList.add("active");
+    }
+
+    // Update page info
+    this.currentPage = pageName;
+    this.updatePageTitle(pageName);
+    this.updateBreadcrumb(pageName);
+
+    // Load page-specific data
+    this.loadPageData(pageName);
+  }
+
   // Data Loading
   loadInitialData() {
     try {
@@ -1397,7 +1429,7 @@ class RionaAIDashboard {
                                         <p><strong>Ideal para:</strong> Cualquier nicho, contenido variado</p>
                                         <p><strong>Estilo:</strong> Versátil, adaptable, engagement natural</p>
                                         <div class="example-comment">
-                                            <strong>Ejemplo:</strong> "¡Excelente contenido! Me encanta cómo explicas conceptos complejos de manera sencilla. 👏"
+                                            <strong>Ejemplo:</strong> "¡Excelente contenido! Me encanta cómo explicas conceptos complejos de manera sencilla. ���"
                                         </div>
                                     </div>
                                 </div>
@@ -1639,7 +1671,7 @@ class RionaAIDashboard {
                             </div>
 
                             <div class="security-features">
-                                <h3>🔒 Características de Seguridad</h3>
+                                <h3>��� Características de Seguridad</h3>
 
                                 <div class="security-grid">
                                     <div class="security-item">
