@@ -1278,7 +1278,66 @@
         }
       };
 
+      // Global form handler function
+      window.handleFormSubmit = function(event) {
+        console.log("🔧 Global handleFormSubmit called");
+        event.preventDefault();
+
+        if (window.dashboard && window.dashboard.handleAddAccount) {
+          console.log("✅ Using dashboard.handleAddAccount");
+          window.dashboard.handleAddAccount(event);
+        } else {
+          console.log("⚠️ Dashboard not available, using fallback");
+          // Fallback: manual form handling
+          const formData = new FormData(event.target);
+          const username = formData.get("username")?.trim();
+          const password = formData.get("password")?.trim();
+
+          if (!username || !password) {
+            alert("❌ Usuario y contraseña son obligatorios");
+            return false;
+          }
+
+          // Simple storage for testing
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          const newAccount = {
+            id: Date.now(),
+            username: username.replace("@", ""),
+            password: btoa(password), // Simple encoding
+            platform: "instagram",
+            status: "active",
+            created: new Date().toISOString(),
+            settings: {
+              autoLike: formData.get("autoLike") === "on",
+              autoComment: formData.get("autoComment") === "on",
+              autoFollow: formData.get("autoFollow") === "on",
+              maxLikesPerHour: parseInt(formData.get("maxLikesPerHour")) || 30,
+              targetHashtags: (formData.get("targetHashtags") || "technology,ai").split(",").map(h => h.trim())
+            }
+          };
+
+          accounts.push(newAccount);
+          localStorage.setItem("accounts", JSON.stringify(accounts));
+
+          console.log("✅ Account saved via fallback method");
+          alert(`✅ Cuenta @${newAccount.username} agregada correctamente`);
+
+          // Close modal
+          const modal = document.getElementById("addAccountModal");
+          if (modal) {
+            modal.style.display = 'none';
+            modal.classList.remove("active");
+          }
+
+          // Refresh page to show new account
+          window.location.reload();
+        }
+
+        return false;
+      };
+
       console.log("✅ Global showAddAccountModal function defined");
+      console.log("✅ Global handleFormSubmit function defined");
 
       // Test function availability
       setTimeout(function() {
