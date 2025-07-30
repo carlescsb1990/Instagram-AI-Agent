@@ -1695,7 +1695,7 @@ class RionaAIDashboard {
                                         <li>Incrementa gradualmente la actividad</li>
                                         <li>Varía los hashtags regularmente</li>
                                         <li>Complementa con contenido propio</li>
-                                        <li>Interactúa manualmente también</li>
+                                        <li>Interactúa manualmente tambi��n</li>
                                     </ul>
                                 </div>
 
@@ -1887,6 +1887,66 @@ class RionaAIDashboard {
     } catch (error) {
       this.addLogEntry("error", `Error en LocalStorage: ${error.message}`);
     }
+  }
+
+  // Modal functions (for compatibility with ExtendedDashboard)
+  showAddAccountModal() {
+    console.log("🔧 Opening add account modal from basic dashboard...");
+
+    const modal = document.getElementById("addAccountModal");
+    if (modal) {
+      console.log("✅ Modal found, opening...");
+
+      // Reset form
+      const form = document.getElementById("addAccountForm");
+      if (form) {
+        form.reset();
+        console.log("✅ Form reset");
+      }
+
+      // Force show modal with important styles
+      modal.style.display = 'flex';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      modal.style.zIndex = '1000';
+      modal.classList.add("active");
+
+      console.log("✅ Modal should be visible now");
+
+      // Add notification
+      this.showNotification("🔧 Modal opened - Basic Dashboard Mode", 'info');
+    } else {
+      console.error("❌ Modal not found in DOM");
+      this.showNotification("❌ Modal not found - check console", 'error');
+    }
+  }
+
+  showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <span>${message}</span>
+        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    `;
+
+    // Add to page
+    document.body.appendChild(notification);
+
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove();
+      }
+    }, 5000);
   }
 }
 
