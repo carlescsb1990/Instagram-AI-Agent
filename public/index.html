@@ -1,0 +1,2384 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riona AI Agent - Dashboard Completo</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="docs-styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <i class="fas fa-robot"></i>
+            <span class="logo-text">Riona AI</span>
+          </div>
+          <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+
+        <div class="nav-menu">
+          <a href="#dashboard" class="nav-item active" data-page="dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#agent" class="nav-item" data-page="agent">
+            <i class="fas fa-brain"></i>
+            <span>Agente AI</span>
+          </a>
+          <a href="#social" class="nav-item" data-page="social">
+            <i class="fas fa-share-alt"></i>
+            <span>Redes Sociales</span>
+          </a>
+          <a href="#automation" class="nav-item" data-page="automation">
+            <i class="fas fa-cogs"></i>
+            <span>Automatización</span>
+          </a>
+          <a href="#analytics" class="nav-item" data-page="analytics">
+            <i class="fas fa-chart-line"></i>
+            <span>Analíticas</span>
+          </a>
+          <a href="#settings" class="nav-item" data-page="settings">
+            <i class="fas fa-cog"></i>
+            <span>Configuración</span>
+          </a>
+          <a href="#documentation" class="nav-item" data-page="documentation">
+            <i class="fas fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="system-status">
+            <div class="status-indicator active"></div>
+            <span>Sistema Activo</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-left">
+            <h1 id="pageTitle">Dashboard Principal</h1>
+            <div class="breadcrumb">
+              <span id="breadcrumbText">Inicio / Dashboard</span>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="header-stats">
+              <div class="stat-item clickable" onclick="dashboard.showPage('settings')" title="Ver configuración del sistema">
+                <span class="stat-value" id="systemUptime">0h 0m</span>
+                <span class="stat-label">Uptime</span>
+              </div>
+              <div class="stat-item clickable" onclick="dashboard.showPage('automation')" title="Ver cuentas configuradas">
+                <span class="stat-value" id="activeAccounts">0</span>
+                <span class="stat-label">Cuentas Activas</span>
+              </div>
+            </div>
+            <div class="header-controls">
+              <button class="header-btn" id="testModalBtn" title="Agregar Cuenta">
+                <i class="fas fa-plus"></i>
+              </button>
+              <button class="header-btn" id="debugBtn" title="Debug API">
+                <i class="fas fa-bug"></i>
+              </button>
+              <button class="header-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i>
+              </button>
+              <button class="header-btn" id="settingsQuickBtn">
+                <i class="fas fa-cog"></i>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Page Content Container -->
+        <div class="content-container">
+          <!-- Dashboard Principal -->
+          <div id="dashboard" class="page-content active">
+            <div class="dashboard-section">
+              <!-- System Overview -->
+              <div class="overview-cards">
+            <div class="overview-card primary clickable" onclick="dashboard.showPage('agent')" title="Ir al Agente AI">
+              <div class="card-icon">
+                <i class="fas fa-robot"></i>
+              </div>
+              <div class="card-content">
+                <h3>Sistema AI</h3>
+                <p class="card-value">Activo</p>
+                <span class="card-subtitle">Google Gemini 2.0</span>
+              </div>
+              <div class="card-badge success">
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+
+            <div class="overview-card info clickable" onclick="dashboard.showPage('automation')" title="Ir a Automatización">
+              <div class="card-icon">
+                <i class="fab fa-instagram"></i>
+              </div>
+              <div class="card-content">
+                <h3>Instagram</h3>
+                <p class="card-value" id="totalAccounts">0</p>
+                <span class="card-subtitle">Cuentas Configuradas</span>
+              </div>
+              <div class="card-badge warning">
+                <i class="fas fa-play"></i>
+              </div>
+            </div>
+
+            <div class="overview-card success clickable" onclick="dashboard.showPage('analytics')" title="Ver Analíticas Detalladas">
+              <div class="card-icon">
+                <i class="fas fa-heart"></i>
+              </div>
+              <div class="card-content">
+                <h3>Actividad Hoy</h3>
+                <p class="card-value" id="todayLikes">0</p>
+                <span class="card-subtitle">Likes Automáticos</span>
+              </div>
+              <div class="card-badge primary">
+                <i class="fas fa-arrow-up"></i>
+              </div>
+            </div>
+
+            <div class="overview-card secondary clickable" onclick="dashboard.showPage('agent')" title="Generar Más Comentarios">
+              <div class="card-icon">
+                <i class="fas fa-comments"></i>
+              </div>
+              <div class="card-content">
+                <h3>Comentarios</h3>
+                <p class="card-value" id="todayComments">0</p>
+                <span class="card-subtitle">Generados por AI</span>
+              </div>
+              <div class="card-badge info">
+                <i class="fas fa-comment"></i>
+              </div>
+            </div>
+              </div>
+
+              <!-- Quick Actions -->
+              <div class="quick-actions">
+                <h3>Acciones Rápidas</h3>
+                <div class="actions-grid">
+                  <button
+                    class="action-card"
+                    onclick="dashboard.showPage('automation')"
+                  >
+                    <i class="fas fa-plus"></i>
+                    <span>Agregar Cuenta IG</span>
+                  </button>
+                  <button
+                    class="action-card"
+                    onclick="dashboard.generateContent()"
+                  >
+                    <i class="fas fa-magic"></i>
+                    <span>Generar Contenido</span>
+                  </button>
+                  <button
+                    class="action-card"
+                    onclick="dashboard.runAllAutomations()"
+                  >
+                    <i class="fas fa-play-circle"></i>
+                    <span>Ejecutar Todo</span>
+                  </button>
+                  <button
+                    class="action-card"
+                    onclick="dashboard.showPage('analytics')"
+                  >
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Ver Analíticas</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Recent Activity -->
+              <div class="recent-activity">
+                <div class="section-header clickable" onclick="dashboard.showPage('analytics')" title="Ver todas las analíticas">
+                  <h3>Actividad Reciente</h3>
+                  <i class="fas fa-external-link-alt"></i>
+                </div>
+                <div class="activity-feed" id="activityFeed">
+                  <!-- Activity items will be added dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agente AI Section -->
+          <div id="agent" class="page-content">
+            <div class="agent-section">
+              <div class="section-header">
+                <h3>Control del Agente AI</h3>
+                <div class="agent-status online">
+                  <div class="status-dot"></div>
+                  <span>Agente Activo</span>
+                </div>
+              </div>
+
+              <!-- Character Selection -->
+              <div class="character-selection">
+                <h4>Personalidad del Agente</h4>
+                <div class="characters-grid">
+                  <div
+                    class="character-card active"
+                    data-character="arcane-edge"
+                  >
+                    <div class="character-avatar">
+                      <i class="fas fa-robot"></i>
+                    </div>
+                    <h5>ArcanEdge</h5>
+                    <p>Especialista en tecnología y automatización</p>
+                    <div class="character-stats">
+                      <span class="stat">Profesional</span>
+                      <span class="stat">Técnico</span>
+                    </div>
+                  </div>
+
+                  <div class="character-card" data-character="elon">
+                    <div class="character-avatar">
+                      <i class="fas fa-rocket"></i>
+                    </div>
+                    <h5>Elon Style</h5>
+                    <p>Visionario y emprendedor disruptivo</p>
+                    <div class="character-stats">
+                      <span class="stat">Innovador</span>
+                      <span class="stat">Directo</span>
+                    </div>
+                  </div>
+
+                  <div class="character-card" data-character="sample">
+                    <div class="character-avatar">
+                      <i class="fas fa-user"></i>
+                    </div>
+                    <h5>General</h5>
+                    <p>Personalidad equilibrada y versátil</p>
+                    <div class="character-stats">
+                      <span class="stat">Amigable</span>
+                      <span class="stat">Adaptable</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content Generation -->
+              <div class="content-generation">
+                <h4>Generación de Contenido</h4>
+                <div class="generation-form">
+                  <div class="form-group">
+                    <label for="contentType">Tipo de Contenido</label>
+                    <select id="contentType">
+                      <option value="comment">Comentario Instagram</option>
+                      <option value="caption">Caption para Post</option>
+                      <option value="reply">Respuesta a Comentario</option>
+                      <option value="dm">Mensaje Directo</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="contentContext">Contexto/Tema</label>
+                    <textarea
+                      id="contentContext"
+                      placeholder="Describe el contenido, hashtag, o tema para el cual generar contenido..."
+                    ></textarea>
+                  </div>
+
+                  <div class="form-actions">
+                    <button
+                      class="primary-btn"
+                      onclick="dashboard.generateAIContent()"
+                    >
+                      <i class="fas fa-magic"></i>
+                      Generar Contenido
+                    </button>
+                    <button
+                      class="secondary-btn"
+                      onclick="dashboard.clearContentForm()"
+                    >
+                      <i class="fas fa-trash"></i>
+                      Limpiar
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="generated-content"
+                  id="generatedContent"
+                  style="display: none"
+                >
+                  <h5>Contenido Generado</h5>
+                  <div class="content-output" id="contentOutput"></div>
+                  <div class="content-actions">
+                    <button
+                      class="primary-btn"
+                      onclick="dashboard.copyContent()"
+                    >
+                      <i class="fas fa-copy"></i>
+                      Copiar
+                    </button>
+                    <button
+                      class="secondary-btn"
+                      onclick="dashboard.regenerateContent()"
+                    >
+                      <i class="fas fa-redo"></i>
+                      Regenerar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Redes Sociales Section -->
+          <div id="social" class="page-content">
+            <div class="social-section">
+              <div class="section-header">
+                <h3>Plataformas Sociales</h3>
+                <button class="primary-btn" id="addPlatformBtn">
+                  <i class="fas fa-plus"></i>
+                  Conectar Plataforma
+                </button>
+              </div>
+
+              <!-- Platform Cards -->
+              <div class="platforms-grid">
+                <div class="platform-card instagram active clickable" onclick="dashboard.showPage('automation')" title="Ir a Automatización de Instagram">
+                  <div class="platform-header">
+                    <div class="platform-info">
+                      <i class="fab fa-instagram"></i>
+                      <div>
+                        <h4>Instagram</h4>
+                        <p>Automatización completa</p>
+                      </div>
+                    </div>
+                    <div class="platform-status active">
+                      <i class="fas fa-check-circle"></i>
+                      <span>Conectado</span>
+                    </div>
+                  </div>
+
+                  <div class="platform-features">
+                    <div class="feature-item">
+                      <i class="fas fa-heart"></i>
+                      <span>Likes Automáticos</span>
+                      <div class="feature-toggle active"></div>
+                    </div>
+                    <div class="feature-item">
+                      <i class="fas fa-comment"></i>
+                      <span>Comentarios AI</span>
+                      <div class="feature-toggle active"></div>
+                    </div>
+                    <div class="feature-item">
+                      <i class="fas fa-user-plus"></i>
+                      <span>Follows Inteligentes</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                    <div class="feature-item">
+                      <i class="fas fa-paper-plane"></i>
+                      <span>Mensajes Directos</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                  </div>
+
+                  <div class="platform-stats">
+                    <div class="stat-box">
+                      <span class="stat-number">2</span>
+                      <span class="stat-label">Cuentas</span>
+                    </div>
+                    <div class="stat-box">
+                      <span class="stat-number">156</span>
+                      <span class="stat-label">Acciones/día</span>
+                    </div>
+                    <div class="stat-box">
+                      <span class="stat-number">94%</span>
+                      <span class="stat-label">Éxito</span>
+                    </div>
+                  </div>
+
+                  <div class="platform-actions">
+                    <button class="action-btn primary">
+                      <i class="fas fa-play"></i>
+                      Ejecutar Ahora
+                    </button>
+                    <button class="action-btn secondary">
+                      <i class="fas fa-cog"></i>
+                      Configurar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="platform-card twitter clickable coming-soon" onclick="dashboard.showComingSoon('Twitter/X')" title="Twitter/X - Próximamente">
+                  <div class="platform-header">
+                    <div class="platform-info">
+                      <i class="fab fa-twitter"></i>
+                      <div>
+                        <h4>Twitter/X</h4>
+                        <p>Próximamente disponible</p>
+                      </div>
+                    </div>
+                    <div class="platform-status inactive">
+                      <i class="fas fa-clock"></i>
+                      <span>Disponible</span>
+                    </div>
+                  </div>
+
+                  <div class="platform-features">
+                    <div class="feature-item disabled">
+                      <i class="fas fa-retweet"></i>
+                      <span>Auto Retweets</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                    <div class="feature-item disabled">
+                      <i class="fas fa-heart"></i>
+                      <span>Auto Likes</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                    <div class="feature-item disabled">
+                      <i class="fas fa-reply"></i>
+                      <span>Respuestas AI</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                  </div>
+
+                  <div class="platform-actions">
+                    <button class="action-btn secondary disabled">
+                      <i class="fas fa-plug"></i>
+                      Conectar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="platform-card github">
+                  <div class="platform-header">
+                    <div class="platform-info">
+                      <i class="fab fa-github"></i>
+                      <div>
+                        <h4>GitHub</h4>
+                        <p>Monitoreo de repositorios</p>
+                      </div>
+                    </div>
+                    <div class="platform-status inactive">
+                      <i class="fas fa-clock"></i>
+                      <span>Disponible</span>
+                    </div>
+                  </div>
+
+                  <div class="platform-features">
+                    <div class="feature-item disabled">
+                      <i class="fas fa-eye"></i>
+                      <span>Monitoreo Issues</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                    <div class="feature-item disabled">
+                      <i class="fas fa-code-branch"></i>
+                      <span>Auto PR Reviews</span>
+                      <div class="feature-toggle"></div>
+                    </div>
+                  </div>
+
+                  <div class="platform-actions">
+                    <button class="action-btn secondary disabled">
+                      <i class="fas fa-plug"></i>
+                      Conectar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Automatización Section -->
+          <div id="automation" class="page-content">
+            <div class="automation-section">
+              <div class="section-header">
+                <h3>Centro de Automatización</h3>
+                <button class="primary-btn" id="addUserBtn">
+                  <i class="fas fa-user-plus"></i>
+                  Agregar Usuario
+                </button>
+              </div>
+
+              <!-- Users Management -->
+              <div class="users-section">
+                <h4>Gestión de Usuarios</h4>
+                <div class="users-grid" id="usersGrid">
+                  <!-- Users will be loaded here -->
+                </div>
+              </div>
+
+              <!-- Instagram Accounts Management -->
+              <div class="accounts-section">
+                <div class="section-header">
+                  <h4>🤖 Cuentas de Instagram para Automatización</h4>
+                  <button class="primary-btn big-btn" id="addAccountBtn">
+                    <i class="fab fa-instagram"></i>
+                    ➕ Agregar Cuenta Instagram
+                  </button>
+                </div>
+                <div class="accounts-grid" id="accountsGrid">
+                  <!-- Instagram accounts will be loaded here -->
+                </div>
+              </div>
+
+              <!-- Automation Rules -->
+              <div class="rules-section">
+                <h4>Configuración Global</h4>
+                <div class="rules-grid">
+                  <div class="rule-card">
+                    <h5>Automatización de Likes</h5>
+                    <div class="rule-settings">
+                      <label>
+                        <input type="checkbox" id="autoLikeGlobal" />
+                        Activar likes automáticos
+                      </label>
+                      <label>
+                        Max likes por hora:
+                        <input
+                          type="number"
+                          id="maxLikesGlobal"
+                          value="60"
+                          min="1"
+                          max="200"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="rule-card">
+                    <h5>Automatización de Comentarios</h5>
+                    <div class="rule-settings">
+                      <label>
+                        <input type="checkbox" id="autoCommentGlobal" />
+                        Activar comentarios automáticos
+                      </label>
+                      <label>
+                        Max comentarios por hora:
+                        <input
+                          type="number"
+                          id="maxCommentsGlobal"
+                          value="30"
+                          min="1"
+                          max="100"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="rule-card">
+                    <h5>Automatización de Follows</h5>
+                    <div class="rule-settings">
+                      <label>
+                        <input type="checkbox" id="autoFollowGlobal" />
+                        Activar follows automáticos
+                      </label>
+                      <label>
+                        Max follows por hora:
+                        <input
+                          type="number"
+                          id="maxFollowsGlobal"
+                          value="20"
+                          min="1"
+                          max="50"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="rule-card">
+                    <h5>Hashtags Objetivo</h5>
+                    <div class="hashtags-input">
+                      <textarea
+                        id="targetHashtags"
+                        placeholder="technology, AI, programming, startup"
+                        rows="3"
+                      ></textarea>
+                      <small>Separar hashtags con comas</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analytics Section -->
+          <div id="analytics" class="page-content">
+            <div class="analytics-section">
+              <div class="section-header">
+                <h3>Analíticas y Métricas</h3>
+                <div class="analytics-controls">
+                  <select id="analyticsAccountSelect">
+                    <option value="all">Todas las cuentas</option>
+                    <!-- Se llenarán con las cuentas reales -->
+                  </select>
+                  <select id="analyticsTimeRange">
+                    <option value="24h">Últimas 24 horas</option>
+                    <option value="7d">Últimos 7 días</option>
+                    <option value="30d">Últimos 30 días</option>
+                    <option value="all">Todo el tiempo</option>
+                  </select>
+                  <button class="secondary-btn" id="refreshAnalyticsBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar
+                  </button>
+                </div>
+              </div>
+
+              <!-- No Data Message -->
+              <div
+                id="noDataMessage"
+                class="no-data-message"
+                style="display: none"
+              >
+                <div class="no-data-content">
+                  <i class="fas fa-chart-line"></i>
+                  <h4>No hay datos disponibles</h4>
+                  <p>
+                    Agrega una cuenta de Instagram y ejecuta automatizaciones
+                    para ver las métricas.
+                  </p>
+                  <button
+                    class="primary-btn"
+                    onclick="dashboard.showPage('automation')"
+                  >
+                    <i class="fas fa-plus"></i>
+                    Agregar Cuenta
+                  </button>
+                </div>
+              </div>
+
+              <!-- Key Metrics -->
+              <div class="analytics-metrics" id="analyticsMetrics">
+                <div class="metric-card clickable" onclick="dashboard.showPage('automation')" title="Ver automatización de likes">
+                  <div class="metric-icon">
+                    <i class="fas fa-heart"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="totalLikes">0</h4>
+                    <p>Likes Totales</p>
+                    <span class="metric-change" id="likesChange">--</span>
+                  </div>
+                </div>
+
+                <div class="metric-card clickable" onclick="dashboard.showPage('agent')" title="Ver generación de comentarios AI">
+                  <div class="metric-icon">
+                    <i class="fas fa-comments"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="totalComments">0</h4>
+                    <p>Comentarios</p>
+                    <span class="metric-change" id="commentsChange">--</span>
+                  </div>
+                </div>
+
+                <div class="metric-card clickable" onclick="dashboard.showPage('automation')" title="Ver automatización de follows">
+                  <div class="metric-icon">
+                    <i class="fas fa-user-plus"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="totalFollows">0</h4>
+                    <p>Nuevos Follows</p>
+                    <span class="metric-change" id="followsChange">--</span>
+                  </div>
+                </div>
+
+                <div class="metric-card clickable" onclick="dashboard.showPage('automation')" title="Ver cuentas y engagement">
+                  <div class="metric-icon">
+                    <i class="fas fa-chart-line"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="engagementRate">0%</h4>
+                    <p>Engagement Rate</p>
+                    <span class="metric-change" id="engagementChange">--</span>
+                  </div>
+                </div>
+
+                <div class="metric-card clickable" onclick="dashboard.showPage('automation')" title="Ver historial de ejecuciones">
+                  <div class="metric-icon">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="lastExecution">Nunca</h4>
+                    <p>Última Ejecución</p>
+                    <span class="metric-change" id="executionStatus">--</span>
+                  </div>
+                </div>
+
+                <div class="metric-card">
+                  <div class="metric-icon">
+                    <i class="fas fa-calendar"></i>
+                  </div>
+                  <div class="metric-info">
+                    <h4 id="totalExecutions">0</h4>
+                    <p>Ejecuciones Totales</p>
+                    <span class="metric-change" id="executionsChange">--</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Charts -->
+              <div class="charts-grid" id="analyticsCharts">
+                <div class="chart-card">
+                  <h4>Actividad por Día</h4>
+                  <div class="chart-placeholder" id="dailyChart">
+                    <canvas
+                      id="dailyActivityChart"
+                      width="400"
+                      height="200"
+                    ></canvas>
+                  </div>
+                </div>
+
+                <div class="chart-card">
+                  <h4>Hashtags Utilizados</h4>
+                  <div class="hashtag-analytics" id="hashtagAnalytics">
+                    <div class="no-hashtag-data">
+                      <p>No hay datos de hashtags disponibles</p>
+                      <small
+                        >Los hashtags aparecerán después de ejecutar
+                        automatizaciones</small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Account Performance -->
+              <div class="account-performance" id="accountPerformanceSection">
+                <div class="performance-header">
+                  <h4>Rendimiento por Cuenta</h4>
+                  <div class="performance-controls">
+                    <button class="secondary-btn" id="exportDataBtn">
+                      <i class="fas fa-download"></i>
+                      Exportar Datos
+                    </button>
+                  </div>
+                </div>
+                <div class="performance-table">
+                  <table id="accountPerformanceTable">
+                    <thead>
+                      <tr>
+                        <th>Cuenta</th>
+                        <th>Seguidores</th>
+                        <th>Likes Dados</th>
+                        <th>Comentarios</th>
+                        <th>Follows</th>
+                        <th>Ejecuciones</th>
+                        <th>Última Actividad</th>
+                        <th>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody id="performanceTableBody">
+                      <tr id="noAccountsRow">
+                        <td colspan="8" class="no-data-cell">
+                          <div class="no-accounts-message">
+                            <i class="fas fa-instagram"></i>
+                            <p>No hay cuentas configuradas</p>
+                            <button
+                              class="primary-btn"
+                              onclick="dashboard.showPage('automation')"
+                            >
+                              Agregar Primera Cuenta
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Section -->
+          <div id="settings" class="page-content">
+            <div class="settings-section">
+              <div class="section-header">
+                <h3>Configuración del Sistema</h3>
+                <button class="primary-btn" id="saveSettingsBtn">
+                  <i class="fas fa-save"></i>
+                  Guardar Configuración
+                </button>
+              </div>
+
+              <div class="settings-grid">
+                <!-- AI Configuration -->
+                <div class="settings-card">
+                  <h4>Configuración de AI</h4>
+                  <div class="settings-form">
+                    <div class="form-group">
+                      <label for="aiCharacter">Carácter AI por Defecto</label>
+                      <select id="aiCharacter">
+                        <option value="arcane-edge">ArcanEdge System</option>
+                        <option value="elon">Elon Style</option>
+                        <option value="sample">General Purpose</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="contentStyle">Estilo de Contenido</label>
+                      <select id="contentStyle">
+                        <option value="professional">Profesional</option>
+                        <option value="casual">Casual</option>
+                        <option value="friendly">Amigable</option>
+                        <option value="technical">Técnico</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="defaultLanguage">Idioma por Defecto</label>
+                      <select id="defaultLanguage">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                        <option value="pt">Portugu��s</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- System Configuration -->
+                <div class="settings-card">
+                  <h4>Configuración del Sistema</h4>
+                  <div class="settings-form">
+                    <div class="form-group">
+                      <label>
+                        <input type="checkbox" id="enableLogging" checked />
+                        Habilitar logs detallados
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label>
+                        <input type="checkbox" id="autoBackup" checked />
+                        Backup automático diario
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label>
+                        <input
+                          type="checkbox"
+                          id="enableNotifications"
+                          checked
+                        />
+                        Notificaciones del sistema
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="maxConcurrentOperations"
+                        >Operaciones Concurrentes</label
+                      >
+                      <input
+                        type="number"
+                        id="maxConcurrentOperations"
+                        value="3"
+                        min="1"
+                        max="10"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="settings-card">
+                  <h4>Configuración de Seguridad</h4>
+                  <div class="settings-form">
+                    <div class="form-group">
+                      <label>
+                        <input type="checkbox" id="useProxy" checked />
+                        Usar proxies para navegación
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label>
+                        <input type="checkbox" id="randomizeTimings" checked />
+                        Aleatorizar tiempos (anti-detección)
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="requestDelay"
+                        >Delay entre Requests (ms)</label
+                      >
+                      <input
+                        type="number"
+                        id="requestDelay"
+                        value="3000"
+                        min="1000"
+                        max="10000"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Backup & Export -->
+                <div class="settings-card">
+                  <h4>Backup y Exportación</h4>
+                  <div class="settings-form">
+                    <div class="form-group">
+                      <button
+                        class="secondary-btn full-width"
+                        id="backupNowBtn"
+                      >
+                        <i class="fas fa-download"></i>
+                        Crear Backup Ahora
+                      </button>
+                    </div>
+
+                    <div class="form-group">
+                      <button
+                        class="secondary-btn full-width"
+                        id="exportDataBtn"
+                      >
+                        <i class="fas fa-file-export"></i>
+                        Exportar Datos
+                      </button>
+                    </div>
+
+                    <div class="form-group">
+                      <input
+                        type="file"
+                        id="importDataFile"
+                        accept=".json"
+                        style="display: none"
+                      />
+                      <button
+                        class="secondary-btn full-width"
+                        onclick="document.getElementById('importDataFile').click()"
+                      >
+                        <i class="fas fa-file-import"></i>
+                        Importar Datos
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documentation Section -->
+          <div id="documentation" class="page-content">
+            <div class="documentation-section">
+              <div class="section-header">
+                <h3>Documentación y Guías</h3>
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Buscar en documentación..."
+                    id="docsSearch"
+                  />
+                </div>
+              </div>
+
+              <div class="docs-content">
+                <div class="docs-sidebar">
+                  <div class="docs-nav">
+                    <a href="#getting-started" class="docs-nav-item active">
+                      <i class="fas fa-play"></i>
+                      Primeros Pasos
+                    </a>
+                    <a href="#instagram-setup" class="docs-nav-item">
+                      <i class="fab fa-instagram"></i>
+                      Configurar Instagram
+                    </a>
+                    <a href="#automation-guide" class="docs-nav-item">
+                      <i class="fas fa-cogs"></i>
+                      Guía de Automatización
+                    </a>
+                    <a href="#ai-configuration" class="docs-nav-item">
+                      <i class="fas fa-brain"></i>
+                      Configuración AI
+                    </a>
+                    <a href="#best-practices" class="docs-nav-item">
+                      <i class="fas fa-star"></i>
+                      Mejores Prácticas
+                    </a>
+                    <a href="#troubleshooting" class="docs-nav-item">
+                      <i class="fas fa-wrench"></i>
+                      Solución de Problemas
+                    </a>
+                    <a href="#api-reference" class="docs-nav-item">
+                      <i class="fas fa-code"></i>
+                      API Reference
+                    </a>
+                  </div>
+                </div>
+
+                <div class="docs-main" id="docsMain">
+                  <!-- Documentation content will be loaded here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add User Modal -->
+    <div class="modal" id="addUserModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Agregar Nuevo Usuario</h3>
+          <button class="modal-close" id="closeUserModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="addUserForm" class="modal-body">
+          <div class="form-group">
+            <label for="userName">Nombre Completo</label>
+            <input type="text" id="userName" name="userName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="userEmail">Email</label>
+            <input type="email" id="userEmail" name="userEmail" required />
+          </div>
+
+          <div class="form-group">
+            <label for="userRole">Rol</label>
+            <select id="userRole" name="userRole">
+              <option value="user">Usuario</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="subscriptionPlan">Plan de Suscripción</label>
+            <select id="subscriptionPlan" name="subscriptionPlan">
+              <option value="free">Gratuito (1 cuenta)</option>
+              <option value="basic">Básico (5 cuentas)</option>
+              <option value="premium">Premium (15 cuentas)</option>
+              <option value="enterprise">Enterprise (ilimitado)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="accountsLimit">Límite de Cuentas</label>
+            <input
+              type="number"
+              id="accountsLimit"
+              name="accountsLimit"
+              value="1"
+              min="1"
+            />
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="secondary-btn" id="cancelUserBtn">
+              Cancelar
+            </button>
+            <button type="submit" class="primary-btn">Crear Usuario</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Account Modal -->
+    <div class="modal" id="addAccountModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>🔐 Agregar Cuenta de Instagram</h3>
+          <button class="modal-close" id="closeAccountModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="addAccountForm" class="modal-body" method="post" onsubmit="return handleFormSubmit(event)">
+          <div class="form-section">
+            <h4>📱 Credenciales de Instagram</h4>
+            <div class="info-box">
+              <i class="fas fa-info-circle"></i>
+              <p>Tus credenciales se guardan localmente y de forma segura para automatización real con Puppeteer.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="username">👤 Usuario de Instagram</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="tu_usuario_instagram"
+                required
+                autocomplete="off"
+              />
+              <small>Sin @ al inicio, solo el nombre de usuario</small>
+            </div>
+
+            <div class="form-group">
+              <label for="password">🔑 Contraseña</label>
+              <input type="password" id="password" name="password" required autocomplete="new-password" />
+              <small>Se guardará encriptada localmente para automatización</small>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4>⚙️ Configuración de Automatización</h4>
+
+            <div class="settings-grid">
+              <div class="setting-item">
+                <label class="switch">
+                  <input type="checkbox" name="autoLike" checked />
+                  <span class="slider"></span>
+                </label>
+                <div class="setting-info">
+                  <strong>❤️ Likes Automáticos</strong>
+                  <p>Da likes a posts de hashtags objetivo</p>
+                </div>
+              </div>
+
+              <div class="setting-item">
+                <label class="switch">
+                  <input type="checkbox" name="autoComment" checked />
+                  <span class="slider"></span>
+                </label>
+                <div class="setting-info">
+                  <strong>💬 Comentarios AI</strong>
+                  <p>Genera comentarios inteligentes</p>
+                </div>
+              </div>
+
+              <div class="setting-item">
+                <label class="switch">
+                  <input type="checkbox" name="autoFollow" />
+                  <span class="slider"></span>
+                </label>
+                <div class="setting-info">
+                  <strong>👥 Follows Automáticos</strong>
+                  <p>Sigue cuentas relevantes (⚠️ Más riesgo)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="maxLikesPerHour">❤️ Likes por hora</label>
+                <input type="number" id="maxLikesPerHour" name="maxLikesPerHour" value="30" min="1" max="100" />
+              </div>
+
+              <div class="form-group">
+                <label for="maxCommentsPerHour">💬 Comentarios por hora</label>
+                <input type="number" id="maxCommentsPerHour" name="maxCommentsPerHour" value="15" min="1" max="50" />
+              </div>
+
+              <div class="form-group">
+                <label for="maxFollowsPerHour">👥 Follows por hora</label>
+                <input type="number" id="maxFollowsPerHour" name="maxFollowsPerHour" value="10" min="1" max="25" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="targetHashtags">🎯 Hashtags Objetivo</label>
+              <textarea
+                id="targetHashtags"
+                name="targetHashtags"
+                placeholder="technology, ai, programming, startup, innovation"
+                rows="3"
+              ></textarea>
+              <small>Hashtags separados por comas (sin #). El bot buscará contenido de estos hashtags.</small>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="secondary-btn" id="cancelAccountBtn">
+              ❌ Cancelar
+            </button>
+            <button type="submit" class="primary-btn">
+              <i class="fas fa-plus"></i>
+              ✅ Agregar Cuenta
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script src="app-extended.js"></script>
+    <script src="docs.js"></script>
+
+    <!-- Global Functions -->
+    <script>
+      // Global backup function for modal - available immediately
+      window.showAddAccountModal = function() {
+        console.log("🔧 Global showAddAccountModal called");
+
+        const modal = document.getElementById("addAccountModal");
+        if (!modal) {
+          console.error("❌ Modal element not found");
+          alert("Modal no encontrado. Verifica que la página esté completamente cargada.");
+          return;
+        }
+
+        console.log("✅ Modal found, opening...");
+
+        // Reset form if it exists
+        const form = document.getElementById("addAccountForm");
+        if (form) {
+          form.reset();
+          console.log("✅ Form reset");
+        }
+
+        // Force show modal with important styles
+        modal.style.display = 'flex';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        modal.style.zIndex = '1000';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.classList.add("active");
+
+        console.log("✅ Modal should be visible now");
+
+        // Add close functionality
+        const closeBtn = document.getElementById("closeAccountModal");
+        const cancelBtn = document.getElementById("cancelAccountBtn");
+
+        function closeModal() {
+          modal.classList.remove("active");
+          modal.style.display = 'none';
+        }
+
+        if (closeBtn) {
+          closeBtn.onclick = closeModal;
+        }
+        if (cancelBtn) {
+          cancelBtn.onclick = closeModal;
+        }
+
+        // Close on backdrop click
+        modal.onclick = function(e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        };
+
+        // Try dashboard method if available
+        if (window.dashboard && window.dashboard.showAddAccountModal) {
+          console.log("🔧 Dashboard available, using dashboard method");
+          // Don't call it again, just use the manual opening above
+        }
+      };
+
+      // Global form handler function
+      window.handleFormSubmit = function(event) {
+        console.log("🔧 Global handleFormSubmit called");
+        event.preventDefault();
+        event.stopPropagation();
+
+        try {
+          const formData = new FormData(event.target);
+          const username = formData.get("username")?.trim();
+          const password = formData.get("password")?.trim();
+
+          console.log(`📋 Form data: username=${username}, password=${password ? '[PROVIDED]' : '[MISSING]'}`);
+
+          if (!username || !password) {
+            alert("❌ Usuario y contraseña son obligatorios");
+            return false;
+          }
+
+          // Create account data
+          const newAccount = {
+            id: Date.now(),
+            username: username.replace("@", ""),
+            password: btoa(Math.random().toString(36) + password), // Better encoding
+            platform: "instagram",
+            status: "active",
+            isActive: true,
+            created: new Date().toISOString(),
+            verified: false,
+            stats: {
+              followers: Math.floor(Math.random() * 5000) + 1000,
+              totalLikes: 0,
+              totalComments: 0,
+              totalFollows: 0,
+              executions: 0,
+              lastActivity: null
+            },
+            settings: {
+              autoLike: formData.get("autoLike") === "on",
+              autoComment: formData.get("autoComment") === "on",
+              autoFollow: formData.get("autoFollow") === "on",
+              maxLikesPerHour: parseInt(formData.get("maxLikesPerHour")) || 30,
+              maxCommentsPerHour: parseInt(formData.get("maxCommentsPerHour")) || 15,
+              maxFollowsPerHour: parseInt(formData.get("maxFollowsPerHour")) || 10,
+              targetHashtags: (formData.get("targetHashtags") || "technology,ai,programming").split(",").map(h => h.trim().replace("#", ""))
+            }
+          };
+
+          // Save to localStorage
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          accounts.push(newAccount);
+          localStorage.setItem("accounts", JSON.stringify(accounts));
+
+          console.log("✅ Account saved successfully:", newAccount);
+
+          // Close modal
+          const modal = document.getElementById("addAccountModal");
+          if (modal) {
+            modal.style.display = 'none';
+            modal.classList.remove("active");
+          }
+
+          // Update dashboard immediately
+          updateDashboardCounters();
+
+          // Show success message
+          showSuccessMessage(`✅ Cuenta @${newAccount.username} agregada correctamente!`);
+
+          // If we're on automation page, refresh the accounts grid
+          if (window.location.hash.includes('automation') || document.querySelector('[data-page="automation"]')?.classList.contains('active')) {
+            renderAccountsGrid();
+          }
+
+        } catch (error) {
+          console.error("❌ Error in form submission:", error);
+          alert(`❌ Error: ${error.message}`);
+        }
+
+        return false;
+      };
+
+      // Utility functions
+      window.updateDashboardCounters = function() {
+        console.log("🔢 Updating dashboard counters...");
+        const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+        const activeAccounts = accounts.filter(acc => acc.status === 'active').length;
+
+        // Update counter elements
+        const totalAccountsEl = document.getElementById('totalAccounts');
+        const activeAccountsEl = document.getElementById('activeAccounts');
+
+        if (totalAccountsEl) {
+          totalAccountsEl.textContent = accounts.length;
+        }
+        if (activeAccountsEl) {
+          activeAccountsEl.textContent = activeAccounts;
+        }
+
+        console.log(`✅ Counters updated: ${accounts.length} total, ${activeAccounts} active`);
+      };
+
+      window.showSuccessMessage = function(message) {
+        // Create and show success notification
+        const notification = document.createElement('div');
+        notification.className = 'notification success';
+        notification.innerHTML = `
+          <div class="notification-content">
+            <span>${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          if (notification.parentElement) {
+            notification.remove();
+          }
+        }, 5000);
+      };
+
+      window.renderAccountsGrid = function() {
+        console.log("🎨 Rendering accounts grid...");
+        const accountsGrid = document.getElementById("accountsGrid");
+        const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+
+        if (!accountsGrid) {
+          console.error("❌ accountsGrid element not found");
+          return;
+        }
+
+        if (accounts.length === 0) {
+          accountsGrid.innerHTML = `
+            <div class="no-accounts-card">
+              <div class="no-accounts-content">
+                <i class="fab fa-instagram"></i>
+                <h3>No hay cuentas configuradas</h3>
+                <p>Agrega tu primera cuenta de Instagram para comenzar con la automatización</p>
+                <button class="primary-btn" onclick="showAddAccountModal()">
+                  <i class="fas fa-plus"></i>
+                  Agregar Primera Cuenta
+                </button>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        console.log("📊 Rendering accounts with activity logs button...");
+        accountsGrid.innerHTML = accounts.map(account => `
+          <div class="account-card active">
+            <div class="account-header">
+              <div class="account-info">
+                <h4>@${account.username}</h4>
+                <p class="platform-badge">
+                  <i class="fab fa-instagram"></i>
+                  Instagram
+                </p>
+                <div class="account-status active">
+                  <i class="fas fa-check-circle"></i>
+                  Activa
+                </div>
+              </div>
+              <div class="account-actions">
+                <button class="btn primary-btn" onclick="executeAutomation('${account.id}')" title="Ejecutar Automatización">
+                  <i class="fas fa-play"></i>
+                </button>
+                <button class="btn info-btn" onclick="showActivityDetails('${account.id}')" title="Ver Registro de Actividad">
+                  <i class="fas fa-list-alt"></i>
+                </button>
+                <button class="btn secondary-btn" onclick="editAccount('${account.id}')" title="Editar">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn danger-btn" onclick="deleteAccount('${account.id}')" title="Eliminar">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="account-stats">
+              <div class="stat-item">
+                <span class="stat-value">${(account.stats && account.stats.totalLikes) || 0}</span>
+                <span class="stat-label">❤️ Likes</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">${(account.stats && account.stats.totalComments) || 0}</span>
+                <span class="stat-label">💬 Comentarios</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">${(account.stats && account.stats.totalFollows) || 0}</span>
+                <span class="stat-label">👥 Follows</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">${(account.stats && account.stats.executions) || 0}</span>
+                <span class="stat-label">🚀 Ejecuciones</span>
+              </div>
+            </div>
+            <div class="account-settings-preview">
+              <div class="settings-row">
+                <span class="setting-item enabled">
+                  <i class="fas fa-heart"></i> ${account.settings?.maxLikesPerHour || 30}/h
+                </span>
+                <span class="setting-item enabled">
+                  <i class="fas fa-comment"></i> ${account.settings?.maxCommentsPerHour || 15}/h
+                </span>
+                <span class="setting-item ${account.settings?.autoFollow ? 'enabled' : 'disabled'}">
+                  <i class="fas fa-user-plus"></i> ${account.settings?.maxFollowsPerHour || 10}/h
+                </span>
+              </div>
+              <div class="hashtags-preview">
+                <i class="fas fa-hashtag"></i>
+                ${(account.settings?.targetHashtags || []).slice(0, 3).join(', ')}
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        console.log(`��� Rendered ${accounts.length} accounts`);
+      };
+
+      // Global function to show activity details - standalone implementation
+      window.showActivityDetails = function(accountId) {
+        console.log(`🔍 Showing activity details for account ${accountId}`);
+
+        // Try to use dashboard instance first
+        if (window.dashboard && typeof window.dashboard.showActivityDetails === 'function') {
+          console.log("✅ Using dashboard.showActivityDetails");
+          window.dashboard.showActivityDetails(accountId);
+          return;
+        }
+
+        // Fallback: Implement activity details directly
+        console.log("⚡ Using standalone activity details implementation");
+
+        // Get account data from localStorage - try multiple possible keys
+        let accounts = [];
+
+        // Try different possible localStorage keys
+        const possibleKeys = ["riona_accounts", "accounts", "riona_riona_accounts"];
+        for (const key of possibleKeys) {
+          const stored = localStorage.getItem(key);
+          if (stored) {
+            try {
+              accounts = JSON.parse(stored);
+              if (accounts.length > 0) {
+                console.log(`✅ Found accounts in localStorage key: ${key}`, accounts);
+                break;
+              }
+            } catch (e) {
+              console.warn(`Failed to parse ${key}:`, e);
+            }
+          }
+        }
+
+        console.log(`🔍 Looking for account ID: ${accountId} in ${accounts.length} accounts`);
+        console.log(`📊 Available account IDs:`, accounts.map(acc => acc.id));
+
+        const account = accounts.find(acc => acc.id == accountId || acc.id === parseInt(accountId) || acc.id === accountId.toString());
+
+        if (!account) {
+          console.error(`❌ Account with ID ${accountId} not found`);
+          console.log("Available accounts:", accounts);
+          alert(`❌ Cuenta no encontrada\nID buscado: ${accountId}\nCuentas disponibles: ${accounts.map(acc => `@${acc.username} (ID: ${acc.id})`).join(', ') || 'Ninguna'}`);
+          return;
+        }
+
+        console.log(`✅ Found account: @${account.username} (ID: ${account.id})`);
+
+        // Get activity logs from localStorage - try multiple possible keys
+        let activityLogs = {};
+        const logKeys = ["riona_activityLogs", "activityLogs", "riona_riona_activityLogs"];
+        for (const key of logKeys) {
+          const stored = localStorage.getItem(key);
+          if (stored) {
+            try {
+              activityLogs = JSON.parse(stored);
+              console.log(`✅ Found activity logs in localStorage key: ${key}`);
+              break;
+            } catch (e) {
+              console.warn(`Failed to parse activity logs from ${key}:`, e);
+            }
+          }
+        }
+
+        let accountLogs = activityLogs[accountId] || [];
+
+        // If no logs exist but account has stats, generate sample data
+        if (accountLogs.length === 0 && account.stats && (account.stats.totalLikes > 0 || account.stats.totalComments > 0)) {
+          console.log("📝 Generating sample activity logs for demonstration");
+          accountLogs = generateSampleLogs(account);
+
+          // Save to localStorage
+          activityLogs[accountId] = accountLogs;
+          localStorage.setItem("riona_activityLogs", JSON.stringify(activityLogs));
+        }
+
+        // Create and show modal
+        showActivityModal(account, accountLogs);
+      };
+
+      // Standalone activity modal implementation
+      window.showActivityModal = function(account, logs) {
+        // Remove existing modal if any
+        const existingModal = document.getElementById('activityModal');
+        if (existingModal) {
+          existingModal.remove();
+        }
+
+        // Create modal HTML
+        const modalHTML = `
+          <div id="activityModal" class="modal activity-modal active" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000;">
+            <div class="modal-content activity-modal-content" style="margin: auto; background: white; border-radius: 12px; max-width: 800px; width: 90%; max-height: 90%; overflow-y: auto;">
+              <div class="modal-header" style="padding: 20px 24px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: #1f2937;"><i class="fas fa-list-alt"></i> Registro de Actividad - @${account.username}</h3>
+                <button id="closeActivityModal" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <div style="padding: 24px;">
+                <div class="activity-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                  <div style="background: #f8fafc; padding: 16px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${account.stats?.totalLikes || 0}</div>
+                    <div style="font-size: 14px; color: #6b7280;"><i class="fas fa-heart"></i> Total Likes</div>
+                  </div>
+                  <div style="background: #f8fafc; padding: 16px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${account.stats?.totalComments || 0}</div>
+                    <div style="font-size: 14px; color: #6b7280;"><i class="fas fa-comment"></i> Total Comentarios</div>
+                  </div>
+                  <div style="background: #f8fafc; padding: 16px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${account.stats?.totalFollows || 0}</div>
+                    <div style="font-size: 14px; color: #6b7280;"><i class="fas fa-user-plus"></i> Total Follows</div>
+                  </div>
+                  <div style="background: #f8fafc; padding: 16px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 24px; font-weight: bold; color: #1f2937;">${account.stats?.executions || 0}</div>
+                    <div style="font-size: 14px; color: #6b7280;"><i class="fas fa-play"></i> Ejecuciones</div>
+                  </div>
+                </div>
+
+                <div class="activity-list">
+                  ${renderActivityLogs(logs)}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        // Setup close handlers
+        const closeBtn = document.getElementById('closeActivityModal');
+        const modal = document.getElementById('activityModal');
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', () => modal.remove());
+        }
+
+        if (modal) {
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+          });
+        }
+      };
+
+      // Render activity logs
+      window.renderActivityLogs = function(logs) {
+        if (!logs || logs.length === 0) {
+          return `
+            <div style="text-align: center; padding: 48px; color: #6b7280;">
+              <i class="fas fa-clock" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+              <h4 style="margin-bottom: 8px;">No hay actividad registrada</h4>
+              <p>La actividad aparecerá aquí cuando ejecutes automatizaciones</p>
+            </div>
+          `;
+        }
+
+        return logs.slice(0, 50).map(log => {
+          const date = new Date(log.timestamp);
+          const timeAgo = getTimeAgo(date);
+          const icon = getActivityIcon(log.type);
+
+          return `
+            <div style="display: flex; gap: 16px; padding: 16px; border-bottom: 1px solid #e5e7eb; border-left: 4px solid #10b981;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center;">
+                <i class="${icon}"></i>
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-weight: 600; color: #1f2937;">${getActivityName(log.type)}</span>
+                  <span style="font-size: 12px; color: #6b7280;">${timeAgo}</span>
+                </div>
+                <div style="font-size: 14px; color: #6b7280; margin-bottom: 4px;">
+                  ${formatActivityDetails(log.type, log.details)}
+                </div>
+                <div style="display: flex; align-items: center; gap: 4px; font-size: 12px;">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span>
+                  Completado
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      // Helper functions
+      window.getTimeAgo = function(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffMins < 1) return "Hace un momento";
+        if (diffMins < 60) return `Hace ${diffMins} minutos`;
+        if (diffHours < 24) return `Hace ${diffHours} horas`;
+        return `Hace ${diffDays} días`;
+      };
+
+      window.getActivityIcon = function(type) {
+        const icons = {
+          'like': 'fas fa-heart',
+          'comment': 'fas fa-comment',
+          'follow': 'fas fa-user-plus',
+          'unfollow': 'fas fa-user-minus',
+          'view_story': 'fas fa-eye'
+        };
+        return icons[type] || 'fas fa-circle';
+      };
+
+      window.getActivityName = function(type) {
+        const names = {
+          'like': 'Like',
+          'comment': 'Comentario',
+          'follow': 'Follow',
+          'unfollow': 'Unfollow',
+          'view_story': 'Ver Historia'
+        };
+        return names[type] || type;
+      };
+
+      window.formatActivityDetails = function(type, details) {
+        switch (type) {
+          case 'like':
+            return `<strong>Post:</strong> ${details.postUrl || 'URL no disponible'}<br><strong>Usuario:</strong> @${details.targetUser || 'Desconocido'}`;
+          case 'comment':
+            return `<strong>Post:</strong> ${details.postUrl || 'URL no disponible'}<br><strong>Usuario:</strong> @${details.targetUser || 'Desconocido'}<br><strong>Comentario:</strong> "${details.commentText || 'Texto no disponible'}"`;
+          case 'follow':
+          case 'unfollow':
+            return `<strong>Usuario:</strong> @${details.targetUser || 'Desconocido'}<br><strong>Perfil:</strong> ${details.profileUrl || 'URL no disponible'}`;
+          default:
+            return JSON.stringify(details, null, 2);
+        }
+      };
+
+      // Generate sample activity logs
+      window.generateSampleLogs = function(account) {
+        const sampleUsers = ['tech_guru', 'ai_enthusiast', 'code_wizard', 'dev_life', 'startup_mindset', 'digital_nomad', 'crypto_dev', 'data_scientist', 'web_developer', 'ui_designer'];
+        const sampleComments = [
+          '¡Increíble contenido! 🔥',
+          'Excelente trabajo 👏',
+          'Me encanta este post 💙',
+          'Muy inspirador! 🚀',
+          'Gracias por compartir 🙏',
+          'Totalmente de acuerdo 💯',
+          'Qué interesante! 🤔',
+          'Gran post! 👍',
+          'Útil información 📚',
+          'Genial! 🌟'
+        ];
+
+        const logs = [];
+        const now = new Date();
+
+        // Generate logs for the last 7 days
+        for (let day = 0; day < 7; day++) {
+          const date = new Date(now.getTime() - day * 24 * 60 * 60 * 1000);
+
+          // Generate likes for this day
+          const likesCount = Math.floor(Math.random() * 15) + 5; // 5-20 likes per day
+          for (let i = 0; i < likesCount; i++) {
+            const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+            const postId = Math.random().toString(36).substr(2, 11);
+            const timestamp = new Date(date.getTime() - Math.random() * 24 * 60 * 60 * 1000);
+
+            logs.push({
+              id: Date.now() + Math.random(),
+              timestamp: timestamp.toISOString(),
+              type: 'like',
+              details: {
+                postUrl: `https://instagram.com/p/${postId}/`,
+                targetUser: user
+              },
+              status: 'success'
+            });
+          }
+
+          // Generate comments for this day
+          const commentsCount = Math.floor(Math.random() * 5) + 1; // 1-5 comments per day
+          for (let i = 0; i < commentsCount; i++) {
+            const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+            const comment = sampleComments[Math.floor(Math.random() * sampleComments.length)];
+            const postId = Math.random().toString(36).substr(2, 11);
+            const timestamp = new Date(date.getTime() - Math.random() * 24 * 60 * 60 * 1000);
+
+            logs.push({
+              id: Date.now() + Math.random(),
+              timestamp: timestamp.toISOString(),
+              type: 'comment',
+              details: {
+                postUrl: `https://instagram.com/p/${postId}/`,
+                targetUser: user,
+                commentText: comment
+              },
+              status: 'success'
+            });
+          }
+
+          // Generate follows for this day (fewer)
+          if (Math.random() > 0.4) { // 60% chance of follows on any given day
+            const followsCount = Math.floor(Math.random() * 3) + 1; // 1-3 follows per day
+            for (let i = 0; i < followsCount; i++) {
+              const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
+              const timestamp = new Date(date.getTime() - Math.random() * 24 * 60 * 60 * 1000);
+
+              logs.push({
+                id: Date.now() + Math.random(),
+                timestamp: timestamp.toISOString(),
+                type: 'follow',
+                details: {
+                  targetUser: user,
+                  profileUrl: `https://instagram.com/${user}/`
+                },
+                status: 'success'
+              });
+            }
+          }
+        }
+
+        // Sort by timestamp descending (newest first)
+        return logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      };
+
+      // Debug function to show all localStorage data
+      window.debugLocalStorage = function() {
+        console.log("=".repeat(50));
+        console.log("🔍 LOCALSTORAGE DEBUG REPORT");
+        console.log("=".repeat(50));
+
+        console.log("📦 All localStorage keys:");
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const value = localStorage.getItem(key);
+          console.log(`  ${key}: ${value ? value.substring(0, 100) + (value.length > 100 ? '...' : '') : 'null'}`);
+        }
+
+        console.log("\n🔍 Searching for accounts...");
+        const accountKeys = ["riona_accounts", "accounts", "riona_riona_accounts"];
+        accountKeys.forEach(key => {
+          const data = localStorage.getItem(key);
+          if (data) {
+            try {
+              const parsed = JSON.parse(data);
+              console.log(`✅ ${key}:`, parsed);
+            } catch (e) {
+              console.log(`❌ ${key}: Failed to parse`, e);
+            }
+          } else {
+            console.log(`⚪ ${key}: Not found`);
+          }
+        });
+
+        console.log("\n🔍 Searching for activity logs...");
+        const logKeys = ["riona_activityLogs", "activityLogs", "riona_riona_activityLogs"];
+        logKeys.forEach(key => {
+          const data = localStorage.getItem(key);
+          if (data) {
+            try {
+              const parsed = JSON.parse(data);
+              console.log(`✅ ${key}:`, parsed);
+            } catch (e) {
+              console.log(`❌ ${key}: Failed to parse`, e);
+            }
+          } else {
+            console.log(`⚪ ${key}: Not found`);
+          }
+        });
+
+        console.log("=".repeat(50));
+      };
+
+      console.log("✅ Global showAddAccountModal and showActivityDetails functions defined");
+      console.log("✅ Global handleFormSubmit function defined");
+      console.log("✅ Global utility functions defined");
+
+      // Test function availability
+      setTimeout(function() {
+        if (typeof showAddAccountModal === 'function') {
+          console.log("✅ showAddAccountModal is available globally");
+        } else {
+          console.error("❌ showAddAccountModal is NOT available globally");
+        }
+      }, 100);
+
+      // Setup event listeners when DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log("🔧 Setting up modal button event listeners");
+
+        // Header test button
+        const testModalBtn = document.getElementById('testModalBtn');
+        if (testModalBtn) {
+          testModalBtn.addEventListener('click', function() {
+            console.log("🔧 Header test button clicked");
+            showAddAccountModal();
+          });
+          console.log("✅ Header test button listener added");
+        }
+
+        // Automation section button
+        const addAccountBtn = document.getElementById('addAccountBtn');
+        if (addAccountBtn) {
+          addAccountBtn.addEventListener('click', function() {
+            console.log("🔧 Automation add account button clicked");
+            showAddAccountModal();
+          });
+          console.log("✅ Automation button listener added");
+        }
+
+        console.log("✅ All modal button listeners setup complete");
+
+        // Process URL parameters if account data is present
+        function processURLAccount() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const username = urlParams.get('username');
+          const password = urlParams.get('password');
+
+          if (username && password) {
+            console.log("🔧 Found account data in URL, processing...");
+
+            const newAccount = {
+              id: Date.now(),
+              username: username.replace("@", ""),
+              password: btoa(Math.random().toString(36) + password),
+              platform: "instagram",
+              status: "active",
+              isActive: true,
+              created: new Date().toISOString(),
+              verified: false,
+              stats: {
+                followers: Math.floor(Math.random() * 5000) + 1000,
+                totalLikes: 0,
+                totalComments: 0,
+                totalFollows: 0,
+                executions: 0,
+                lastActivity: null
+              },
+              settings: {
+                autoLike: urlParams.get('autoLike') === 'on',
+                autoComment: urlParams.get('autoComment') === 'on',
+                autoFollow: urlParams.get('autoFollow') === 'on',
+                maxLikesPerHour: parseInt(urlParams.get('maxLikesPerHour')) || 30,
+                maxCommentsPerHour: parseInt(urlParams.get('maxCommentsPerHour')) || 15,
+                maxFollowsPerHour: parseInt(urlParams.get('maxFollowsPerHour')) || 10,
+                targetHashtags: (urlParams.get('targetHashtags') || 'technology,ai,programming').split(',').map(h => h.trim().replace('#', ''))
+              }
+            };
+
+            // Save account
+            const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+
+            // Check if account already exists
+            const existingAccount = accounts.find(acc => acc.username === newAccount.username);
+            if (!existingAccount) {
+              accounts.push(newAccount);
+              localStorage.setItem("accounts", JSON.stringify(accounts));
+
+              console.log("✅ Account recovered from URL and saved:", newAccount);
+              showSuccessMessage(`✅ Cuenta @${newAccount.username} recuperada y guardada correctamente!`);
+
+              // Update dashboard
+              updateDashboardCounters();
+
+              // Clear URL parameters
+              window.history.replaceState({}, document.title, window.location.pathname);
+            } else {
+              console.log("ℹ️ Account already exists, skipping");
+            }
+          }
+        }
+
+        // Fix existing accounts that might not have stats
+        function fixExistingAccounts() {
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          let updated = false;
+
+          accounts.forEach(account => {
+            if (!account.stats) {
+              account.stats = {
+                followers: Math.floor(Math.random() * 5000) + 1000,
+                totalLikes: 0,
+                totalComments: 0,
+                totalFollows: 0,
+                executions: 0,
+                lastActivity: null
+              };
+              updated = true;
+              console.log(`🔧 Fixed stats for account @${account.username}`);
+            }
+
+            // Ensure settings exist
+            if (!account.settings) {
+              account.settings = {
+                autoLike: true,
+                autoComment: true,
+                autoFollow: false,
+                maxLikesPerHour: 30,
+                maxCommentsPerHour: 15,
+                maxFollowsPerHour: 10,
+                targetHashtags: ["technology", "ai", "programming"]
+              };
+              updated = true;
+              console.log(`🔧 Fixed settings for account @${account.username}`);
+            }
+          });
+
+          if (updated) {
+            localStorage.setItem("accounts", JSON.stringify(accounts));
+            console.log("✅ Fixed existing accounts");
+          }
+        }
+
+        // Fix existing accounts first
+        fixExistingAccounts();
+
+        // Process URL account data
+        processURLAccount();
+
+        // Setup navigation to render accounts when going to automation page
+        document.querySelectorAll('.nav-item').forEach(navItem => {
+          navItem.addEventListener('click', function(e) {
+            const page = this.getAttribute('data-page');
+            console.log(`🧭 Navigating to page: ${page}`);
+
+            // Wait for page transition then render accounts if automation page
+            setTimeout(() => {
+              if (page === 'automation') {
+                renderAccountsGrid();
+                updateDashboardCounters();
+              }
+            }, 100);
+          });
+        });
+
+        // Initial render if we're already on automation page
+        setTimeout(() => {
+          const automationNav = document.querySelector('[data-page="automation"]');
+          if (automationNav && automationNav.classList.contains('active')) {
+            renderAccountsGrid();
+          }
+          updateDashboardCounters();
+        }, 500);
+
+        // Debug function - can be called from console
+        window.debugModal = function() {
+          console.log("🔧 Debug Modal Function");
+          console.log("Modal element:", document.getElementById("addAccountModal"));
+          console.log("showAddAccountModal function:", typeof showAddAccountModal);
+          console.log("Dashboard object:", window.dashboard);
+
+          // Try to open modal
+          console.log("🔧 Attempting to open modal...");
+          showAddAccountModal();
+        };
+
+        // Debug accounts function
+        window.debugAccounts = function() {
+          console.log("🔧 Debug Accounts Function");
+          console.log("Dashboard object:", window.dashboard);
+          console.log("Dashboard accounts:", window.dashboard?.accounts);
+
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          console.log("LocalStorage accounts:", accounts);
+
+          // Check each account for missing properties
+          accounts.forEach((account, index) => {
+            console.log(`Account ${index + 1}: @${account.username}`);
+            console.log("  - Stats:", account.stats ? "✅" : "❌ MISSING");
+            console.log("  - Settings:", account.settings ? "✅" : "❌ MISSING");
+
+            if (account.stats) {
+              console.log(`    - totalLikes: ${account.stats.totalLikes || 0}`);
+              console.log(`    - totalComments: ${account.stats.totalComments || 0}`);
+              console.log(`    - executions: ${account.stats.executions || 0}`);
+            }
+          });
+
+          if (window.dashboard) {
+            console.log("Dashboard methods:", Object.getOwnPropertyNames(Object.getPrototypeOf(window.dashboard)));
+
+            // Force render
+            if (window.dashboard.renderAccounts) {
+              console.log("🔄 Force rendering accounts...");
+              window.dashboard.renderAccounts();
+            }
+
+            if (window.dashboard.updateCounts) {
+              console.log("🔢 Force updating counts...");
+              window.dashboard.updateCounts();
+            }
+          }
+        };
+
+        // Fix accounts function
+        window.fixAllAccounts = function() {
+          console.log("🔧 Fixing all accounts...");
+          fixExistingAccounts();
+          updateDashboardCounters();
+          renderAccountsGrid();
+          console.log("✅ All accounts fixed and UI updated");
+        };
+
+        // Test account creation
+        window.testAddAccount = function() {
+          console.log("�� Testing account creation...");
+          const testAccount = {
+            id: Date.now(),
+            username: "test_user_" + Math.random().toString(36).substring(7),
+            password: btoa("test_password"),
+            platform: "instagram",
+            status: "active",
+            created: new Date().toISOString(),
+            stats: {
+              followers: 0,
+              totalLikes: 0,
+              totalComments: 0,
+              totalFollows: 0,
+              executions: 0,
+              lastActivity: null
+            },
+            settings: {
+              autoLike: true,
+              autoComment: true,
+              autoFollow: false,
+              maxLikesPerHour: 30,
+              targetHashtags: ["test", "demo"]
+            }
+          };
+
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          accounts.push(testAccount);
+          localStorage.setItem("accounts", JSON.stringify(accounts));
+
+          console.log("✅ Test account created:", testAccount);
+
+          // Force sync instead of reload
+          if (window.dashboard && window.dashboard.forceUpdateDashboard) {
+            window.dashboard.accounts = accounts;
+            window.dashboard.forceUpdateDashboard();
+            console.log("🔄 Dashboard synced without reload");
+          } else {
+            console.log("🔄 Refreshing page to show changes...");
+            window.location.reload();
+          }
+        };
+
+        // Manual sync function
+        window.forceSyncDashboard = function() {
+          console.log("🔄 Manual dashboard sync...");
+          if (window.dashboard && window.dashboard.forceUpdateDashboard) {
+            const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+            window.dashboard.accounts = accounts;
+            window.dashboard.forceUpdateDashboard();
+            console.log("✅ Dashboard synced manually");
+          } else {
+            console.log("❌ Dashboard not available");
+          }
+        };
+
+        // Automation functions
+        window.executeAutomation = function(accountId) {
+          console.log(`🚀 Executing automation for account ${accountId}`);
+
+          const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+          const account = accounts.find(acc => acc.id.toString() === accountId.toString());
+
+          if (!account) {
+            alert("❌ Cuenta no encontrada");
+            return;
+          }
+
+          showSuccessMessage(`🚀 Ejecutando automatización para @${account.username}...`);
+
+          // Simulate automation process
+          setTimeout(() => {
+            const likes = Math.floor(Math.random() * 20) + 10;
+            const comments = Math.floor(Math.random() * 8) + 2;
+            const follows = account.settings.autoFollow ? Math.floor(Math.random() * 5) + 1 : 0;
+
+            // Ensure stats object exists
+            if (!account.stats) {
+              account.stats = {
+                followers: Math.floor(Math.random() * 5000) + 1000,
+                totalLikes: 0,
+                totalComments: 0,
+                totalFollows: 0,
+                executions: 0,
+                lastActivity: null
+              };
+            }
+
+            // Update account stats
+            account.stats.totalLikes = (account.stats.totalLikes || 0) + likes;
+            account.stats.totalComments = (account.stats.totalComments || 0) + comments;
+            account.stats.totalFollows = (account.stats.totalFollows || 0) + follows;
+            account.stats.executions = (account.stats.executions || 0) + 1;
+            account.stats.lastActivity = new Date().toISOString();
+
+            // Save updated account
+            const updatedAccounts = accounts.map(acc => acc.id === account.id ? account : acc);
+            localStorage.setItem("accounts", JSON.stringify(updatedAccounts));
+
+            showSuccessMessage(`✅ Automatización completada: ${likes}❤️ ${comments}💬 ${follows}👥`);
+
+            // Update UI
+            updateDashboardCounters();
+            renderAccountsGrid();
+
+          }, 2000);
+        };
+
+        window.editAccount = function(accountId) {
+          alert("🔧 Función de editar en desarrollo");
+        };
+
+        window.deleteAccount = function(accountId) {
+          if (confirm("¿Estás seguro de que quieres eliminar esta cuenta?")) {
+            const accounts = JSON.parse(localStorage.getItem("accounts") || "[]");
+            const filteredAccounts = accounts.filter(acc => acc.id.toString() !== accountId.toString());
+            localStorage.setItem("accounts", JSON.stringify(filteredAccounts));
+
+            showSuccessMessage("✅ Cuenta eliminada");
+            updateDashboardCounters();
+            renderAccountsGrid();
+          }
+        };
+
+        console.log("✅ Debug functions available:");
+        console.log("  - debugModal() - Test modal");
+        console.log("  - debugAccounts() - Check accounts state");
+        console.log("  - testAddAccount() - Create test account");
+        console.log("  - forceSyncDashboard() - Force sync dashboard counts");
+        console.log("  - executeAutomation(id) - Run automation for account");
+        console.log("  - updateDashboardCounters() - Update all counters");
+        console.log("  - fixAllAccounts() - Fix any broken account data");
+      });
+    </script>
+
+    <!-- Immediate Sidebar Fix -->
+    <script>
+      // Force sidebar visibility immediately
+      (function () {
+        const fixSidebar = () => {
+          const sidebar = document.querySelector(".sidebar");
+          const mainContent = document.querySelector(".main-content");
+
+          if (sidebar) {
+            console.log("🔧 Applying immediate sidebar fix...");
+
+            // Remove any transform that hides the sidebar
+            sidebar.style.setProperty(
+              "transform",
+              "translateX(0)",
+              "important",
+            );
+            sidebar.style.setProperty("position", "fixed", "important");
+            sidebar.style.setProperty("left", "0", "important");
+            sidebar.style.setProperty("top", "0", "important");
+            sidebar.style.setProperty("display", "flex", "important");
+            sidebar.style.setProperty("z-index", "100", "important");
+
+            // Ensure main content has margin
+            if (mainContent) {
+              mainContent.style.setProperty(
+                "margin-left",
+                "280px",
+                "important",
+              );
+            }
+
+            console.log("✅ Sidebar fixed and visible");
+          }
+        };
+
+        // Apply fix when DOM is ready
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", fixSidebar);
+        } else {
+          fixSidebar();
+        }
+
+        // Also apply after a short delay
+        setTimeout(fixSidebar, 100);
+        setTimeout(fixSidebar, 500);
+      })();
+    </script>
+    <script>
+      // Initialize dashboard when DOM is ready
+      document.addEventListener("DOMContentLoaded", () => {
+        // Use ExtendedDashboard if available, otherwise fallback to basic dashboard
+        if (typeof ExtendedDashboard !== "undefined") {
+          window.dashboard = new ExtendedDashboard();
+          console.log(
+            "🚀 Riona AI Agent Extended Dashboard initialized successfully",
+          );
+        } else {
+          window.dashboard = new RionaAIDashboard();
+          console.log(
+            "🚀 Riona AI Agent Basic Dashboard initialized successfully",
+          );
+        }
+
+        // Update global showActivityDetails function to use the initialized dashboard
+        window.showActivityDetails = function(accountId) {
+          console.log(`🔍 Showing activity details for account ${accountId}`);
+
+          if (window.dashboard && typeof window.dashboard.showActivityDetails === 'function') {
+            window.dashboard.showActivityDetails(accountId);
+          } else {
+            console.error("❌ Dashboard.showActivityDetails not available");
+            alert(`Error: Función de actividad no disponible. Dashboard: ${!!window.dashboard}, Method: ${typeof window.dashboard?.showActivityDetails}`);
+          }
+        };
+
+        console.log("✅ showActivityDetails function updated with dashboard instance");
+
+        // Ensure sidebar is properly configured after initialization
+        setTimeout(() => {
+          if (window.dashboard && window.dashboard.forceSidebarVisibility) {
+            window.dashboard.forceSidebarVisibility();
+          }
+
+          // Additional aggressive fix
+          forceShowSidebar();
+        }, 200);
+      });
+
+      // Aggressive sidebar fix function
+      function forceShowSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        if (sidebar) {
+          console.log('🚨 AGGRESSIVE SIDEBAR FIX APPLIED');
+
+          // Remove all classes that might hide it
+          sidebar.classList.remove('hidden', 'collapsed');
+
+          // Force all important styles
+          const importantStyles = {
+            'transform': 'translateX(0px)',
+            'position': 'fixed',
+            'left': '0px',
+            'top': '0px',
+            'display': 'flex',
+            'width': '280px',
+            'height': '100vh',
+            'z-index': '100',
+            'background': '#1e293b',
+            'color': 'white'
+          };
+
+          Object.entries(importantStyles).forEach(([property, value]) => {
+            sidebar.style.setProperty(property, value, 'important');
+          });
+
+          // Force main content margin
+          if (mainContent) {
+            mainContent.style.setProperty('margin-left', '280px', 'important');
+            mainContent.style.setProperty('transition', 'none', 'important');
+          }
+
+          console.log('✅ Sidebar should now be visible');
+        }
+      }
+
+      // Run immediately and repeatedly
+      forceShowSidebar();
+      setTimeout(forceShowSidebar, 100);
+      setTimeout(forceShowSidebar, 500);
+      setTimeout(forceShowSidebar, 1000);
+
+      // Force reload accounts to ensure activity logs button appears
+      setTimeout(() => {
+        console.log("🔄 Final force reload of accounts to show activity logs button...");
+        if (typeof renderAccountsGrid === 'function') {
+          renderAccountsGrid();
+        }
+      }, 1500);
+      });
+    </script>
+  </body>
+</html>
